@@ -1,0 +1,19 @@
+{
+  "name": "jellywave",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharkbox-labs/jellywave.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sharkbox-labs/jellywave/issues"
+  },
+  "homepage": "https://github.com/sharkbox-labs/jellywave#readme"
+}
