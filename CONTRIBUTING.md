@@ -19,7 +19,7 @@
   - (test) ...
   - (doc) ... (Resolves #9)
 1. When you've finished with your fix or feature, Rebase upstream changes into your branch with
-   `git pull upstream --rebase develop. Submit a [pull request](https://github.com/sharkbox-labs/jellywave)
+   `git pull upstream --rebase develop`. Submit a [pull request](https://github.com/sharkbox-labs/jellywave)
    to the `develop` branch. Include a description of your changes.
 1. Your pull request will be reviewed by another maintainer. The point of code
    reviews is to help keep the codebase clean and of high quality and, equally
