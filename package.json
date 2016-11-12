@@ -15,6 +15,13 @@
   "bugs": {
     "url": "https://github.com/sharkbox-labs/jellywave/issues"
   },
+  "eslintConfig": {
+    "extends": "airbnb",
+    "env": {
+      "mocha": true,
+      "node": true,
+      "browser": true
+    },
   "homepage": "https://github.com/sharkbox-labs/jellywave#readme",
   "devDependencies": {
     "eslint": "^3.9.1",
