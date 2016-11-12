@@ -1,6 +1,7 @@
 # Project Name
 
-> Pithy project description
+> 'Jellywave' is the codename for a safe walk app. The app will
+integrate mapping with crime data to help walkers find a safe path to their destinations.
 
 ## Team
 
@@ -20,29 +21,28 @@
 
 ## Usage
 
-> Some usage instructions
+> Safe walk is designed using a service-oriented architecture. To use the app locally for
+development, [install the dependencies](#installing-dependencies) for each service, then start
+each service using `npm start`. From there, visit [http://localhost:3000](http://localhost:3000)
+in your browser. 
 
 ## Requirements
 
 - Node 6.7.0
-- etc
-- etc
 
 ## Development
 
 ### Installing Dependencies
 
-From within the root directory:
+From within **each** folder in the root directory:
 
 ```sh
-sudo npm install -g bower
 npm install
-bower install
 ```
 
-### Roadmap
+### Backlog
 
-View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
+View the project backlog [here](https://waffle.io/sharkbox-labs/jellywave)
 
 
 ## Contributing
