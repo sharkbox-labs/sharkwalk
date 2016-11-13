@@ -3,6 +3,6 @@ const requestHandlers = require('./requestHandlers');
 
 const router = express.Router();
 
-router.get('/', requestHandlers);
+router.get('/trip', requestHandlers);
 
 module.exports = router;
