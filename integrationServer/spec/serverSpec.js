@@ -21,15 +21,15 @@ describe('Integration Server:', () => {
   });
 
   describe('API', () => {
-    it('should respond with a 200 status code on /api GET', (done) => {
+    it('should respond with a 404 status code on /api GET', (done) => {
       request(app)
         .get('/api')
-        .expect(200, done);
+        .expect(404, done);
     });
 
     it('should have "routes" in the response body', (done) => {
       request(app)
-        .get('/api')
+        .get('/api/trip')
         .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
@@ -41,7 +41,7 @@ describe('Integration Server:', () => {
 
     it('should respond with routes in an array', (done) => {
       request(app)
-        .get('/api')
+        .get('/api/trip')
         .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
@@ -53,7 +53,7 @@ describe('Integration Server:', () => {
 
     it('should have "risk" in the response body', (done) => {
       request(app)
-        .get('/api')
+        .get('/api/trip')
         .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
