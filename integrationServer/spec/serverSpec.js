@@ -1,6 +1,18 @@
 const request = require('supertest');
+const qs = require('qs');
 const expect = require('chai').expect;
 const app = require('../server');
+
+const testQuery = {
+  origin: {
+    lat: 37.7840081,
+    long: -122.406077,
+  },
+  destination: {
+    lat: 37.7811631,
+    long: -122.409185,
+  },
+};
 
 describe('Integration Server:', () => {
   it('should respond with a 200 status code on / GET', (done) => {
@@ -13,16 +25,13 @@ describe('Integration Server:', () => {
     it('should respond with a 200 status code on /api GET', (done) => {
       request(app)
         .get('/api')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', '/json/')
         .expect(200, done);
     });
 
     it('should have "routes" in the response body', (done) => {
       request(app)
         .get('/api')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', '/json/')
+        .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
           expect(response.status).to.equal(200);
@@ -34,8 +43,7 @@ describe('Integration Server:', () => {
     it('should respond with routes in an array', (done) => {
       request(app)
         .get('/api')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', '/json/')
+        .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
           expect(response.status).to.equal(200);
@@ -47,8 +55,7 @@ describe('Integration Server:', () => {
     it('should have "risk" in the response body', (done) => {
       request(app)
         .get('/api')
-        .set('Accept', 'application/json')
-        .expect('Content-Type', '/json/')
+        .query(testQuery)
         .end((error, response) => {
           expect(error).to.not.exist;
           expect(response.status).to.equal(200);
