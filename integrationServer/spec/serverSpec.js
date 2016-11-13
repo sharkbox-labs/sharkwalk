@@ -1,5 +1,4 @@
 const request = require('supertest');
-const qs = require('qs');
 const expect = require('chai').expect;
 const app = require('../server');
 
