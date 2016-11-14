@@ -3,30 +3,58 @@ const sfData = require('../assessmentWorker/sanFranciscoDataConnector');
 
 /* eslint-disable no-unused-expressions */
 
-describe('San Francisco crime reports', () => {
+xdescribe('San Francisco crime reports', () => {
   describe('Fetching crime reports', () => {
+    const bounds = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [
+                  -122.41803646087645,
+                  37.78126410541595,
+                ],
+                [
+                  -122.41803646087645,
+                  37.7975770425844,
+                ],
+                [
+                  -122.39576339721678,
+                  37.7975770425844,
+                ],
+                [
+                  -122.39576339721678,
+                  37.78126410541595,
+                ],
+                [
+                  -122.41803646087645,
+                  37.78126410541595,
+                ],
+              ],
+            ],
+          },
+        },
+      ],
+    };
+
     it('should fetch crime reports', () => {
-      const bounds = [
-        {
-          geometry: {
-            type: 'Point',
-            coordinates: [-122.4204826, 37.7963668],
-          },
-        },
-        {
-          geometry: {
-            type: 'Point',
-            coordinates: [-122.3955917, 37.7804946],
-          },
-        },
-      ];
       return sfData.fetchCrimeReports(bounds, '1 month ago', 2)
         .then((reports) => {
           expect(reports).to.be.an('Array');
           expect(reports[0]).to.include.keys(['pddistrict', 'x', 'y', 'resolution']);
-        })
-        .catch((error) => {
-          throw error;
+        });
+    });
+
+    it('should not require a limit', () => {
+      return sfData.fetchCrimeReports(bounds, '1 month ago')
+        .then((reports) => {
+          expect(reports).to.be.an('Array');
+          expect(reports[0]).to.include.keys(['pddistrict', 'x', 'y', 'resolution']);
         });
     });
   });

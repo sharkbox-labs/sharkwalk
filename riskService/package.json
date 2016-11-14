@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/sharkbox-labs/jellywave#readme",
   "dependencies": {
+    "@turf/turf": "^3.5.3",
     "axios": "^0.15.2",
     "body-parser": "^1.15.2",
     "chai": "^3.5.0",
