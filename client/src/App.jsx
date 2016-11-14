@@ -3,6 +3,7 @@ import Map, { GoogleApiWrapper } from 'google-maps-react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './App.css';
 import Nav from './Nav';
+import googleApiKey from './apiKeys/googleApiKey';
 
 injectTapEventPlugin();
 
@@ -23,5 +24,5 @@ class App extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyAOrEYQQAPOj1o3dvwWm2dnrU2MEockivg',
+  apiKey: googleApiKey,
 })(App);
