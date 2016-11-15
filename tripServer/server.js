@@ -5,7 +5,7 @@ const requestHandler = require('./requestHandlers.js').requestHandler;
 
 const app = express();
 
-app.get('/api/trip', requestHandler);
+app.get('/trip', requestHandler);
 
 const port = 3001;
 
