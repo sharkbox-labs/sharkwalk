@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import App from './App';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import App from './components/App/App';
 import './index.css';
 
 ReactDOM.render((
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
     <Router history={browserHistory}>
       <Route path="/" component={App} />
     </Router>
