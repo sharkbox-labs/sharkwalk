@@ -1,5 +1,5 @@
+import Map, { GoogleApiWrapper, Marker } from 'google-maps-react';
 import React, { Component } from 'react';
-import Map, { GoogleApiWrapper } from 'google-maps-react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import qs from 'qs';
@@ -15,20 +15,17 @@ class App extends Component {
 
     this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
 
+    // bind custom methods to App scope
     this.getDirections = this.getDirections.bind(this);
+    this.renderOriginMarker = this.renderOriginMarker.bind(this);
 
     this.state = {
-      origin: {
-        lat: '',
-        long: '',
-      },
-      destination: {
-        lat: '',
-        long: '',
-      },
+      origin: '',
+      destinationMarkers: [],
     };
   }
 
+  componentDidMount() {}
 
   getDirections() {
     const queryObj = {
@@ -48,6 +45,24 @@ class App extends Component {
       });
   }
 
+  renderOriginMarker() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const originMarker = (
+          <Marker
+            key={'origin'}
+            position={{ lat: position.coords.latitude, lng: position.coords.longitude }}
+          />
+        );
+
+        this.setState({
+          origin: originMarker,
+        });
+      });
+    } else {
+      console.log('Geolocation is unavailable');
+    }
+  }
 
   render() {
     const style = {
@@ -56,9 +71,11 @@ class App extends Component {
     };
 
     return (
-      <div>
+      <div style={style}>
         <Nav getDirections={this.getDirections} />
-        <Map google={this.props.google} style={style} />
+        <Map google={this.props.google} onReady={this.renderOriginMarker}>
+          {this.state.origin}
+        </Map>
       </div>
     );
   }
