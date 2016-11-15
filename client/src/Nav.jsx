@@ -1,6 +1,9 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 function handleTouchTap() {
@@ -8,11 +11,13 @@ function handleTouchTap() {
 }
 
 const Nav = props => (
-  <AppBar
-    title="SafeWalk"
-    onTitleTouchTap={handleTouchTap}
-    iconElementRight={<RaisedButton label="Submit" onClick={props.getDirections} />}
-  />
+  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+    <AppBar
+      title="SafeWalk"
+      onTitleTouchTap={handleTouchTap}
+      iconElementRight={<RaisedButton label="Submit" onClick={props.getDirections} />}
+    />
+  </MuiThemeProvider>
 );
 
 Nav.propTypes = {
