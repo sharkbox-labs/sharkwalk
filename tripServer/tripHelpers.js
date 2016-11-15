@@ -24,13 +24,16 @@ const decodePolylines = (polylines) => {
   polylines.forEach((line) => {
     const points = polyline.decode(line);
     points.forEach((point) => {
-      coords.push(point);
+      if (coords.length === 0) {
+        coords.push(point);
+      } else if (point[0] !== coords[coords.length - 1][0]
+        && point[1] !== coords[coords.length - 1][1]) {
+        coords.push(point);
+      }
     });
   });
-  console.log(coords);
   return coords;
 };
-
 
 const threshold = 0.1;
 // sets threshold to be 100m (0.1 kilometers)
@@ -57,6 +60,7 @@ const checkDistance = (pairOne, pairTwo) => {
   return true;
 };
 
+
 const findPointsAlongWay = () => {
   // for each set of coordinations, check distance with turf.js
   // if greater than threshold
@@ -71,5 +75,4 @@ module.exports = {
   decodePolylines,
   checkDistance,
   findPointsAlongWay,
-  flatten,
 };
