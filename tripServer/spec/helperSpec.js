@@ -202,20 +202,25 @@ const exampleDirectionsObject = {
 
 /* eslint-enable quotes, quote-props, comma-dangle */
 
+const polylines = retrievePolylines(exampleDirectionsObject);
+const coords = decodePolylines(polylines);
+
 describe('geoJSON helpers', () => {
   describe('#retrievePolylines', () => {
     it('should extract polylines from directions object', (done) => {
-      const polylines = retrievePolylines(exampleDirectionsObject);
       expect(polylines.length).to.equal(5);
       done();
     });
   });
-  describe('#translatePolylines', () => {
-    it('should return a nested array of coordinates', (done) => {
-      const polylines = retrievePolylines(exampleDirectionsObject);
-      const coords = decodePolylines(polylines);
+  describe('#decodePolylines', () => {
+    it('should return a nested array of coordinates (tuples)', (done) => {
       expect(coords).to.be.an('array');
       expect(coords[0]).to.be.an('array');
+      expect(coords[0].length).to.equal(2);
+      done();
+    });
+    it('should reject duplicate coordinates', (done) => {
+      expect(coords.length).to.equal(20); // length would be 24 with duplicates
       done();
     });
   });
