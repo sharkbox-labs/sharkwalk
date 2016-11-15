@@ -11,10 +11,12 @@
     "react-scripts": "0.7.0"
   },
   "dependencies": {
+    "axios": "^0.15.2",
     "chai": "^3.5.0",
     "enzyme": "^2.6.0",
     "google-maps-react": "^1.0.19",
     "material-ui": "^0.16.1",
+    "qs": "^6.3.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
