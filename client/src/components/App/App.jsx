@@ -4,8 +4,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import axios from 'axios';
 import qs from 'qs';
 import './App.css';
-import Nav from './Nav';
-import googleApiKey from './apiKeys/googleApiKey';
+import Nav from '../Nav/Nav';
+import googleApiKey from '../../apiKeys/googleApiKey';
 
 injectTapEventPlugin();
 

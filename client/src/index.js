@@ -4,7 +4,7 @@ import { Router, Route, browserHistory } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import App from './App';
+import App from './components/App/App';
 import './index.css';
 
 ReactDOM.render((
