@@ -17,17 +17,42 @@ class App extends Component {
 
     // bind custom methods to App scope
     this.getDirections = this.getDirections.bind(this);
-    this.renderOriginMarker = this.renderOriginMarker.bind(this);
+    this.setDestination = this.setDestination.bind(this);
+    this.setOriginMarker = this.setOriginMarker.bind(this);
+    this.renderMarkers = this.renderMarkers.bind(this);
 
     this.state = {
-      origin: '',
-      destinationMarkers: [],
+      origin: {
+        lat: '',
+        lng: '',
+      },
+      destination: {
+        lat: '',
+        lng: '',
+      },
+      originMarker: '',
+      mapMarkers: [],
     };
   }
 
   componentDidMount() {}
 
   getDirections() {
+    const destinationMarker = (
+      <Marker
+        key={'destination'}
+        position={{ lat: this.state.destination.lat, lng: this.state.destination.lng }}
+      />
+    );
+
+    const mapMarkers = [this.state.originMarker, destinationMarker];
+
+    this.setState({
+      mapMarkers,
+    }, () => console.log('mapMarkers: ', this.state.mapMarkers));
+
+    //=========================================
+
     const queryObj = {
       origin: this.state.origin,
       destination: this.state.destination,
@@ -45,7 +70,16 @@ class App extends Component {
       });
   }
 
-  renderOriginMarker() {
+  setDestination(mapProps, map) {
+    this.setState({
+      destination: {
+        lat: map.center.lat(),
+        lng: map.center.lng(),
+      }, 
+    }, () => console.log('Current destination: ', this.state.destination));
+  }
+
+  setOriginMarker() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         const originMarker = (
@@ -56,12 +90,26 @@ class App extends Component {
         );
 
         this.setState({
-          origin: originMarker,
-        });
+          origin: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+          originMarker,
+          mapMarkers: [originMarker],
+        }, () => console.log('ORIGIN: ', this.state.origin));
       });
     } else {
       console.log('Geolocation is unavailable');
     }
+  }
+
+  renderMarkers() {
+
+    return this.state.mapMarkers.map((marker) => {
+      console.log('marker: ', marker);
+
+      return marker;
+    });
   }
 
   render() {
@@ -73,8 +121,8 @@ class App extends Component {
     return (
       <div style={style}>
         <Nav getDirections={this.getDirections} />
-        <Map google={this.props.google} onReady={this.renderOriginMarker}>
-          {this.state.origin}
+        <Map google={this.props.google} onReady={this.setOriginMarker} onDragend={this.setDestination}>
+          {this.renderMarkers()}
         </Map>
       </div>
     );
