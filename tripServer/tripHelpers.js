@@ -17,24 +17,27 @@ const retrievePolylines = (directionsObj) => {
   return polylines;
 };
 
-// converts polylines into LatLngs
+// converts array of polylines into LatLngs
 
 const decodePolylines = (polylines) => {
   const coords = [];
   polylines.forEach((line) => {
     const points = polyline.decode(line);
-    coords.push(points);
+    points.forEach((point) => {
+      coords.push(point);
+    });
   });
+  console.log(coords);
   return coords;
 };
 
 
+const threshold = 0.1;
+// sets threshold to be 100m (0.1 kilometers)
+
 // checks distance between coords
 // returns true if distance is less than threshold
 // returns false if distance is omre than threshold
-
-const threshold = 0.1;
-
 const checkDistance = (pairOne, pairTwo) => {
   const line = {
     type: 'Feature',
@@ -54,8 +57,6 @@ const checkDistance = (pairOne, pairTwo) => {
   return true;
 };
 
-// sets threshold to be 100m (0.1 kilometers)
-
 const findPointsAlongWay = () => {
   // for each set of coordinations, check distance with turf.js
   // if greater than threshold
@@ -70,4 +71,5 @@ module.exports = {
   decodePolylines,
   checkDistance,
   findPointsAlongWay,
+  flatten,
 };
