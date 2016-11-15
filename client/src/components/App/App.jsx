@@ -6,7 +6,6 @@ import qs from 'qs';
 import './App.css';
 import Nav from '../Nav/Nav';
 import googleApiKey from '../../apiKeys/googleApiKey';
-import GoogleMap from '../GoogleMap/GoogleMap';
 
 injectTapEventPlugin();
 
@@ -16,39 +15,17 @@ class App extends Component {
 
     this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
 
+    // bind custom methods to App scope
     this.getDirections = this.getDirections.bind(this);
+    this.renderOriginMarker = this.renderOriginMarker.bind(this);
 
     this.state = {
-      origin: {
-        lat: '',
-        long: '',
-      },
-      destination: {
-        lat: '',
-        long: '',
-      },
+      origin: '',
+      destinationMarkers: [],
     };
   }
 
-  componentDidMount() {
-    // setTimeout(() => this.setState({ showMarker: true }), 3000);
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.setState({
-          origin: {
-            lat: position.coords.latitude,
-            long: position.coords.longitude,
-          },
-        });
-
-        console.log('lat: ', position.coords.latitude);
-        console.log('long: ', position.coords.longitude);
-      });
-    } else {
-      console.log('Geolocation is unavailable');
-    }
-    setTimeout(() => {this.props.google.maps.event.trigger(this.map, 'ready'); this.forceUpdate();}, 2000);
-  }
+  componentDidMount() {}
 
   getDirections() {
     const queryObj = {
@@ -68,19 +45,36 @@ class App extends Component {
       });
   }
 
+  renderOriginMarker() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const originMarker = (
+          <Marker
+            key={'origin'}
+            position={{ lat: position.coords.latitude, lng: position.coords.longitude }}
+          />
+        );
+
+        this.setState({
+          origin: originMarker,
+        });
+      });
+    } else {
+      console.log('Geolocation is unavailable');
+    }
+  }
 
   render() {
     const style = {
       width: '100vw',
       height: '90vh',
     };
+
     return (
       <div style={style}>
         <Nav getDirections={this.getDirections} />
-        <Map google={this.props.google}>
-          <Marker
-            position={{ lat: 37.778519, lng: -122.405640 }}
-            name={'Current location'} />
+        <Map google={this.props.google} onReady={this.renderOriginMarker}>
+          {this.state.origin}
         </Map>
       </div>
     );
