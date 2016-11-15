@@ -1,21 +1,21 @@
-const request = require('axios');
+const axios = require('axios');
 
 
 const APIKEY = process.env.APIKEY;
 
 const googleMapsURL = 'https://maps.googleapis.com/maps/api/directions/json?origin=';
 
-const requestHandler = (req, resp) => {
+const requestHandler = (request, response) => {
   // define origin and destination from request parameters
   // hard coded locations for now
   const origin = '37.783669,-122.40895';
   const destination = '37.781256,-122.405955';
   const directionsRequestURL = googleMapsURL + origin + '&destination=' + destination + '&mode=walking&key=' + APIKEY;
   // make call to googleMaps api with origin and destination
-  request(directionsRequestURL)
+  axios.get(directionsRequestURL)
   .then((route) => {
     // temporarily sending back routes array
-    resp.status(200).json(route.data.routes);
+    response.status(200).json(route.data.routes);
   });
 };
 
