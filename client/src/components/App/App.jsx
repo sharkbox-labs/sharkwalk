@@ -147,7 +147,17 @@ class App extends Component {
   render() {
     const style = {
       width: '100vw',
-      height: '90vh',
+      height: '100vh',
+    };
+
+    const imgStyle = {
+      position: 'absolute',
+      'z-index': '10',
+      height: 'auto',
+      width: '45px',
+      border: 'solid 1px red',
+      top: '45%', //43
+      left: '45%', //46.75
     };
 
     return (
@@ -158,6 +168,7 @@ class App extends Component {
           onReady={this.setDefaultMarkers}
           onDragend={this.setDestination}
         >
+          <img src={'http://maplacejs.com/website/images/red-dot.png'} style={imgStyle} />
           {this.state.mapMarkers}
         </Map>
       </div>
