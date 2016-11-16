@@ -35,12 +35,17 @@ const decodePolylines = (polylines) => {
   return coords;
 };
 
-const threshold = 0.1;
-// sets threshold to be 100m (0.1 kilometers)
+const threshold = 0.05;
+// sets threshold to be 50m (0.1 kilometers)
 
 // checks distance between coords
 // returns true if distance is less than threshold
-// returns false if distance is omre than threshold
+// returns false if distance is more than threshold
+
+// convert google LatLongs into geoJSON coordinates ([Long, Lat])
+
+const convertLatLongs = LatLong => [LatLong[1], LatLong[0]];
+
 const checkDistance = (pairOne, pairTwo) => {
   const line = {
     type: 'Feature',
@@ -48,8 +53,8 @@ const checkDistance = (pairOne, pairTwo) => {
     geometry: {
       type: 'LineString',
       coordinates: [
-        pairOne,
-        pairTwo,
+        convertLatLongs(pairOne),
+        convertLatLongs(pairTwo),
       ],
     },
   };
@@ -60,19 +65,40 @@ const checkDistance = (pairOne, pairTwo) => {
   return true;
 };
 
+const injectCoordinate = (pairOne, pairTwo) => {
+  const line = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [pairOne[1], pairOne[0]],
+        [pairTwo[1], pairTwo[0]],
+      ],
+    },
+  };
+
+  const along = turf.along(line, threshold, 'kilometers');
+  return convertLatLongs(along.geometry.coordinates);
+};
 
 const findPointsAlongWay = (coordinates) => {
   const result = [coordinates[0]];
-  for (let i = 1; i < coordinates.length; i + 1) {
+  for (let i = 1; i < coordinates.length; i += 1) {
     const current = coordinates[i];
     const prev = coordinates[i - 1];
-    if (checkDistance(prev, current) === false) {
+    if (!checkDistance(prev, current)) {
       // inject point
+      const injection = injectCoordinate(prev, current);
+      result.push(injection);
+      result.push(current);
+    } else {
+      result.push(current);
     }
   }
-  // return result
+  console.log(result);
+  return result;
 };
-
 
   // for each set of coordinations, check distance with turf.js
   // if greater than threshold
@@ -85,4 +111,5 @@ module.exports = {
   decodePolylines,
   checkDistance,
   findPointsAlongWay,
+  convertLatLongs,
 };

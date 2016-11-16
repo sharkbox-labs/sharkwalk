@@ -1,4 +1,5 @@
 const expect = require('chai').expect;
+const turf = require('turf');
 // const requestHandlers = require('../requestHandlers.js');
 const helpers = require('../tripHelpers.js');
 // const supertest = require('supertest');
@@ -6,6 +7,7 @@ const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
 const checkDistance = helpers.checkDistance;
 const findPointsAlongWay = helpers.findPointsAlongWay;
+const convertLatLongs = helpers.convertLatLongs;
 // const supertest = require('supertest');
 // const app = require('../server');
 // const axios = require('axios');
@@ -224,10 +226,25 @@ describe('geoJSON helpers', () => {
       done();
     });
   });
+  describe('#convertLatLongs', () => {
+    it('should return geoJSON formatted coordinates from LatLong', (done) => {
+      const LatLong = [37.78392, -122.40799];
+      const coordinates = [-122.40799, 37.78392];
+      const converted = convertLatLongs(LatLong);
+      expect(converted).to.deep.equal(coordinates);
+      done();
+    });
+  });
   describe('#checkDistance', () => {
-    it('should return a boolean', (done) => {
+    it('should return true if distance is less than threshold', (done) => {
       const result = checkDistance([37.78343, -122.40914], [37.78348, -122.40881]);
       expect(typeof result).to.equal('boolean');
+      expect(result).to.equal(true);
+      done();
+    });
+    it('should return false if distance is greater than threshold', (done) => {
+      const result = checkDistance([37.78343, -122.40914], [37.78348, -122.50881]);
+      expect(result).to.equal(false);
       done();
     });
   });
@@ -235,6 +252,18 @@ describe('geoJSON helpers', () => {
     it('should inject points along the way', (done) => {
       const result = findPointsAlongWay(coords);
       expect(result.length).to.be.above(coords.length);
+      // const twoPoints = [[37.78392, -122.40799], [37.78360516397757, -122.40758402669043]];
+      const twoPointsgeo = [[-122.40799, 37.78392], [-122.40758402669043, 37.78360516397757]];
+      const line = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates: twoPointsgeo,
+        },
+      };
+      const distance = turf.lineDistance(line);
+      console.log('distance is: ', distance);
       done();
     });
   });
