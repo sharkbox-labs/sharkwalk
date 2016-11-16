@@ -18,7 +18,7 @@ class App extends Component {
     // bind custom methods to App scope
     this.getDirections = this.getDirections.bind(this);
     this.setDestination = this.setDestination.bind(this);
-    this.setOriginMarker = this.setOriginMarker.bind(this);
+    this.setDefaultMarkers = this.setDefaultMarkers.bind(this);
     this.addDestinationMarker = this.addDestinationMarker.bind(this);
     this.renderMarkers = this.renderMarkers.bind(this);
 
@@ -94,9 +94,11 @@ class App extends Component {
   ========
   */
 
-  setOriginMarker() {
+  setDefaultMarkers(mapProps, map) {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
+
+        // Create origin marker (user's geolocation)
         const originMarker = (
           <Marker
             key={'origin'}
@@ -104,8 +106,19 @@ class App extends Component {
           />
         );
 
+        // Create default value for destination marker--'map.center' is 
+        // currently hardcoded to the center of SF in the google-maps-react module.
+        // This will only update if the map is dragged.
+        const destinationMarker = (
+          <Marker
+            key={'destination'}
+            position={{ lat: map.center.lat(), lng: map.center.lng() }}
+          />
+        );
+
         this.setState({
           originMarker,
+          destinationMarker,
           origin: {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -151,7 +164,7 @@ class App extends Component {
         <Nav getDirections={this.getDirections} />
         <Map
           google={this.props.google} // this.props.google is given by the google-maps-react module
-          onReady={this.setOriginMarker}
+          onReady={this.setDefaultMarkers}
           onDragend={this.setDestination}
         >
           {this.renderMarkers()}
