@@ -19,6 +19,7 @@ class App extends Component {
     this.getDirections = this.getDirections.bind(this);
     this.setDestination = this.setDestination.bind(this);
     this.setOriginMarker = this.setOriginMarker.bind(this);
+    this.addDestinationMarker = this.addDestinationMarker.bind(this);
     this.renderMarkers = this.renderMarkers.bind(this);
 
     this.state = {
@@ -31,27 +32,21 @@ class App extends Component {
         lng: '',
       },
       originMarker: '',
-      mapMarkers: [],
+      destinationMarker: '',
+      mapMarkers: [], // [originMarker, destinationMarker]
     };
   }
 
-  componentDidMount() {}
+  /*
+  ========
+    Will make a GET request to the server for directions:
+  ========
+  */
 
   getDirections() {
-    const destinationMarker = (
-      <Marker
-        key={'destination'}
-        position={{ lat: this.state.destination.lat, lng: this.state.destination.lng }}
-      />
-    );
-
-    const mapMarkers = [this.state.originMarker, destinationMarker];
-
-    this.setState({
-      mapMarkers,
-    }, () => console.log('mapMarkers: ', this.state.mapMarkers));
-
-    //=========================================
+    // addDestinationMarker can be called upon a successful GET request
+    // if we don't want to render a pin until the route is given.
+    this.addDestinationMarker();
 
     const queryObj = {
       origin: this.state.origin,
@@ -70,14 +65,34 @@ class App extends Component {
       });
   }
 
+  /*
+  ========
+    Will set the current destination (center of the map):
+  ========
+  */
+
   setDestination(mapProps, map) {
+    const destinationMarker = (
+      <Marker
+        key={'destination'}
+        position={{ lat: map.center.lat(), lng: map.center.lng() }}
+      />
+    );
+
     this.setState({
+      destinationMarker,
       destination: {
         lat: map.center.lat(),
         lng: map.center.lng(),
-      }, 
-    }, () => console.log('Current destination: ', this.state.destination));
+      },
+    });
   }
+
+  /*
+  ========
+    Will set a marker on the map for the user's geolocation:
+  ========
+  */
 
   setOriginMarker() {
     if ('geolocation' in navigator) {
@@ -90,26 +105,39 @@ class App extends Component {
         );
 
         this.setState({
+          originMarker,
           origin: {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           },
-          originMarker,
           mapMarkers: [originMarker],
-        }, () => console.log('ORIGIN: ', this.state.origin));
+        });
       });
     } else {
       console.log('Geolocation is unavailable');
     }
   }
 
-  renderMarkers() {
+  /*
+  ========
+    Will add a marker on the map for the selected destination:
+  ========
+  */
 
-    return this.state.mapMarkers.map((marker) => {
-      console.log('marker: ', marker);
-
-      return marker;
+  addDestinationMarker() {
+    this.setState({
+      mapMarkers: [this.state.originMarker, this.state.destinationMarker],
     });
+  }
+
+  /*
+  ========
+    Will render all markers
+  ========
+  */
+
+  renderMarkers() {
+    return this.state.mapMarkers.map(marker => marker);
   }
 
   render() {
@@ -121,7 +149,11 @@ class App extends Component {
     return (
       <div style={style}>
         <Nav getDirections={this.getDirections} />
-        <Map google={this.props.google} onReady={this.setOriginMarker} onDragend={this.setDestination}>
+        <Map
+          google={this.props.google} // this.props.google is given by the google-maps-react module
+          onReady={this.setOriginMarker}
+          onDragend={this.setDestination}
+        >
           {this.renderMarkers()}
         </Map>
       </div>
