@@ -8,7 +8,7 @@ class Direction extends Component {
   }
 
   renderDirection() {
-    const directionService = new google.maps.DirectionService();
+    const directionService = new google.maps.DirectionsService();
   }
 
   render() {
