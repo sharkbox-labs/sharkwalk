@@ -145,32 +145,57 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      width: '100vw',
-      height: '100vh',
+    const mapStyle = {
+      // width: '100vw',
+      // height: '100vh',
     };
 
-    const imgStyle = {
-      position: 'absolute',
-      'z-index': '10',
+    const mapPinStyle = {
+      zIndex: '10',
       height: 'auto',
       width: '45px',
       border: 'solid 1px red',
-      top: '45%', //43
-      left: '45%', //46.75
+      // To center pin image on map:
+      margin: 'auto',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: '5%',
+      right: 0,
     };
 
+    const appContainerStyle = {};
+
+    const navStyle = {};
+
+    const mapContainerStyle = {};
+
     return (
-      <div style={style}>
-        <Nav getDirections={this.getDirections} />
-        <Map
-          google={this.props.google} // this.props.google is given by the google-maps-react module
-          onReady={this.setDefaultMarkers}
-          onDragend={this.setDestination}
-        >
-          <img src={'http://maplacejs.com/website/images/red-dot.png'} style={imgStyle} />
-          {this.state.mapMarkers}
-        </Map>
+      <div className="app-container" style={appContainerStyle} >
+        <div className="nav-container">
+          <Nav
+            className="nav-bar"
+            getDirections={this.getDirections}
+            style={navStyle}
+          />
+        </div>
+        <div className="map-container" style={mapContainerStyle}>
+          <Map
+            className="map"
+            google={this.props.google} // this.props.google is given by the google-maps-react module
+            onReady={this.setDefaultMarkers}
+            onDragend={this.setDestination}
+            style={mapStyle}
+          >
+            <img
+              className="map-pin"
+              role="presentation"
+              src={'http://maplacejs.com/website/images/red-dot.png'}
+              style={mapPinStyle}
+            />
+            {this.state.mapMarkers}
+          </Map>
+        </div>
       </div>
     );
   }
