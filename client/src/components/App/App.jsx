@@ -164,11 +164,15 @@ class App extends Component {
       right: 0,
     };
 
-    const appContainerStyle = {};
+    const appContainerStyle = {
+      // width: '100vw',
+      // height: '100vh',
+    };
 
     const navStyle = {};
 
-    const mapContainerStyle = {};
+    const mapContainerStyle = {
+    };
 
     return (
       <div className="app-container" style={appContainerStyle} >
@@ -185,6 +189,7 @@ class App extends Component {
             google={this.props.google} // this.props.google is given by the google-maps-react module
             onReady={this.setDefaultMarkers}
             onDragend={this.setDestination}
+            onClick={this.setDestination}
             style={mapStyle}
           >
             <img
