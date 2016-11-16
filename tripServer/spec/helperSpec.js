@@ -252,18 +252,31 @@ describe('geoJSON helpers', () => {
     it('should inject points along the way', (done) => {
       const result = findPointsAlongWay(coords);
       expect(result.length).to.be.above(coords.length);
-      // const twoPoints = [[37.78392, -122.40799], [37.78360516397757, -122.40758402669043]];
-      const twoPointsgeo = [[-122.40799, 37.78392], [-122.40758402669043, 37.78360516397757]];
+      // const pair = [[-122.40799, 37.78392], [-122.40758402669043, 37.78360516397757]];
+      const pair = [result[0], result[1]];
       const line = {
         type: 'Feature',
         properties: {},
         geometry: {
           type: 'LineString',
-          coordinates: twoPointsgeo,
+          coordinates: pair,
         },
       };
       const distance = turf.lineDistance(line);
-      console.log('distance is: ', distance);
+      expect(distance).to.be.below(0.05);
+      done();
+    });
+    it('should produce an array with segments of distance less than defined threshold', (done) => {
+      const result = findPointsAlongWay(coords);
+      let distanceLargerThanThreshold = false;
+      for (let i = 1; i < result.length; i += 1) {
+        const current = result[i];
+        const prev = result[i - 1];
+        if (!checkDistance(prev, current)) {
+          distanceLargerThanThreshold = true;
+        }
+      }
+      expect(distanceLargerThanThreshold).to.equal(false);
       done();
     });
   });
