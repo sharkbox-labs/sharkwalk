@@ -6,4 +6,9 @@ class Direction extends Component {
   }
 }
 
+Direction.propTypes = {
+  // eslint-disable-next-line
+  directionsResponse: React.propTypes.object,
+};
+
 export default Direction;
