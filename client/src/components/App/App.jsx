@@ -20,7 +20,6 @@ class App extends Component {
     this.setDestination = this.setDestination.bind(this);
     this.setDefaultMarkers = this.setDefaultMarkers.bind(this);
     this.addDestinationMarker = this.addDestinationMarker.bind(this);
-    this.renderMarkers = this.renderMarkers.bind(this);
 
     this.state = {
       origin: {
@@ -143,16 +142,6 @@ class App extends Component {
     });
   }
 
-  /*
-  ========
-    Will render all markers
-  ========
-  */
-
-  renderMarkers() {
-    return this.state.mapMarkers.map(marker => marker);
-  }
-
   render() {
     const style = {
       width: '100vw',
@@ -167,7 +156,7 @@ class App extends Component {
           onReady={this.setDefaultMarkers}
           onDragend={this.setDestination}
         >
-          {this.renderMarkers()}
+          {this.state.mapMarkers}
         </Map>
       </div>
     );
