@@ -102,6 +102,13 @@ const findPointsAlongWay = (coordinates) => {
   return result;
 };
 
+const getPath = (directionsObj) => {
+  const polylines = retrievePolylines(directionsObj);
+  const coordinates = decodePolylines(polylines);
+  const path = findPointsAlongWay(coordinates);
+  return path;
+};
+
 
 module.exports = {
   retrievePolylines,
@@ -109,4 +116,5 @@ module.exports = {
   checkDistance,
   findPointsAlongWay,
   convertLatLongs,
+  getPath,
 };

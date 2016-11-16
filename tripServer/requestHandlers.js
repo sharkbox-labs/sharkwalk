@@ -1,4 +1,5 @@
 const axios = require('axios');
+const getPath = require('./tripHelpers.js').getPath;
 
 
 const APIKEY = process.env.APIKEY;
@@ -19,8 +20,12 @@ const requestHandler = (request, response) => {
     },
   })
   .then((route) => {
-    // temporarily sending back routes array
-    response.status(200).json(route.data.routes);
+    const path = getPath(route.data);
+    // repsonse object contains google directions and coordinates
+    response.status(200).json({ route: route.data, path });
+  })
+  .catch((error) => {
+    console.log(error);
   });
 };
 
