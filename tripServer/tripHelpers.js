@@ -61,14 +61,24 @@ const checkDistance = (pairOne, pairTwo) => {
 };
 
 
-const findPointsAlongWay = () => {
+const findPointsAlongWay = (coordinates) => {
+  const result = [coordinates[0]];
+  for (let i = 1; i < coordinates.length; i + 1) {
+    const current = coordinates[i];
+    const prev = coordinates[i - 1];
+    if (checkDistance(prev, current) === false) {
+      // inject point
+    }
+  }
+  // return result
+};
+
+
   // for each set of coordinations, check distance with turf.js
   // if greater than threshold
   // find point along the way with turf.along
   // inject this point into array
   // return array of coordinates
-};
-
 
 module.exports = {
   retrievePolylines,
