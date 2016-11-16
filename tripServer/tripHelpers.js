@@ -77,34 +77,31 @@ const injectCoordinate = (pairOne, pairTwo) => {
       ],
     },
   };
-
   const along = turf.along(line, threshold, 'kilometers');
   return convertLatLongs(along.geometry.coordinates);
 };
 
-const findPointsAlongWay = (coordinates) => {
-  const result = [coordinates[0]];
-  for (let i = 1; i < coordinates.length; i += 1) {
-    const current = coordinates[i];
-    const prev = coordinates[i - 1];
-    if (!checkDistance(prev, current)) {
-      // inject point
-      const injection = injectCoordinate(prev, current);
-      result.push(injection);
-      result.push(current);
-    } else {
-      result.push(current);
-    }
-  }
-  console.log(result);
-  return result;
-};
-
+// find PointsAlongWay
   // for each set of coordinations, check distance with turf.js
   // if greater than threshold
   // find point along the way with turf.along
   // inject this point into array
   // return array of coordinates
+
+const findPointsAlongWay = (coordinates) => {
+  const result = coordinates.splice(0);
+  for (let i = 1; i < result.length; i += 1) {
+    const current = result[i];
+    const prev = result[i - 1];
+    if (!checkDistance(prev, current)) {
+      // inject point
+      const injection = injectCoordinate(prev, current);
+      result.splice(i, 0, injection);
+    }
+  }
+  return result;
+};
+
 
 module.exports = {
   retrievePolylines,
