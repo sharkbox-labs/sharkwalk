@@ -5,6 +5,7 @@ import axios from 'axios';
 import qs from 'qs';
 import './App.css';
 import Nav from '../Nav/Nav';
+import Direction from '../Direction/Direction';
 import googleApiKey from '../../apiKeys/googleApiKey';
 
 injectTapEventPlugin();
@@ -117,6 +118,10 @@ class App extends Component {
           />
         );
 
+        const direction = (
+          <Direction directionsResponse={{}} />
+        );
+
         this.setState({
           originMarker,
           destinationMarker,
@@ -124,7 +129,7 @@ class App extends Component {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           },
-          mapMarkers: [originMarker],
+          mapMarkers: [originMarker, direction],
         });
       });
     } else {
