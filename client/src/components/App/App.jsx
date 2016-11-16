@@ -71,6 +71,8 @@ class App extends Component {
   */
 
   setDestination(mapProps, map) {
+    // 'mapProps' and 'map' are required by the google-maps-react module
+    // when using the onDragend event listener
     const destinationMarker = (
       <Marker
         key={'destination'}
