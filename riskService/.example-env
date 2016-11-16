@@ -1,1 +1,1 @@
-MONGO_URL=<URL to MongoDB instance>
+MONGO_URL=mongodb://localhost/jellywave
