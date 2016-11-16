@@ -5,7 +5,7 @@ const helpers = require('../tripHelpers.js');
 const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
 const checkDistance = helpers.checkDistance;
-
+const findPointsAlongWay = helpers.findPointsAlongWay;
 // const supertest = require('supertest');
 // const app = require('../server');
 // const axios = require('axios');
@@ -228,6 +228,13 @@ describe('geoJSON helpers', () => {
     it('should return a boolean', (done) => {
       const result = checkDistance([37.78343, -122.40914], [37.78348, -122.40881]);
       expect(typeof result).to.equal('boolean');
+      done();
+    });
+  });
+  describe('#findPointsAlongWay', () => {
+    it('should inject points along the way', (done) => {
+      const result = findPointsAlongWay(coords);
+      expect(result.length).to.be.above(coords.length);
       done();
     });
   });
