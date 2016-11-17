@@ -20,8 +20,6 @@
 
 .center-map-pin {
   z-index: 10;
-  height: auto;
-  width: 45px;
   margin: auto;
   position: absolute;
   top: 0;

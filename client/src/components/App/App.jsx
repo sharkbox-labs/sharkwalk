@@ -178,7 +178,7 @@ class App extends Component {
               className="center-map-pin"
               ref={(c) => { this.centerMapPin = c; }}
               role="presentation"
-              src="http://maplacejs.com/website/images/red-dot.png"
+              src="default-marker.png"
             />
             {this.state.mapMarkers}
           </Map>
