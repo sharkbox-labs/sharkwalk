@@ -5,6 +5,7 @@ import axios from 'axios';
 import qs from 'qs';
 import './App.css';
 import Nav from '../Nav/Nav';
+import Direction from '../Direction/Direction';
 import googleApiKey from '../../apiKeys/googleApiKey';
 
 injectTapEventPlugin();
@@ -19,7 +20,7 @@ class App extends Component {
     this.getDirections = this.getDirections.bind(this);
     this.setDestination = this.setDestination.bind(this);
     this.setDefaultMarkers = this.setDefaultMarkers.bind(this);
-    this.addDestinationMarker = this.addDestinationMarker.bind(this);
+    this.displayDirection = this.displayDirection.bind(this);
 
     this.state = {
       origin: {
@@ -43,9 +44,9 @@ class App extends Component {
   */
 
   getDirections() {
-    // addDestinationMarker can be called upon a successful GET request
+    // displayDirection can be called upon a successful GET request
     // if we don't want to render a pin until the route is given.
-    this.addDestinationMarker();
+    this.displayDirection();
 
     const queryObj = {
       origin: this.state.origin,
@@ -98,7 +99,6 @@ class App extends Component {
   setDefaultMarkers(mapProps, map) {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-
         // Create origin marker (user's geolocation)
         const originMarker = (
           <Marker
@@ -107,7 +107,7 @@ class App extends Component {
           />
         );
 
-        // Create default value for destination marker--'map.center' is 
+        // Create default value for destination marker--'map.center' is
         // currently hardcoded to the center of SF in the google-maps-react module.
         // This will only update if the map is dragged.
         const destinationMarker = (
@@ -138,22 +138,23 @@ class App extends Component {
   ========
   */
 
-  addDestinationMarker() {
-    // remove center map marker
+  displayDirection(direction) {
+    direction = (
+      <Direction directionsResponse={{}} />
+    );
+    // Remove center map marker
     this.centerMapPin.className = 'center-map-pin-hide';
-    // and set the marker on the map permanently
+    // Set the destination marker and the direction on the map permanently
     this.setState({
-      mapMarkers: [this.state.originMarker, this.state.destinationMarker],
+      mapMarkers: [this.state.originMarker, this.state.destinationMarker, direction],
     });
   }
 
   render() {
+    // These styles are for development only, remove for production
     const mapStyle = {};
-
     const appContainerStyle = {};
-
     const navStyle = {};
-
     const mapContainerStyle = {};
 
     return (
@@ -168,7 +169,7 @@ class App extends Component {
         <div className="map-container" style={mapContainerStyle}>
           <Map
             className="map"
-            google={this.props.google} // this.props.google is given by the google-maps-react module
+            google={this.props.google} // eslint-disable-line
             onReady={this.setDefaultMarkers}
             onDragend={this.setDestination}
             onClick={this.setDestination}
