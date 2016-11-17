@@ -152,12 +152,10 @@ class App extends Component {
   }
 
   render() {
+    // These styles are for development only, remove for production
     const mapStyle = {};
-
     const appContainerStyle = {};
-
     const navStyle = {};
-
     const mapContainerStyle = {};
 
     return (
