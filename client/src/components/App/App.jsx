@@ -59,7 +59,11 @@ class App extends Component {
       .then((response) => {
         // Build Direction component and pass in the response data
         const direction = (
-          <Direction directionsResponse={response.data.route} />
+          <Direction
+            directionsResponse={response.data.route}
+            origin={this.state.origin}
+            destination={this.state.destination}
+          />
         );
 
         // Call displayDirection to update the current state
