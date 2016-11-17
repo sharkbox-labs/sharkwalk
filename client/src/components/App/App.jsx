@@ -131,6 +131,10 @@ class App extends Component {
         this.setState({
           originMarker,
           destinationMarker,
+          destination: {
+            lat: map.center.lat(),
+            lng: map.center.lng(),
+          },
           origin: {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
