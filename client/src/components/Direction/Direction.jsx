@@ -3,28 +3,28 @@ import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
 
 class Direction extends Component {
-  // This function is only for displaying a direction during development
-  // Remove before production
-  componentWillMount() {
-    // Instantiate Google Services
-    const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
-    const directionsService = new google.maps.DirectionsService(); // eslint-disable-line
-    directionsDisplay.setMap(this.props.map);
+  // // This function is only for displaying a direction during development
+  // // Remove before production
+  // componentWillMount() {
+  //   // Instantiate Google Services
+  //   const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
+  //   const directionsService = new google.maps.DirectionsService(); // eslint-disable-line
+  //   directionsDisplay.setMap(this.props.map);
 
-    // Use fake data
-    const request = {
-      origin: new google.maps.LatLng(37.774929, -122.419416), // eslint-disable-line
-      destination: new google.maps.LatLng(37.7837762, -122.4090387), // eslint-disable-line
-      travelMode: 'WALKING',
-    };
+  //   // Use fake data
+  //   const request = {
+  //     origin: new google.maps.LatLng(37.774929, -122.419416), // eslint-disable-line
+  //     destination: new google.maps.LatLng(37.7837762, -122.4090387), // eslint-disable-line
+  //     travelMode: 'WALKING',
+  //   };
 
-    // Request route
-    directionsService.route(request, (result, status) => {
-      if (status === 'OK') {
-        directionsDisplay.setDirections(result);
-      }
-    });
-  }
+  //   // Request route
+  //   directionsService.route(request, (result, status) => {
+  //     if (status === 'OK') {
+  //       directionsDisplay.setDirections(result);
+  //     }
+  //   });
+  // }
 
   // When the component updates, call the renderDirection method
   componentDidUpdate(prevProps) {
