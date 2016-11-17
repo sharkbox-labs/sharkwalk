@@ -53,8 +53,16 @@ class Direction extends Component {
 }
 
 Direction.propTypes = {
-  directionsResponse: React.PropTypes.object, // eslint-disable-line
-  map: React.PropTypes.object, // eslint-disable-line
+  directionsResponse: React.PropTypes.object.isRequired, // eslint-disable-line
+  map: React.PropTypes.object.isRequired, // eslint-disable-line
+  origin: React.PropTypes.shape({
+    lat: React.PropTypes.number,
+    lng: React.PropTypes.number,
+  }).isRequired,
+  destination: React.PropTypes.shape({
+    lat: React.PropTypes.number,
+    lng: React.PropTypes.number,
+  }).isRequired,
 };
 
 export default GoogleApiWrapper({
