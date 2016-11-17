@@ -20,7 +20,6 @@ class App extends Component {
     this.setDestination = this.setDestination.bind(this);
     this.setDefaultMarkers = this.setDefaultMarkers.bind(this);
     this.addDestinationMarker = this.addDestinationMarker.bind(this);
-    this.renderMarkers = this.renderMarkers.bind(this);
 
     this.state = {
       origin: {
@@ -72,6 +71,8 @@ class App extends Component {
   */
 
   setDestination(mapProps, map) {
+    // 'mapProps' and 'map' are required by the google-maps-react module
+    // when using the onDragend event listener
     const destinationMarker = (
       <Marker
         key={'destination'}
@@ -138,37 +139,50 @@ class App extends Component {
   */
 
   addDestinationMarker() {
+    // remove center map marker
+    this.centerMapPin.className = 'center-map-pin-hide';
+    // and set the marker on the map permanently
     this.setState({
       mapMarkers: [this.state.originMarker, this.state.destinationMarker],
     });
   }
 
-  /*
-  ========
-    Will render all markers
-  ========
-  */
-
-  renderMarkers() {
-    return this.state.mapMarkers.map(marker => marker);
-  }
-
   render() {
-    const style = {
-      width: '100vw',
-      height: '90vh',
-    };
+    const mapStyle = {};
+
+    const appContainerStyle = {};
+
+    const navStyle = {};
+
+    const mapContainerStyle = {};
 
     return (
-      <div style={style}>
-        <Nav getDirections={this.getDirections} />
-        <Map
-          google={this.props.google} // this.props.google is given by the google-maps-react module
-          onReady={this.setDefaultMarkers}
-          onDragend={this.setDestination}
-        >
-          {this.renderMarkers()}
-        </Map>
+      <div className="app-container" style={appContainerStyle} >
+        <div className="nav-container">
+          <Nav
+            className="nav-bar"
+            getDirections={this.getDirections}
+            style={navStyle}
+          />
+        </div>
+        <div className="map-container" style={mapContainerStyle}>
+          <Map
+            className="map"
+            google={this.props.google} // this.props.google is given by the google-maps-react module
+            onReady={this.setDefaultMarkers}
+            onDragend={this.setDestination}
+            onClick={this.setDestination}
+            style={mapStyle}
+          >
+            <img
+              className="center-map-pin"
+              ref={(c) => { this.centerMapPin = c; }}
+              role="presentation"
+              src="default-marker.png"
+            />
+            {this.state.mapMarkers}
+          </Map>
+        </div>
       </div>
     );
   }
