@@ -8,11 +8,16 @@ class Direction extends Component {
   componentWillMount() {
     const googleMaps = this.props.google.maps; // eslint-disable-line
 
+    const asLatLng = latLngObject => (
+      new googleMaps.LatLng(latLngObject.lat, latLngObject.lng)
+    );
+
     const request = {
-      origin: new googleMaps.LatLng(this.props.origin.lat, this.props.origin.lng),
-      destination: new googleMaps.LatLng(this.props.destination.lat, this.props.destination.lng),
+      origin: asLatLng(this.props.origin),
+      destination: asLatLng(this.props.destination),
       travelMode: 'WALKING',
     };
+
 
   //   // Instantiate Google Services
   //   const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
