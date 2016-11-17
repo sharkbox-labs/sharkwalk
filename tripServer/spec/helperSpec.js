@@ -1,17 +1,13 @@
 const expect = require('chai').expect;
 const turf = require('turf');
-// const requestHandlers = require('../requestHandlers.js');
 const helpers = require('../tripHelpers.js');
-// const supertest = require('supertest');
+
 const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
 const checkDistance = helpers.checkDistance;
 const findPointsAlongWay = helpers.findPointsAlongWay;
 const convertLatLongs = helpers.convertLatLongs;
 const exampleDirectionsObject = require('./specData.js');
-// const supertest = require('supertest');
-// const app = require('../server');
-// const axios = require('axios');
 
 const polylines = retrievePolylines(exampleDirectionsObject);
 const coords = decodePolylines(polylines);
@@ -61,7 +57,7 @@ describe('geoJSON helpers', () => {
   describe('#checkDistance', () => {
     it('should return true if distance is less than threshold', (done) => {
       const result = checkDistance([37.78343, -122.40914], [37.78348, -122.40881]);
-      expect(typeof result).to.equal('boolean');
+      expect(result).to.be.a('boolean');
       expect(result).to.equal(true);
       done();
     });
