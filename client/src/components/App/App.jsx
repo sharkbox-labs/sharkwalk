@@ -139,6 +139,9 @@ class App extends Component {
   */
 
   addDestinationMarker() {
+    // remove center map marker
+    this.mapPin.className = 'map-pin-hide';
+
     this.setState({
       mapMarkers: [this.state.originMarker, this.state.destinationMarker],
     });
@@ -148,20 +151,6 @@ class App extends Component {
     const mapStyle = {
       // width: '100vw',
       // height: '100vh',
-    };
-
-    const mapPinStyle = {
-      zIndex: '10',
-      height: 'auto',
-      width: '45px',
-      border: 'solid 1px red',
-      // To center pin image on map:
-      margin: 'auto',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: '5%',
-      right: 0,
     };
 
     const appContainerStyle = {
@@ -194,9 +183,9 @@ class App extends Component {
           >
             <img
               className="map-pin"
+              ref={(c) => { this.mapPin = c; }}
               role="presentation"
-              src={'http://maplacejs.com/website/images/red-dot.png'}
-              style={mapPinStyle}
+              src="http://maplacejs.com/website/images/red-dot.png"
             />
             {this.state.mapMarkers}
           </Map>
