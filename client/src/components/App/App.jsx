@@ -20,7 +20,7 @@ class App extends Component {
     this.getDirections = this.getDirections.bind(this);
     this.setDestination = this.setDestination.bind(this);
     this.setDefaultMarkers = this.setDefaultMarkers.bind(this);
-    this.addDestinationMarker = this.addDestinationMarker.bind(this);
+    this.displayDirection = this.displayDirection.bind(this);
 
     this.state = {
       origin: {
@@ -44,9 +44,9 @@ class App extends Component {
   */
 
   getDirections() {
-    // addDestinationMarker can be called upon a successful GET request
+    // displayDirection can be called upon a successful GET request
     // if we don't want to render a pin until the route is given.
-    this.addDestinationMarker();
+    this.displayDirection();
 
     const queryObj = {
       origin: this.state.origin,
@@ -117,10 +117,6 @@ class App extends Component {
           />
         );
 
-        const direction = (
-          <Direction directionsResponse={{}} />
-        );
-
         this.setState({
           originMarker,
           destinationMarker,
@@ -128,7 +124,7 @@ class App extends Component {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           },
-          mapMarkers: [originMarker, direction],
+          mapMarkers: [originMarker],
         });
       });
     } else {
@@ -142,12 +138,15 @@ class App extends Component {
   ========
   */
 
-  addDestinationMarker() {
-    // remove center map marker
+  displayDirection(direction) {
+    direction = (
+      <Direction directionsResponse={{}} />
+    );
+    // Remove center map marker
     this.centerMapPin.className = 'center-map-pin-hide';
-    // and set the marker on the map permanently
+    // Set the destination marker and the direction on the map permanently
     this.setState({
-      mapMarkers: [this.state.originMarker, this.state.destinationMarker],
+      mapMarkers: [this.state.originMarker, this.state.destinationMarker, direction],
     });
   }
 
