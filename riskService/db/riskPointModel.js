@@ -15,7 +15,11 @@ const riskPointSchema = new mongoose.Schema({
     required: [true, 'Location is required for a Risk Point'],
   },
   batchId: String,
+}, {
+  timestamps: true,
 });
+
+riskPointSchema.index({ location: '2dsphere' }); // enable geo-queries
 
 // eslint-disable-next-line new-cap
 module.exports = mongoose.model('RiskPoint', riskPointSchema);

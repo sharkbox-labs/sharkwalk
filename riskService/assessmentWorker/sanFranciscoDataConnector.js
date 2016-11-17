@@ -1,6 +1,7 @@
 const request = require('axios');
 const sugar = require('sugar-date');
 const turf = require('@turf/turf');
+const logger = require('../logger.js');
 
 const sfCrimeURL = 'https://data.sfgov.org/resource/cuks-n6tp.json';
 
@@ -108,16 +109,21 @@ const fetchCrimeReports = function fetchCrimeReports(
       $limit: limit,
       $select: 'category, time, date, descript, location',
       $offset: offset,
+      $$app_token: process.env.SF_CRIME_APP_TOKEN,
     },
   })
   .then((response) => {
+    if (response.status === 429) {
+      logger.warn('San Francisco crime reports have been throttled (HTTP 429)');
+      throw new Error('San Francisco crime reports API is throttled');
+    }
     const newResults = [...results, ...response.data];
     if (response.data.length === limit && limit === 50000) {
       // We are at our max number of records and need to paginate
-      console.log(`Retrieved the limit of ${limit} records. Paginating.`);
+      logger.info(`Retrieved the limit of ${limit} San Francisco crime reports. Paginating.`);
       return fetchCrimeReports(bounds, lookback, limit, newResults, offset + limit);
     }
-    console.log(`Retrieved ${newResults.length} records.`);
+    logger.info(`Retrieved ${newResults.length} San Francisco crime reports.`);
     return newResults;
   });
 };
