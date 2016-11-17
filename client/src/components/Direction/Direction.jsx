@@ -5,7 +5,15 @@ import googleApiKey from '../../apiKeys/googleApiKey';
 class Direction extends Component {
   // // This function is only for displaying a direction during development
   // // Remove before production
-  // componentWillMount() {
+  componentWillMount() {
+    const googleMaps = this.props.google.maps; // eslint-disable-line
+
+    const request = {
+      origin: new googleMaps.LatLng(this.props.origin.lat, this.props.origin.lng),
+      destination: new googleMaps.LatLng(this.props.destination.lat, this.props.destination.lng),
+      travelMode: 'WALKING',
+    };
+
   //   // Instantiate Google Services
   //   const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
   //   const directionsService = new google.maps.DirectionsService(); // eslint-disable-line
@@ -24,7 +32,7 @@ class Direction extends Component {
   //       directionsDisplay.setDirections(result);
   //     }
   //   });
-  // }
+  }
 
   // When the component updates, call the renderDirection method
   componentDidUpdate(prevProps) {
