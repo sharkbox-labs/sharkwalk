@@ -140,7 +140,7 @@ class App extends Component {
 
   addDestinationMarker() {
     // remove center map marker
-    this.mapPin.className = 'map-pin-hide';
+    this.centerMapPin.className = 'center-map-pin-hide';
     // and set the marker on the map permanently
     this.setState({
       mapMarkers: [this.state.originMarker, this.state.destinationMarker],
@@ -175,8 +175,8 @@ class App extends Component {
             style={mapStyle}
           >
             <img
-              className="map-pin"
-              ref={(c) => { this.mapPin = c; }}
+              className="center-map-pin"
+              ref={(c) => { this.centerMapPin = c; }}
               role="presentation"
               src="http://maplacejs.com/website/images/red-dot.png"
             />
