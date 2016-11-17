@@ -57,11 +57,18 @@ class App extends Component {
 
     axios.get(`${this.serverUrl}/api/trip?${queryString}`)
       .then((response) => {
-        // response object will have directions with risk factor
-        // need to display on map (maybe done in map component?)
+        // Build Direction component and pass in the response data
+        const direction = (
+          <Direction directionsResponse={response.data[0]} />
+        );
+
+        // Call displayDirection to update the current state
+        this.displayDirection(direction);
       })
       .catch((error) => {
         // handle error
+        console.error(error);// eslint-disable-line
+        throw new Error('Failed to fetch direction data');
       });
   }
 
@@ -128,7 +135,7 @@ class App extends Component {
         });
       });
     } else {
-      console.log('Geolocation is unavailable');
+      console.log('Geolocation is unavailable'); // eslint-disable-line
     }
   }
 
@@ -139,9 +146,6 @@ class App extends Component {
   */
 
   displayDirection(direction) {
-    direction = (
-      <Direction directionsResponse={{}} />
-    );
     // Remove center map marker
     this.centerMapPin.className = 'center-map-pin-hide';
     // Set the destination marker and the direction on the map permanently
