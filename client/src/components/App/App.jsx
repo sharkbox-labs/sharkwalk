@@ -141,27 +141,20 @@ class App extends Component {
   addDestinationMarker() {
     // remove center map marker
     this.mapPin.className = 'map-pin-hide';
-
+    // and set the marker on the map permanently
     this.setState({
       mapMarkers: [this.state.originMarker, this.state.destinationMarker],
     });
   }
 
   render() {
-    const mapStyle = {
-      // width: '100vw',
-      // height: '100vh',
-    };
+    const mapStyle = {};
 
-    const appContainerStyle = {
-      // width: '100vw',
-      // height: '100vh',
-    };
+    const appContainerStyle = {};
 
     const navStyle = {};
 
-    const mapContainerStyle = {
-    };
+    const mapContainerStyle = {};
 
     return (
       <div className="app-container" style={appContainerStyle} >
