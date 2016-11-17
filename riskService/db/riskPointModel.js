@@ -15,6 +15,8 @@ const riskPointSchema = new mongoose.Schema({
     required: [true, 'Location is required for a Risk Point'],
   },
   batchId: String,
+}, {
+  timestamps: true,
 });
 
 // eslint-disable-next-line new-cap
