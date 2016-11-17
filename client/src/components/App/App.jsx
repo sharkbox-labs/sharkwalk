@@ -99,7 +99,6 @@ class App extends Component {
   setDefaultMarkers(mapProps, map) {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
-
         // Create origin marker (user's geolocation)
         const originMarker = (
           <Marker
@@ -108,7 +107,7 @@ class App extends Component {
           />
         );
 
-        // Create default value for destination marker--'map.center' is 
+        // Create default value for destination marker--'map.center' is
         // currently hardcoded to the center of SF in the google-maps-react module.
         // This will only update if the map is dragged.
         const destinationMarker = (
@@ -173,7 +172,7 @@ class App extends Component {
         <div className="map-container" style={mapContainerStyle}>
           <Map
             className="map"
-            google={this.props.google} // this.props.google is given by the google-maps-react module
+            google={this.props.google} // eslint-disable-line
             onReady={this.setDefaultMarkers}
             onDragend={this.setDestination}
             onClick={this.setDestination}
