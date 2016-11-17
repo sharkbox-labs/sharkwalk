@@ -1,1 +1,3 @@
 MONGO_URL=mongodb://localhost/jellywave
+SF_CRIME_APP_TOKEN=<YOUR TOKEN>
+SF_CRIME_SECRET=<YOUR SECRET>
