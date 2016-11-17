@@ -36,13 +36,13 @@ const decodePolylines = (polylines) => {
 };
 
 const threshold = 0.05;
-// sets threshold to be 50m (0.1 kilometers)
+// sets threshold to be 50m (0.05 kilometers)
+
+// convert google LatLongs into geoJSON coordinates ([Long, Lat])
 
 // checks distance between coords
 // returns true if distance is less than threshold
 // returns false if distance is more than threshold
-
-// convert google LatLongs into geoJSON coordinates ([Long, Lat])
 
 const convertLatLongs = LatLong => [LatLong[1], LatLong[0]];
 
