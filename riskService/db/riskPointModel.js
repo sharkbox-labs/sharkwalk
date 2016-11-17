@@ -19,5 +19,7 @@ const riskPointSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+riskPointSchema.index({ location: '2dsphere' }); // enable geo-queries
+
 // eslint-disable-next-line new-cap
 module.exports = mongoose.model('RiskPoint', riskPointSchema);
