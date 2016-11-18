@@ -1,56 +1,13 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
+import utils from '../utils/utils';
 
 class Direction extends Component {
   // // This function is only for displaying a direction during development
   // // Remove before production
   componentWillMount() {
     const googleMaps = this.props.google.maps; // eslint-disable-line
-
-    // Transforms normal lat/lng object into a google maps object
-    // that is required for rendering a route.
-    const asLatLng = latLngObject => (
-      new googleMaps.LatLng(latLngObject.lat, latLngObject.lng)
-    );
-
-    const asBounds = boundsObject => (
-      new googleMaps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast))
-    );
-
-    const asPath = encodedPolyObject => (
-      googleMaps.geometry.encoding.decodePath(encodedPolyObject.points)
-    );
-
-    const typecastRoutes = routes => (
-      routes.map((route) => {
-        const transformedRoute = {};
-
-        transformedRoute.bounds = asBounds(route.bounds);
-
-        transformedRoute.overview_path = asPath(route.overview_polyline);
-
-        transformedRoute.legs = route.legs.map((leg) => {
-          const transformedLeg = {};
-          transformedLeg.start_location = asLatLng(leg.start_location);
-          transformedLeg.end_location = asLatLng(leg.end_location);
-
-
-          transformedLeg.steps = leg.steps.map((step) => {
-            const transformedStep = {};
-            transformedStep.start_location = asLatLng(step.start_location);
-            transformedStep.end_location = asLatLng(step.end_location);
-            transformedStep.path = asPath(step.polyline);
-            return transformedStep;
-          });
-
-          return transformedLeg;
-        });
-
-        return transformedRoute;
-      })
-    );
-
 
     const renderer = new googleMaps.DirectionsRenderer();
 
@@ -60,7 +17,7 @@ class Direction extends Component {
 
       renderer.setOptions({
         directions: {
-          routes: typecastRoutes(response.routes),
+          routes: utils.typecastRoutes(response.routes, googleMaps),
           // "request" is important and not returned by web service it's an
           // object containing "origin", "destination" and "travelMode"
           request,
@@ -71,8 +28,8 @@ class Direction extends Component {
     };
 
     const request = {
-      origin: asLatLng(this.props.origin),
-      destination: asLatLng(this.props.destination),
+      origin: utils.asLatLng(this.props.origin, googleMaps),
+      destination: utils.asLatLng(this.props.destination, googleMaps),
       travelMode: 'WALKING',
     };
     
