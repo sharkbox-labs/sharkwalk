@@ -8,45 +8,41 @@
 */
 
 
-const asLatLng = (latLngObject, mapObject) => {
-  const googleMaps = mapObject;
-  return new googleMaps.LatLng(latLngObject.lat, latLngObject.lng);
+const asLatLng = (latLngObject, googleMapsObject) => {
+  return new googleMapsObject.LatLng(latLngObject.lat, latLngObject.lng);
 };
 
-const asBounds = (boundsObject, mapObject) => {
-  const googleMaps = mapObject;
-  return new googleMaps.LatLngBounds(
-    asLatLng(boundsObject.southwest, googleMaps),
-    asLatLng(boundsObject.northeast, googleMaps),
+const asBounds = (boundsObject, googleMapsObject) => {
+  return new googleMapsObject.LatLngBounds(
+    asLatLng(boundsObject.southwest, googleMapsObject),
+    asLatLng(boundsObject.northeast, googleMapsObject),
     );
 };
 
-const asPath = (encodedPolyObject, mapObject) => {
-  const googleMaps = mapObject;
-  return googleMaps.geometry.encoding.decodePath(encodedPolyObject.points);
+const asPath = (encodedPolyObject, googleMapsObject) => {
+  return googleMapsObject.geometry.encoding.decodePath(encodedPolyObject.points);
 };
 
-const typecastRoutes = (routes, mapObject) => {
-  const googleMaps = mapObject;
+const typecastRoutes = (routes, googleMapsObject) => {
 
   return routes.map((route) => {
     const transformedRoute = {};
 
-    transformedRoute.bounds = asBounds(route.bounds, googleMaps);
-    transformedRoute.overview_path = asPath(route.overview_polyline, googleMaps);
+    transformedRoute.bounds = asBounds(route.bounds, googleMapsObject);
+    transformedRoute.overview_path = asPath(route.overview_polyline, googleMapsObject);
     transformedRoute.legs = route.legs.map((leg) => {
 
       const transformedLeg = {};
 
-      transformedLeg.start_location = asLatLng(leg.start_location, googleMaps);
-      transformedLeg.end_location = asLatLng(leg.end_location, googleMaps);
+      transformedLeg.start_location = asLatLng(leg.start_location, googleMapsObject);
+      transformedLeg.end_location = asLatLng(leg.end_location, googleMapsObject);
       transformedLeg.steps = leg.steps.map((step) => {
 
         const transformedStep = {};
 
-        transformedStep.start_location = asLatLng(step.start_location, googleMaps);
-        transformedStep.end_location = asLatLng(step.end_location, googleMaps);
-        transformedStep.path = asPath(step.polyline, googleMaps);
+        transformedStep.start_location = asLatLng(step.start_location, googleMapsObject);
+        transformedStep.end_location = asLatLng(step.end_location, googleMapsObject);
+        transformedStep.path = asPath(step.polyline, googleMapsObject);
 
         return transformedStep;
       });
