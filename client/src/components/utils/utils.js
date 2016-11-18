@@ -33,26 +33,25 @@ const typecastRoutes = (routes, mapObject) => {
     const transformedRoute = {};
 
     transformedRoute.bounds = asBounds(route.bounds, googleMaps);
-
     transformedRoute.overview_path = asPath(route.overview_polyline, googleMaps);
-
     transformedRoute.legs = route.legs.map((leg) => {
+
       const transformedLeg = {};
+
       transformedLeg.start_location = asLatLng(leg.start_location, googleMaps);
       transformedLeg.end_location = asLatLng(leg.end_location, googleMaps);
-
-
       transformedLeg.steps = leg.steps.map((step) => {
+
         const transformedStep = {};
+
         transformedStep.start_location = asLatLng(step.start_location, googleMaps);
         transformedStep.end_location = asLatLng(step.end_location, googleMaps);
         transformedStep.path = asPath(step.polyline, googleMaps);
+
         return transformedStep;
       });
-
       return transformedLeg;
     });
-
     return transformedRoute;
   });
 };
