@@ -10,38 +10,46 @@ class Direction extends Component {
 
     // Transforms normal lat/lng object into a google maps object
     // that is required for rendering a route.
-    const asLatLng = (latLngObject) => {
-      return new googleMaps.LatLng(latLngObject.lat, latLngObject.lng);
-    };
+    const asLatLng = latLngObject => (
+      new googleMaps.LatLng(latLngObject.lat, latLngObject.lng)
+    );
 
-    const asBounds = (boundsObject) => {
-      return new googleMaps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast));
-    };
+    const asBounds = boundsObject => (
+      new googleMaps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast))
+    );
 
-    const asPath = (encodedPolyObject) => {
-      return googleMaps.geometry.encoding.decodePath(encodedPolyObject.points);
-    };
+    const asPath = encodedPolyObject => (
+      googleMaps.geometry.encoding.decodePath(encodedPolyObject.points)
+    );
 
-    const typecastRoutes = (routes) => {
-      routes.forEach((route) => {
-        route.bounds = asBounds(route.bounds);
+    const typecastRoutes = routes => (
+      routes.map((route) => {
+        const transformedRoute = {};
 
-        // I don't think `overview_path` is used but it exists on the
-        // response of DirectionsService.route()
-        route.overview_path = asPath(route.overview_polyline);
+        transformedRoute.bounds = asBounds(route.bounds);
 
-        route.legs.forEach((leg) => {
-          leg.start_location = asLatLng(leg.start_location);
-          leg.end_location = asLatLng(leg.end_location);
+        transformedRoute.overview_path = asPath(route.overview_polyline);
 
-          leg.steps.forEach((step) => {
-            step.start_location = asLatLng(step.start_location);
-            step.end_location = asLatLng(step.end_location);
-            step.path = asPath(step.polyline);
+        transformedRoute.legs = route.legs.map((leg) => {
+          const transformedLeg = {};
+          transformedLeg.start_location = asLatLng(leg.start_location);
+          transformedLeg.end_location = asLatLng(leg.end_location);
+
+
+          transformedLeg.steps = leg.steps.map((step) => {
+            const transformedStep = {};
+            transformedStep.start_location = asLatLng(step.start_location);
+            transformedStep.end_location = asLatLng(step.end_location);
+            transformedStep.path = asPath(step.polyline);
+            return transformedStep;
           });
+
+          return transformedLeg;
         });
-      });
-    };
+
+        return transformedRoute;
+      })
+    );
 
 
     const renderer = new googleMaps.DirectionsRenderer();
@@ -49,11 +57,10 @@ class Direction extends Component {
     const renderDirections = (map, response, request) => {
       // Reformat the response object from the Google Maps API to
       // fit the criteria for googleMaps.DirectionsRenderer
-      typecastRoutes(response.routes);
 
       renderer.setOptions({
         directions: {
-          routes: response.routes,
+          routes: typecastRoutes(response.routes),
           // "request" is important and not returned by web service it's an
           // object containing "origin", "destination" and "travelMode"
           request,
