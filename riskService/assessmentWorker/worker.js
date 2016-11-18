@@ -15,7 +15,7 @@ require('dotenv').config({ silent: true });
  * an easy GUI to create the object.
  * @return {Promise} Resolves to an array of the created records.
  */
-module.exports = function worker(area) {
+module.exports = function worker(area, keepAlive = false) {
   const batchId = shortid.generate();
   return riskGenerator.generateRiskForArea(area)
   .then((riskPoints) => {
@@ -28,12 +28,12 @@ module.exports = function worker(area) {
   })
   .then((records) => {
     logger.info(`Saved ${records.length} risk points in batch ${batchId}`);
-    db.close();
+    if (!keepAlive) db.close();
     return records;
   })
   .catch((error) => {
     logger.error(`Error '${error.message}' with risk points batch ${batchId}`);
-    db.close();
+    if (!keepAlive) db.close();
     throw error;
   });
 };
