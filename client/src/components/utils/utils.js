@@ -1,5 +1,13 @@
-// Transforms normal lat/lng object into a google maps object
-// that is required for rendering a route.
+/*
+===================================================
+  All of the following functions are used
+  to transform the response object from the server
+  into what is required to have it rendered
+  on the map.
+===================================================
+*/
+
+
 const asLatLng = (latLngObject, mapObject) => {
   const googleMaps = mapObject;
   return new googleMaps.LatLng(latLngObject.lat, latLngObject.lng);
