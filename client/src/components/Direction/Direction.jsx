@@ -8,15 +8,68 @@ class Direction extends Component {
   componentWillMount() {
     const googleMaps = this.props.google.maps; // eslint-disable-line
 
-    const asLatLng = latLngObject => (
-      new googleMaps.LatLng(latLngObject.lat, latLngObject.lng)
-    );
+    // Transforms normal lat/lng object into a google maps object
+    // that is required for rendering a route.
+    const asLatLng = (latLngObject) => {
+      return new googleMaps.LatLng(latLngObject.lat, latLngObject.lng);
+    };
+
+    const asBounds = (boundsObject) => {
+      return new googleMaps.LatLngBounds(asLatLng(boundsObject.southwest), asLatLng(boundsObject.northeast));
+    };
+
+    const asPath = (encodedPolyObject) => {
+      return googleMaps.geometry.encoding.decodePath(encodedPolyObject.points);
+    };
+
+    const typecastRoutes = (routes) => {
+      routes.forEach((route) => {
+        route.bounds = asBounds(route.bounds);
+
+        // I don't think `overview_path` is used but it exists on the
+        // response of DirectionsService.route()
+        route.overview_path = asPath(route.overview_polyline);
+
+        route.legs.forEach((leg) => {
+          leg.start_location = asLatLng(leg.start_location);
+          leg.end_location = asLatLng(leg.end_location);
+
+          leg.steps.forEach((step) => {
+            step.start_location = asLatLng(step.start_location);
+            step.end_location = asLatLng(step.end_location);
+            step.path = asPath(step.polyline);
+          });
+        });
+      });
+    };
+
+
+    const renderer = new googleMaps.DirectionsRenderer();
+
+    const renderDirections = (map, response, request) => {
+      // Reformat the response object from the Google Maps API to
+      // fit the criteria for googleMaps.DirectionsRenderer
+      typecastRoutes(response.routes);
+
+      renderer.setOptions({
+        directions: {
+          routes: response.routes,
+          // "request" is important and not returned by web service it's an
+          // object containing "origin", "destination" and "travelMode"
+          request,
+        },
+        draggable: true,
+        map,
+      });
+    };
 
     const request = {
       origin: asLatLng(this.props.origin),
       destination: asLatLng(this.props.destination),
       travelMode: 'WALKING',
     };
+    
+    renderDirections(this.props.map, this.props.directionsResponse, request);
 
 
   //   // Instantiate Google Services
@@ -80,4 +133,5 @@ Direction.propTypes = {
 
 export default GoogleApiWrapper({
   apiKey: googleApiKey,
+  libraries: ['geometry', 'places'], // eslint-disable-line
 })(Direction);
