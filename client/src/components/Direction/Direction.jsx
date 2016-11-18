@@ -1,49 +1,43 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
+import utils from '../utils/utils';
 
 class Direction extends Component {
-  // // This function is only for displaying a direction during development
-  // // Remove before production
-  // componentWillMount() {
-  //   // Instantiate Google Services
-  //   const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
-  //   const directionsService = new google.maps.DirectionsService(); // eslint-disable-line
-  //   directionsDisplay.setMap(this.props.map);
-
-  //   // Use fake data
-  //   const request = {
-  //     origin: new google.maps.LatLng(37.774929, -122.419416), // eslint-disable-line
-  //     destination: new google.maps.LatLng(37.7837762, -122.4090387), // eslint-disable-line
-  //     travelMode: 'WALKING',
-  //   };
-
-  //   // Request route
-  //   directionsService.route(request, (result, status) => {
-  //     if (status === 'OK') {
-  //       directionsDisplay.setDirections(result);
-  //     }
-  //   });
-  // }
+  componentWillMount() {
+    // Render the directions on the map before the component mounts
+    this.renderDirection(this.props.directionsResponse);
+  }
 
   // When the component updates, call the renderDirection method
   componentDidUpdate(prevProps) {
     if (this.props.directionsResponse !== prevProps.directionsResponse) {
-      this.renderDirection();
+      this.renderDirection(this.props.directionsResponse);
     }
   }
 
   // Uses the Google Maps Directions Renderer to update the map prop with
   // a new direction
-  renderDirection() {
+  renderDirection(response) {
+    // Create request object required to render the directions object on the map
+    const request = {
+      origin: utils.asLatLng(this.props.origin, this.props.google.maps),
+      destination: utils.asLatLng(this.props.destination, this.props.google.maps),
+      travelMode: 'WALKING',
+    };
+
     // Instantiate the Google Maps Directions Renderer
     const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
 
-    // Associate directionsDisplay with the current map
-    directionsDisplay.setMap(this.props.map);
-
-    // set directions to directionsDisplay
-    directionsDisplay.setDirections(this.props.directionsResponse);
+    // Set directions to directionsDisplay
+    directionsDisplay.setOptions({
+      directions: {
+        routes: utils.typecastRoutes(response.routes, this.props.google.maps),
+        request,
+      },
+      draggable: true,
+      map: this.props.map,
+    });
   }
 
   render() {
@@ -53,10 +47,19 @@ class Direction extends Component {
 }
 
 Direction.propTypes = {
-  directionsResponse: React.PropTypes.object, // eslint-disable-line
-  map: React.PropTypes.object, // eslint-disable-line
+  directionsResponse: React.PropTypes.object.isRequired, // eslint-disable-line
+  map: React.PropTypes.object.isRequired, // eslint-disable-line
+  origin: React.PropTypes.shape({
+    lat: React.PropTypes.number,
+    lng: React.PropTypes.number,
+  }).isRequired,
+  destination: React.PropTypes.shape({
+    lat: React.PropTypes.number,
+    lng: React.PropTypes.number,
+  }).isRequired,
 };
 
 export default GoogleApiWrapper({
   apiKey: googleApiKey,
+  libraries: ['geometry', 'places'], // eslint-disable-line
 })(Direction);
