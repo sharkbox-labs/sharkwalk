@@ -1,19 +1,11 @@
 const expect = require('chai').expect;
 const turf = require('@turf/turf');
-const sfRequest = require('../assessmentWorker/sanFranciscoDataConnector').request;
-const MockAdapter = require('axios-mock-adapter');
 const riskGenerator = require('../assessmentWorker/riskGenerator');
 const hrReports = require('./crimeReports/hackReactorReports');
 const bhReports = require('./crimeReports/bernalHeightsReports');
-const ctReports = require('./crimeReports/chinatownReports');
+const specHelpers = require('./specHelpers');
 
-let mock;
-
-const mockChinatown = function mockChinatown() {
-  mock = new MockAdapter(sfRequest);
-  mock.onGet('https://data.sfgov.org/resource/cuks-n6tp.json')
-    .reply(200, ctReports);
-};
+const mock = specHelpers.mockChinatown();
 
 /* eslint-disable no-unused-expressions, arrow-body-style */
 
@@ -104,7 +96,7 @@ describe('Generating risk', () => {
 
   describe('Generating risk for an area', () => {
     before(() => {
-      mockChinatown();
+      specHelpers.mockChinatown();
     });
     after(() => {
       mock.restore();

@@ -1,41 +1,34 @@
 process.env.MONGO_URL = 'mongodb://localhost/jellywave-test';
-
-const expect = require('chai').expect;
 const turf = require('@turf/turf');
-const RiskPoint = require('../db/riskPointModel');
+const expect = require('chai').expect;
+const specHelpers = require('./specHelpers');
+
 const riskPointController = require('../db/riskPointController');
 
 require('../db/connection');
 
 /* eslint-disable no-unused-expressions, arrow-body-style */
 
-const getRandom = (min, max) => (Math.random() * (max - min)) + min;
-
-const generateRandomLocation = () =>
-  turf.point([getRandom(-122.49, -122.38), getRandom(37.716, 37.788)]).geometry;
-
-const clearRiskPoints = function clearRiskPoints(done) {
-  RiskPoint.remove({}).then(() => done());
-};
+const randomLocation = specHelpers.generateRandomLocation();
 
 const points = [
   {
     risk: 10,
-    location: generateRandomLocation(),
+    location: randomLocation,
   },
   {
     risk: 20,
-    location: generateRandomLocation(),
+    location: specHelpers.generateRandomLocation(),
   },
   {
     risk: 30,
-    location: generateRandomLocation(),
+    location: specHelpers.generateRandomLocation(),
   },
 ];
 
 describe('Risk points', () => {
   describe('Creating risk points', () => {
-    beforeEach(done => clearRiskPoints(done));
+    beforeEach(done => specHelpers.clearRiskPoints(done));
     it('should throw an error with a malformed point', () => {
       return riskPointController.createRiskPoint(45, [-150, 45], 'test')
         .catch((error) => {
@@ -44,7 +37,7 @@ describe('Risk points', () => {
     });
 
     it('should create a risk point', () => {
-      return riskPointController.createRiskPoint(66, generateRandomLocation(), 'test')
+      return riskPointController.createRiskPoint(66, specHelpers.generateRandomLocation(), 'test')
         .then((riskPoint) => {
           expect(riskPoint).to.exist;
           expect(riskPoint.risk).to.equal(66);
@@ -69,7 +62,7 @@ describe('Risk points', () => {
   });
 
   describe('Retrieving risk points', () => {
-    before(done => clearRiskPoints(done));
+    before(done => specHelpers.clearRiskPoints(done));
     before((done) => {
       riskPointController.createRiskPoints(points, 'batchTest')
         .then(() => done());
@@ -83,6 +76,16 @@ describe('Risk points', () => {
         })
         .catch((error) => {
           expect(error).to.not.exist;
+        });
+    });
+
+    it('should retrieve risk points by location from a GeoJSON point', () => {
+      // generate a point near the 'random location'
+      const offsetPoint = turf.destination(randomLocation, 0.004, 45, 'kilometers');
+      return riskPointController.findRiskPointsNear(offsetPoint.geometry, 100)
+        .then((nearPoints) => {
+          expect(nearPoints).to.be.an('Array');
+          turf.geojsonType(nearPoints[0].location, 'Point', 'Retrieve points by location test');
         });
     });
   });
