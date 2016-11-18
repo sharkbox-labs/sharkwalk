@@ -9,7 +9,7 @@ class Direction extends Component {
     this.renderDirection(this.props.directionsResponse);
   }
 
-  // When the component updates, call the renderDirection method
+  // When the component updates, if the props have changed call the renderDirection method
   componentDidUpdate(prevProps) {
     if (this.props.directionsResponse !== prevProps.directionsResponse) {
       this.renderDirection(this.props.directionsResponse);
