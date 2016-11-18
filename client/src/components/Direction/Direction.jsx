@@ -21,15 +21,15 @@ class Direction extends Component {
   renderDirection(response) {
     // Create request object required to render the directions object on the map
     const request = {
-      origin: utils.transformLatLng(this.props.origin, this.props.google.maps),
-      destination: utils.transformLatLng(this.props.destination, this.props.google.maps),
+      origin: utils.transformLatLng(this.props.origin, this.props.google.maps), // eslint-disable-line
+      destination: utils.transformLatLng(this.props.destination, this.props.google.maps), // eslint-disable-line
       travelMode: 'WALKING',
     };
 
     // Set directions to directionsDisplay
     this.props.directionsDisplay.setOptions({
       directions: {
-        routes: utils.transformRoutes(response.routes, this.props.google.maps),
+        routes: utils.transformRoutes(response.routes, this.props.google.maps), // eslint-disable-line
         request,
       },
       draggable: true,
