@@ -1,43 +1,43 @@
-/*
-===================================================
-  All of the following functions are used
-  to transform the response object from the server
-  into what is required to have it rendered
-  on the map.
-===================================================
-*/
+// Transforms an object containing lat/lng properties into
+// a LatLng object that is required by Google's
+// web service directions renderer
+const asLatLng = (latLngObject, googleMapsObject) => (
+  new googleMapsObject.LatLng(latLngObject.lat, latLngObject.lng)
+);
 
-
-const asLatLng = (latLngObject, googleMapsObject) => {
-  return new googleMapsObject.LatLng(latLngObject.lat, latLngObject.lng);
-};
-
-const asBounds = (boundsObject, googleMapsObject) => {
-  return new googleMapsObject.LatLngBounds(
+// Construct a 'bounds' object to be used by
+// Google's web service directions renderer
+const asBounds = (boundsObject, googleMapsObject) => (
+  new googleMapsObject.LatLngBounds(
+    // Utilize the asLatLng function above to transform
+    // the 'southwest' and 'northeast' properties into
+    // LatLng objects
     asLatLng(boundsObject.southwest, googleMapsObject),
     asLatLng(boundsObject.northeast, googleMapsObject),
-    );
-};
+    )
+);
 
-const asPath = (encodedPolyObject, googleMapsObject) => {
-  return googleMapsObject.geometry.encoding.decodePath(encodedPolyObject.points);
-};
+// Utilizes the geometry library from the Google Maps API to
+// decode an encoded polyline into a sequence of LatLngs
+const asPath = (encodedPolyObject, googleMapsObject) => (
+  googleMapsObject.geometry.encoding.decodePath(encodedPolyObject.points)
+);
 
-const typecastRoutes = (routes, googleMapsObject) => {
-
-  return routes.map((route) => {
+// Utilizes the functions above to transform the route object
+// received from the Google Maps API into what is required by
+// Google's web service directions renderer
+const typecastRoutes = (routes, googleMapsObject) => (
+  routes.map((route) => {
     const transformedRoute = {};
 
     transformedRoute.bounds = asBounds(route.bounds, googleMapsObject);
     transformedRoute.overview_path = asPath(route.overview_polyline, googleMapsObject);
     transformedRoute.legs = route.legs.map((leg) => {
-
       const transformedLeg = {};
 
       transformedLeg.start_location = asLatLng(leg.start_location, googleMapsObject);
       transformedLeg.end_location = asLatLng(leg.end_location, googleMapsObject);
       transformedLeg.steps = leg.steps.map((step) => {
-
         const transformedStep = {};
 
         transformedStep.start_location = asLatLng(step.start_location, googleMapsObject);
@@ -49,8 +49,8 @@ const typecastRoutes = (routes, googleMapsObject) => {
       return transformedLeg;
     });
     return transformedRoute;
-  });
-};
+  })
+);
 
 export default {
   asLatLng,
