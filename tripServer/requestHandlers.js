@@ -6,9 +6,8 @@ const APIKEY = process.env.APIKEY;
 
 const requestHandler = (request, response) => {
   // define origin and destination from request parameters
-  // hard coded locations for now
-  const origin = '37.783669,-122.40895';
-  const destination = '37.781256,-122.405955';
+  const origin = `${request.query.origin.lat.toString()},${request.query.origin.lng.toString()}`;
+  const destination = `${request.query.destination.lat.toString()},${request.query.destination.lng.toString()}`;
   const googleMapsRequestURL = 'https://maps.googleapis.com/maps/api/directions/json?';
   // make call to googleMaps api with origin and destination
   axios.get(googleMapsRequestURL, {
