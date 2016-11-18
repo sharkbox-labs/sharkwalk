@@ -43,11 +43,32 @@ const createRiskPoints = function createRiskPoints(points, batchId) {
 const findRiskPointsByBatchId = function findRiskPointsByBatchId(batchId) {
   return RiskPoint.find({
     batchId,
-  });
+  }).exec();
+};
+
+/**
+ * Find risk points near a given point
+ * @param  {GeoJSON Point} point - The point to look around.
+ * @param {number} distance - The max distance (in meters) the risk points
+ * can be from the input `point`.
+ * @return {Promise} A promise which resolves to the risk points near
+ * the `point`.
+ */
+const findRiskPointsNear = function findRiskPointsNear(point, distance = 100) {
+  return RiskPoint.find({
+    location: {
+      $near: {
+        $geometry: point,
+        $maxDistance: distance,
+        $minDistance: 0,
+      },
+    },
+  }).exec();
 };
 
 module.exports = {
   createRiskPoint,
   createRiskPoints,
   findRiskPointsByBatchId,
+  findRiskPointsNear,
 };
