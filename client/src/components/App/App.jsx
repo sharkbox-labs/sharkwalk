@@ -203,4 +203,5 @@ class App extends Component {
 
 export default GoogleApiWrapper({
   apiKey: googleApiKey,
+  libraries: ['geometry', 'places'], // eslint-disable-line
 })(App);
