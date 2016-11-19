@@ -1,6 +1,10 @@
 const polyline = require('polyline');
 const turf = require('turf');
 
+// The following functions convert the directioss object recieved from the googleMaps API into
+// an array of coordinates along the path.
+// The array of coordinates are separated by a prescribed threshold.
+
 // note: it is purposeful that we are not using the directionsObj's  overview_polyline
 // as this is only an approximation of the resulting directions (per the docs)
 
@@ -86,6 +90,7 @@ const insertCoordinate = (pairOne, pairTwo, distance) => {
 const round = number => Math.round(number * 1000) / 1000;
 
 // generate coordinate path with equidistant segments between points
+// note: the strategy for handling corners along path may need some refining.
 
 const generateEquidistantPath = (coordinates) => {
   // create results array with origin coordinates

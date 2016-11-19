@@ -65,6 +65,9 @@ describe('creation of path with equidistant coordinates', () => {
     it('should return the distance between two coordinates', (done) => {
       const distance = findDistance([37.78343, -122.40914], [37.78348, -122.40881]);
       expect(distance).to.be.a('number');
+      const largerDistance = findDistance([37.78343, -122.40914], [37.78348, -122.40581]);
+      expect(largerDistance).to.be.a('number');
+      expect(largerDistance).to.be.above(distance);
       done();
     });
   });
