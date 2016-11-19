@@ -6,6 +6,7 @@ import qs from 'qs';
 import './App.css';
 import Nav from '../Nav/Nav';
 import Direction from '../Direction/Direction';
+import HeatMap from '../HeatMap/HeatMap';
 import googleApiKey from '../../apiKeys/googleApiKey';
 
 injectTapEventPlugin();
@@ -33,7 +34,7 @@ class App extends Component {
       },
       originMarker: '',
       destinationMarker: '',
-      mapMarkers: [], // [originMarker, destinationMarker]
+      mapElements: [], // [originMarker, destinationMarker]
       directionsDisplay: null,
     };
   }
@@ -77,8 +78,11 @@ class App extends Component {
           />
         );
 
+        const heatMap = (
+          <HeatMap heatMapResponse={response.data.path} />
+        );
         // Call displayDirection to update the current state
-        this.displayDirection(direction);
+        this.displayDirection(direction, heatMap);
       })
       .catch((error) => {
         // handle error
@@ -150,7 +154,7 @@ class App extends Component {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           },
-          mapMarkers: [originMarker],
+          mapElements: [originMarker],
         });
       });
     } else {
@@ -164,12 +168,12 @@ class App extends Component {
   ========
   */
 
-  displayDirection(direction) {
+  displayDirection(direction, heatMap) {
     // Remove center map marker
     this.centerMapPin.className = 'center-map-pin-hide';
     // Set the destination marker and the direction on the map permanently
     this.setState({
-      mapMarkers: [this.state.originMarker, this.state.destinationMarker, direction],
+      mapElements: [this.state.originMarker, this.state.destinationMarker, direction, heatMap],
     });
   }
 
@@ -204,7 +208,7 @@ class App extends Component {
               role="presentation"
               src="default-marker.png"
             />
-            {this.state.mapMarkers}
+            {this.state.mapElements}
           </Map>
         </div>
       </div>
@@ -214,5 +218,5 @@ class App extends Component {
 
 export default GoogleApiWrapper({
   apiKey: googleApiKey,
-  libraries: ['geometry', 'places'], // eslint-disable-line
+  libraries: ['geometry', 'places', 'visualization'], // eslint-disable-line
 })(App);
