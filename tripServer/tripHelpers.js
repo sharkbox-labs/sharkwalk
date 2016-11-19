@@ -35,71 +35,10 @@ const decodePolylines = (polylines) => {
   return coords;
 };
 
-// const threshold = 0.05;
-// sets threshold to be 50m (0.05 kilometers)
-
 
 // convert google LatLongs into geoJSON coordinates ([Long, Lat])
 
 const convertLatLongs = LatLong => [LatLong[1], LatLong[0]];
-
-// checks distance between coords
-// returns true if distance is less than threshold
-// returns false if distance is more than threshold
-
-// const checkDistance = (pairOne, pairTwo) => {
-//   const line = {
-//     type: 'Feature',
-//     properties: {},
-//     geometry: {
-//       type: 'LineString',
-//       coordinates: [
-//         convertLatLongs(pairOne),
-//         convertLatLongs(pairTwo),
-//       ],
-//     },
-//   };
-//   const length = turf.lineDistance(line); // default 2nd arg is kilometers
-//   if (length.toFixed(5) > threshold) { // round down to 5 decimal places
-//     return false;
-//   }
-//   return true;
-// };
-
-// const injectCoordinate = (pairOne, pairTwo) => {
-//   const line = {
-//     type: 'Feature',
-//     properties: {},
-//     geometry: {
-//       type: 'LineString',
-//       coordinates: [
-//         [pairOne[1], pairOne[0]],
-//         [pairTwo[1], pairTwo[0]],
-//       ],
-//     },
-//   };
-//   const along = turf.along(line, threshold, 'kilometers');
-//   return convertLatLongs(along.geometry.coordinates);
-// };
-
-// produces array with distance less than threshold.
-// coordinates are not necessarily equidistant
-// const findPointsAlongWay = (coordinates) => {
-//   const result = coordinates.concat(); // deep copy
-//   for (let i = 1; i < result.length; i += 1) {
-//     const current = result[i];
-//     const prev = result[i - 1];
-//     if (!checkDistance(prev, current)) {
-//       // inject point
-//       const injection = injectCoordinate(prev, current);
-//       result.splice(i, 0, injection);
-//     }
-//   }
-//   return result;
-// };
-
-
-// begin work to get equidistant coordinates:
 
 // find distance between two coordinates
 
@@ -203,8 +142,6 @@ const getPath = (directionsObj) => {
 module.exports = {
   retrievePolylines,
   decodePolylines,
-  // checkDistance,
-  // findPointsAlongWay,
   convertLatLongs,
   getPath,
   findDistance,
