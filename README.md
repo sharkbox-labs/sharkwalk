@@ -1,7 +1,7 @@
 # Project Name
 
-> 'Jellywave' is the codename for a safe walk app. The app will
-integrate mapping with crime data to help walkers find a safe path to their destinations.
+> 'Jellywave' is the codename for a safe walk app. The app integrates
+mapping with crime data to help walkers find a safe path to their destinations.
 
 ## Team
 
@@ -21,7 +21,7 @@ integrate mapping with crime data to help walkers find a safe path to their dest
 
 ## Usage
 
-> Safe walk is designed using a service-oriented architecture. To use the app locally for
+Safe walk is designed using a service-oriented architecture. To use the app locally for
 development, [install the dependencies](#installing-dependencies) for each service.
 
 To set up the Risk Assessment service, first ensure the environment variables specified in
@@ -32,7 +32,7 @@ Open Data, as long as the shared quota for requests without a key has not been r
 moment.) Next, in a separate tab, start MongoDB using the `mongod` command.
 To populate the database with crime risk data, run the one-time worker for Downtown San Francisco
 by executing `node riskService/assessmentWorker/workerDowntownSFScript.js`. Lastly, start the
-service witn `node riskService/server.js`.
+service with `node riskService/server.js`.
 
 To set up the Trip service, set the environmental variables in `tripServer/example.env` the same
 way you did with the Risk Assessment service, then run `node tripServer/server.js`.
@@ -42,7 +42,7 @@ From there, build the React client by `cd`ing into the `client` directory and ru
 
 Lastly, `cd` into the `integrationServer` directory and run `npm start`.
 
-The app should now be live at [http://localhost:3000](http://localhost:3000)
+The app will now be live at [http://localhost:3000](http://localhost:3000)
 in your browser! 
 
 ## Requirements
@@ -53,7 +53,8 @@ in your browser!
 
 ### Installing Dependencies
 
-From within **each** folder in the root directory:
+From the root director **and** within `/client`, `/integrationServer`,
+`/riskService`, and `/tripServer`, install NPM module by running:
 
 ```sh
 npm install
