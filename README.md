@@ -1,7 +1,7 @@
 # Project Name
 
-> 'Jellywave' is the codename for a safe walk app. The app will
-integrate mapping with crime data to help walkers find a safe path to their destinations.
+> 'Jellywave' is the codename for a safe walk app. The app integrates
+mapping with crime data to help walkers find a safe path to their destinations.
 
 ## Team
 
@@ -21,10 +21,31 @@ integrate mapping with crime data to help walkers find a safe path to their dest
 
 ## Usage
 
-> Safe walk is designed using a service-oriented architecture. To use the app locally for
-development, [install the dependencies](#installing-dependencies) for each service, then start
-each service using `npm start`. From there, visit [http://localhost:3000](http://localhost:3000)
-in your browser. 
+Safe walk is designed using a service-oriented architecture. To use the app locally for
+development, [install the dependencies](#installing-dependencies) for each service.
+
+To set up the Risk Assessment service, first `cd` into the `/riskService` directory.
+Ensure the environment variables specified in `.example-env` are set in your environment.
+You may do this by manually setting them, or by duplicating `riskService/example.env` to `.env`
+and filling in the values there. (Note the service should still work without an API key for the San Francisco
+Open Data, as long as the shared quota for requests without a key has not been reached for the
+moment. If you don't have an API key, delete `SF_CRIME_APP_TOKEN` and `SF_CRIME_SECRET` from the
+`.env` file.) Next, in a separate tab, start MongoDB using the `mongod` command.
+To populate the database with crime risk data, run the one-time worker for Downtown San Francisco
+by executing `node assessmentWorker/workerDowntownSFScript.js`. Lastly, start the
+service with `npm start`.
+
+To set up the Trip service, open a new tab and `cd` into the `/tripService` directory.
+Set the environment variables in `example.env` the same way you did with the Risk Assessment service,
+then run `npm start`.
+
+From there, build the React client by `cd`ing into the `client` directory and running
+`npm build`.
+
+Lastly, `cd` into the `integrationServer` directory and run `npm start`.
+
+The app will now be live at [http://localhost:3000](http://localhost:3000)
+in your browser! 
 
 ## Requirements
 
@@ -34,11 +55,14 @@ in your browser.
 
 ### Installing Dependencies
 
-From within **each** folder in the root directory:
+Install NPM modules in the **root** directory, then within each service's
+folder (`/integrationServer`, `/riskService`, `/tripService`, and `/client`) by executing:
 
 ```sh
 npm install
 ```
+
+from within each directory.
 
 ### Backlog
 
