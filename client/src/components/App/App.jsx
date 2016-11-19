@@ -34,6 +34,7 @@ class App extends Component {
       originMarker: '',
       destinationMarker: '',
       mapMarkers: [], // [originMarker, destinationMarker]
+      directionsDisplay: null,
     };
   }
 
@@ -44,10 +45,6 @@ class App extends Component {
   */
 
   getDirections() {
-    // displayDirection can be called upon a successful GET request
-    // if we don't want to render a pin until the route is given.
-    this.displayDirection();
-
     const queryObj = {
       origin: this.state.origin,
       destination: this.state.destination,
@@ -57,12 +54,26 @@ class App extends Component {
 
     axios.get(`${this.serverUrl}/api/trip?${queryString}`)
       .then((response) => {
+
+        // Check if directions renderer has already been instantiated
+        if (!this.state.directionsDisplay) {
+          // (Note: This is set in state because the same renderer must be
+          //  used when a new route needs to be rendered on the map. If
+          //  the same renderer is not used, the old route will not be
+          //  removed.)
+          this.setState({
+            directionsDisplay: new this.props.google.maps.DirectionsRenderer()
+          });
+        }
+          
+
         // Build Direction component and pass in the response data
         const direction = (
           <Direction
             directionsResponse={response.data.route}
             origin={this.state.origin}
             destination={this.state.destination}
+            directionsDisplay={this.state.directionsDisplay}
           />
         );
 

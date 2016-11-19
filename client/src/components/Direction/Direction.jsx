@@ -21,18 +21,15 @@ class Direction extends Component {
   renderDirection(response) {
     // Create request object required to render the directions object on the map
     const request = {
-      origin: utils.asLatLng(this.props.origin, this.props.google.maps),
-      destination: utils.asLatLng(this.props.destination, this.props.google.maps),
+      origin: utils.transformLatLng(this.props.origin, this.props.google.maps),
+      destination: utils.transformLatLng(this.props.destination, this.props.google.maps),
       travelMode: 'WALKING',
     };
 
-    // Instantiate the Google Maps Directions Renderer
-    const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
-
     // Set directions to directionsDisplay
-    directionsDisplay.setOptions({
+    this.props.directionsDisplay.setOptions({
       directions: {
-        routes: utils.typecastRoutes(response.routes, this.props.google.maps),
+        routes: utils.transformRoutes(response.routes, this.props.google.maps),
         request,
       },
       draggable: true,
@@ -48,6 +45,7 @@ class Direction extends Component {
 
 Direction.propTypes = {
   directionsResponse: React.PropTypes.object.isRequired, // eslint-disable-line
+  directionsDisplay: React.PropTypes.object.isRequired, // eslint-disable-line
   map: React.PropTypes.object.isRequired, // eslint-disable-line
   origin: React.PropTypes.shape({
     lat: React.PropTypes.number,
