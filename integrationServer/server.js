@@ -15,6 +15,8 @@ app.use('/', express.static(path.join(__dirname, '../client/build')));
 
 app.use('/api', routes);
 
-app.listen(3000, () => console.log('Integration server listening on port: 3000'));
+const port = 3000;
+
+app.listen(port, () => console.log(`Integration server listening on port: ${port}`));
 
 module.exports = app;
