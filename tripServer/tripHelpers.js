@@ -35,18 +35,75 @@ const decodePolylines = (polylines) => {
   return coords;
 };
 
-const threshold = 0.05;
+// const threshold = 0.05;
 // sets threshold to be 50m (0.05 kilometers)
 
+
 // convert google LatLongs into geoJSON coordinates ([Long, Lat])
+
+const convertLatLongs = LatLong => [LatLong[1], LatLong[0]];
 
 // checks distance between coords
 // returns true if distance is less than threshold
 // returns false if distance is more than threshold
 
-const convertLatLongs = LatLong => [LatLong[1], LatLong[0]];
+// const checkDistance = (pairOne, pairTwo) => {
+//   const line = {
+//     type: 'Feature',
+//     properties: {},
+//     geometry: {
+//       type: 'LineString',
+//       coordinates: [
+//         convertLatLongs(pairOne),
+//         convertLatLongs(pairTwo),
+//       ],
+//     },
+//   };
+//   const length = turf.lineDistance(line); // default 2nd arg is kilometers
+//   if (length.toFixed(5) > threshold) { // round down to 5 decimal places
+//     return false;
+//   }
+//   return true;
+// };
 
-const checkDistance = (pairOne, pairTwo) => {
+// const injectCoordinate = (pairOne, pairTwo) => {
+//   const line = {
+//     type: 'Feature',
+//     properties: {},
+//     geometry: {
+//       type: 'LineString',
+//       coordinates: [
+//         [pairOne[1], pairOne[0]],
+//         [pairTwo[1], pairTwo[0]],
+//       ],
+//     },
+//   };
+//   const along = turf.along(line, threshold, 'kilometers');
+//   return convertLatLongs(along.geometry.coordinates);
+// };
+
+// produces array with distance less than threshold.
+// coordinates are not necessarily equidistant
+// const findPointsAlongWay = (coordinates) => {
+//   const result = coordinates.concat(); // deep copy
+//   for (let i = 1; i < result.length; i += 1) {
+//     const current = result[i];
+//     const prev = result[i - 1];
+//     if (!checkDistance(prev, current)) {
+//       // inject point
+//       const injection = injectCoordinate(prev, current);
+//       result.splice(i, 0, injection);
+//     }
+//   }
+//   return result;
+// };
+
+
+// begin work to get equidistant coordinates:
+
+// find distance between two coordinates
+
+const findDistance = (pairOne, pairTwo) => {
   const line = {
     type: 'Feature',
     properties: {},
@@ -59,53 +116,86 @@ const checkDistance = (pairOne, pairTwo) => {
     },
   };
   const length = turf.lineDistance(line); // default 2nd arg is kilometers
-  if (length > threshold) {
-    return false;
-  }
-  return true;
+  return length;
 };
 
-const injectCoordinate = (pairOne, pairTwo) => {
+// CHANGE SEGMENT LENGTH HERE //
+
+const threshold = 0.025; // (25 m threshold)
+
+// generate line between two coordinates
+// find and return point along line at prescribed distance
+
+const insertCoordinate = (pairOne, pairTwo, distance) => {
   const line = {
     type: 'Feature',
     properties: {},
     geometry: {
       type: 'LineString',
       coordinates: [
-        [pairOne[1], pairOne[0]],
-        [pairTwo[1], pairTwo[0]],
+        convertLatLongs(pairOne),
+        convertLatLongs(pairTwo),
       ],
     },
   };
-  const along = turf.along(line, threshold, 'kilometers');
+  const along = turf.along(line, distance, 'kilometers');
   return convertLatLongs(along.geometry.coordinates);
 };
 
-// find PointsAlongWay
-  // for each set of coordinations, check distance with turf.js
-  // if greater than threshold
-  // find point along the way with turf.along
-  // inject this point into array
-  // return array of coordinates
+// round number to three decimal places
 
-const findPointsAlongWay = (coordinates) => {
-  const result = coordinates.splice(0);
-  for (let i = 1; i < result.length; i += 1) {
-    const current = result[i];
-    const prev = result[i - 1];
-    if (!checkDistance(prev, current)) {
-      // inject point
-      const injection = injectCoordinate(prev, current);
-      result.splice(i, 0, injection);
+const round = number => Math.round(number * 1000) / 1000;
+
+// generate coordinate path with equidistant segments between points
+
+const generateEquidistantPath = (coordinates) => {
+  // create results array with origin coordinates
+  const result = [coordinates[0]];
+  // define inner recursive function
+  const recurse = (origin, target, indexOfNextTarget) => {
+    // base case?
+    const segmentLength = findDistance(origin, target);
+    // check if equal
+    if (round(segmentLength) === threshold) { // round segment length to three decimal places
+      // push target coordinates in result array
+      result.push(target);
+      // recurse with target now as the origin
+      return recurse(target, coordinates[indexOfNextTarget], indexOfNextTarget + 1);
     }
-  }
-  return result;
+    // if distance is greater than threshold, we need to inject points
+    if (segmentLength > threshold) {
+      // generate next point
+      const newPoint = insertCoordinate(origin, target, threshold);
+      result.push(newPoint);
+      // recurse, reassigning origin to injected point
+      return recurse(result[result.length - 1], target, indexOfNextTarget);
+    }
+    // // if distance is less than threshold
+    if (segmentLength < threshold) {
+      // if nextTarget does not exist
+      if (!coordinates[indexOfNextTarget]) {
+        return result;
+      }
+      const difference = threshold - segmentLength;  // how much more to move towards next target
+      // start from target, and move difference towards next Target
+      const newPoint = insertCoordinate(target, coordinates[indexOfNextTarget], difference);
+      // insert new point into result
+      result.push(newPoint);
+      // recurse using that new point
+      return recurse(result[result.length - 1], coordinates[indexOfNextTarget],
+        indexOfNextTarget + 1);
+    }
+  };
+  return recurse(result[0], coordinates[1], 2); // origin, target, nextTargets
 };
+
+// getPath input is directions object returned from google maps API
+// output is array of coordinates along walker's path
 
 const getPath = (directionsObj) => {
   const polylines = retrievePolylines(directionsObj);
   const coordinates = decodePolylines(polylines);
-  const path = findPointsAlongWay(coordinates);
+  const path = generateEquidistantPath(coordinates);
   return path;
 };
 
@@ -113,8 +203,11 @@ const getPath = (directionsObj) => {
 module.exports = {
   retrievePolylines,
   decodePolylines,
-  checkDistance,
-  findPointsAlongWay,
+  // checkDistance,
+  // findPointsAlongWay,
   convertLatLongs,
   getPath,
+  findDistance,
+  generateEquidistantPath,
+  threshold,
 };
