@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
-import utils from '../utils/utils';
+import utils from '../utils/routeObjectHelpers';
 
 class Direction extends Component {
   componentWillMount() {
