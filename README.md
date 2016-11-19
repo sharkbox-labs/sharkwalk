@@ -22,9 +22,28 @@ integrate mapping with crime data to help walkers find a safe path to their dest
 ## Usage
 
 > Safe walk is designed using a service-oriented architecture. To use the app locally for
-development, [install the dependencies](#installing-dependencies) for each service, then start
-each service using `npm start`. From there, visit [http://localhost:3000](http://localhost:3000)
-in your browser. 
+development, [install the dependencies](#installing-dependencies) for each service.
+
+To set up the Risk Assessment service, first ensure the environment variables specified in
+`riskService/.example-env` are set in your environment. You may do this by manually setting them,
+or by duplicating `riskService/example.env` to `.env` and filling
+in the values there. (Note the service should still work without an API key for the San Francisco
+Open Data, as long as the shared quota for requests without a key has not been reached for the
+moment.) Next, in a separate tab, start MongoDB using the `mongod` command.
+To populate the database with crime risk data, run the one-time worker for Downtown San Francisco
+by executing `node riskService/assessmentWorker/workerDowntownSFScript.js`. Lastly, start the
+service witn `node riskService/server.js`.
+
+To set up the Trip service, set the environmental variables in `tripServer/example.env` the same
+way you did with the Risk Assessment service, then run `node tripServer/server.js`.
+
+From there, build the React client by `cd`ing into the `client` directory and running
+`npm build`.
+
+Lastly, `cd` into the `integrationServer` directory and run `npm start`.
+
+The app should now be live at [http://localhost:3000](http://localhost:3000)
+in your browser! 
 
 ## Requirements
 
