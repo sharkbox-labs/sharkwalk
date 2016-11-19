@@ -56,7 +56,7 @@ in your browser!
 ### Installing Dependencies
 
 Install NPM modules from the root directory, then within each service's
-folder ('/integrationServer', '/riskService', '/tripService', and `/client`) by executing:
+folder (`/integrationServer`, `/riskService`, `/tripService`, and `/client`) by executing:
 
 ```sh
 npm install
