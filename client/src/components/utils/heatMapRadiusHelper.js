@@ -37,7 +37,7 @@ const getNewRadius = (map, google, TILE_SIZE) => {
     };
   }
 
-  const desiredRadiusPerPointInMeters = 50;
+  const desiredRadiusPerPointInMeters = 20;
   const numTiles = 1 << map.getZoom(); // eslint-disable-line
   const center = map.getCenter();
   // 1000 meters to the right

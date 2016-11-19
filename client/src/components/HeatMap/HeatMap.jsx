@@ -39,11 +39,15 @@ class HeatMap extends Component {
     }));
 
     // Instantiate the Google Maps Visualization Heat Map Layer with the data and radius
-    const heatmap = new google.maps.visualization.HeatmapLayer({ // eslint-disable-line
-      data: points,
-      radius: getNewRadius(this.props.map, google, 256), // eslint-disable-line
-      // radius: 25,
-    });
+    // const heatmap = new google.maps.visualization.HeatmapLayer({ // eslint-disable-line
+    //   data: points,
+    //   radius: getNewRadius(this.props.map, google, 256), // eslint-disable-line
+    //   // radius: 25,
+    // });
+    const heatmap = this.props.heatMapDisplay;
+
+    // Associate the Heat Map with the current data
+    heatmap.setData(points);
 
     // Associate the Heat Map with the current map
     heatmap.setMap(this.props.map);
@@ -62,6 +66,7 @@ class HeatMap extends Component {
 
 HeatMap.propTypes = {
   heatMapResponse: React.PropTypes.array, // eslint-disable-line
+  heatMapDisplay: React.PropTypes.object.isRequired, // eslint-disable-line
   map: React.PropTypes.object, // eslint-disable-line
 };
 
