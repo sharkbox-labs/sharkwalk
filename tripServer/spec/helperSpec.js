@@ -1,16 +1,19 @@
 const expect = require('chai').expect;
-const turf = require('turf');
+// const turf = require('turf');
 const helpers = require('../tripHelpers.js');
 
 const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
-const checkDistance = helpers.checkDistance;
-const findPointsAlongWay = helpers.findPointsAlongWay;
 const convertLatLongs = helpers.convertLatLongs;
 const exampleDirectionsObject = require('./specData.js');
 
+const findDistance = helpers.findDistance;
+const generateEquidistantPath = helpers.generateEquidistantPath;
+const threshold = helpers.threshold;
+
 const polylines = retrievePolylines(exampleDirectionsObject);
 const coords = decodePolylines(polylines);
+const result = generateEquidistantPath(coords);
 
 describe('geoJSON helpers', () => {
   describe('#retrievePolylines', () => {
@@ -54,49 +57,44 @@ describe('geoJSON helpers', () => {
       done();
     });
   });
-  describe('#checkDistance', () => {
-    it('should return true if distance is less than threshold', (done) => {
-      const result = checkDistance([37.78343, -122.40914], [37.78348, -122.40881]);
-      expect(result).to.be.a('boolean');
-      expect(result).to.equal(true);
-      done();
-    });
-    it('should return false if distance is greater than threshold', (done) => {
-      const result = checkDistance([37.78343, -122.40914], [37.78348, -122.50881]);
-      expect(result).to.equal(false);
+});
+
+
+describe('creation of path with equidistant coordinates', () => {
+  describe('#findDistance', () => {
+    it('should return the distance between two coordinates', (done) => {
+      const distance = findDistance([37.78343, -122.40914], [37.78348, -122.40881]);
+      expect(distance).to.be.a('number');
       done();
     });
   });
-  describe('#findPointsAlongWay', () => {
-    it('should inject points along the way', (done) => {
-      const result = findPointsAlongWay(coords);
-      expect(result.length).to.be.above(coords.length);
-      // const pair = [[-122.40799, 37.78392], [-122.40758402669043, 37.78360516397757]];
-      const pair = [result[0], result[1]];
-      const line = {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: pair,
-        },
-      };
-      const distance = turf.lineDistance(line);
-      expect(distance).to.be.below(0.05);
+  describe('#generateEquidistantPath', () => {
+    it('should inject points equidstant apart', (done) => {
+      // console.log('coords', coords);
+      // const result = generateEquidistantPath(coords);
+      // console.log('result', result);
+      const originalLength = coords.length;
+      const newLength = result.length;
+      expect(originalLength).to.not.equal(newLength);
+      // const pair = convertLatLongs(result[0]);
+      // const distance = findDistance(pair);
+      // expect(distance).to.equal(0.025);
       done();
     });
-    it('should produce an array with segments of distance less than defined threshold', (done) => {
-      const result = findPointsAlongWay(coords);
-      let distanceLargerThanThreshold = false;
-      for (let i = 1; i < result.length; i += 1) {
-        const current = result[i];
-        const prev = result[i - 1];
-        if (!checkDistance(prev, current)) {
-          distanceLargerThanThreshold = true;
-        }
-      }
-      expect(distanceLargerThanThreshold).to.equal(false);
+    it('should produce an array with segments of distance equal to the defined threshold', (done) => {
+      // const result = generateEquidistantPath(coords);
+      // in order to check for ~equality~, must round number to three decimal places
+      // using helper function 'round':
+      const round = number => Math.round(number * 1000) / 1000;
+      // not testing entire array because of the way we handled corners...
+      // TO DO: write test that checks entire array
+      const pairOne = result[0];
+      const pairTwo = result[1];
+      const distance = findDistance(pairOne, pairTwo);
+      // due to rounding, distance will be slightly below threshold
+      expect(round(distance)).to.be.below(threshold);
       done();
     });
   });
 });
+
