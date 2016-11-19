@@ -69,20 +69,20 @@ describe('creation of path with equidistant coordinates', () => {
     });
   });
   describe('#generateEquidistantPath', () => {
+    it('should not modify origin of route', (done) => {
+      const originalOrigin = coords[0];
+      const newOrigin = result[0];
+      expect(originalOrigin[0]).to.equal(newOrigin[0]);
+      expect(originalOrigin[1]).to.equal(newOrigin[1]);
+      done();
+    });
     it('should inject points equidstant apart', (done) => {
-      // console.log('coords', coords);
-      // const result = generateEquidistantPath(coords);
-      // console.log('result', result);
       const originalLength = coords.length;
       const newLength = result.length;
       expect(originalLength).to.not.equal(newLength);
-      // const pair = convertLatLongs(result[0]);
-      // const distance = findDistance(pair);
-      // expect(distance).to.equal(0.025);
       done();
     });
     it('should produce an array with segments of distance equal to the defined threshold', (done) => {
-      // const result = generateEquidistantPath(coords);
       // in order to check for ~equality~, must round number to three decimal places
       // using helper function 'round':
       const round = number => Math.round(number * 1000) / 1000;
