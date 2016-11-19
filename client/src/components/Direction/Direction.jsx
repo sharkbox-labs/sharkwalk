@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
-import utils from '../utils/utils';
+import utils from '../utils/routeObjectHelpers';
 
 class Direction extends Component {
   componentWillMount() {
@@ -9,7 +9,7 @@ class Direction extends Component {
     this.renderDirection(this.props.directionsResponse);
   }
 
-  // When the component updates, call the renderDirection method
+  // When the component updates, if the props have changed call the renderDirection method
   componentDidUpdate(prevProps) {
     if (this.props.directionsResponse !== prevProps.directionsResponse) {
       this.renderDirection(this.props.directionsResponse);
@@ -21,15 +21,15 @@ class Direction extends Component {
   renderDirection(response) {
     // Create request object required to render the directions object on the map
     const request = {
-      origin: utils.transformLatLng(this.props.origin, this.props.google.maps),
-      destination: utils.transformLatLng(this.props.destination, this.props.google.maps),
+      origin: utils.transformLatLng(this.props.origin, this.props.google.maps), // eslint-disable-line
+      destination: utils.transformLatLng(this.props.destination, this.props.google.maps), // eslint-disable-line
       travelMode: 'WALKING',
     };
 
     // Set directions to directionsDisplay
     this.props.directionsDisplay.setOptions({
       directions: {
-        routes: utils.transformRoutes(response.routes, this.props.google.maps),
+        routes: utils.transformRoutes(response.routes, this.props.google.maps), // eslint-disable-line
         request,
       },
       draggable: true,
