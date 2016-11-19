@@ -3,12 +3,22 @@ const expect = require('chai').expect;
 const app = require('../server');
 
 // temporary empty query
-const testQuery = {};
+const testQuery = {
+  origin: {
+    lat: 37.7836415,
+    lng: -122.409185,
+  },
+  destination: {
+    lat: 37.7811631,
+    lng: -122.406077,
+  },
+};
 
 describe('Trip Server:', () => {
   it('should respond with a 200 status code', (done) => {
     request(app)
       .get('/trip')
+      .query(testQuery)
       .expect(200, done);
   });
   it('should have property "path" in the response body', (done) => {
