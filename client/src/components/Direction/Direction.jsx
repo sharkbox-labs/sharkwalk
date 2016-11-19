@@ -26,11 +26,8 @@ class Direction extends Component {
       travelMode: 'WALKING',
     };
 
-    // Instantiate the Google Maps Directions Renderer
-    const directionsDisplay = new google.maps.DirectionsRenderer(); // eslint-disable-line
-
     // Set directions to directionsDisplay
-    directionsDisplay.setOptions({
+    this.props.directionsDisplay.setOptions({
       directions: {
         routes: utils.typecastRoutes(response.routes, this.props.google.maps),
         request,
