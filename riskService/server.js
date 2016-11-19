@@ -1,10 +1,15 @@
+require('dotenv').config({
+  silent: true,
+  path: './.env',
+});
+
 const express = require('express');
 const morgan = require('morgan');
 const requestHandlers = require('./requestHandlers.js');
 const logger = require('./logger');
 const bodyParser = require('body-parser');
 
-require('dotenv').config({ silent: true });
+require('./db/connection');
 
 const app = express();
 app.use(morgan('dev'));
@@ -33,8 +38,8 @@ app.use(bodyParser.json());
  */
 app.post('/risk', requestHandlers.getRisk);
 
-const port = 3001;
+const port = 3002;
 
-app.listen(port, () => logger.info(`Risk service listening on ${3001}`));
+app.listen(port, () => logger.info(`Risk service listening on ${port}`));
 
 module.exports = app;
