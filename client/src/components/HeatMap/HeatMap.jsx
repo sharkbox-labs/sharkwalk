@@ -5,20 +5,7 @@ import googleApiKey from '../../apiKeys/googleApiKey';
 import getNewRadius from '../utils/heatMapRadiusHelper';
 
 class HeatMap extends Component {
-  // // This function is only for displaying a direction during development
-  // // Remove before production
   componentWillMount() {
-    // const points = heatmapData2.map(point => (
-    //   {
-    //     location: new google.maps.LatLng(point.location[0], point.location[1]), // eslint-disable-line
-    //     weight: point.weight,
-    //   }
-    // ));
-
-    // const heatmap = new google.maps.visualization.HeatmapLayer({ data: points, radius: 25, }); // eslint-disable-line
-
-    // heatmap.setMap(this.props.map);
-
     this.renderHeatMap();
   }
 
@@ -38,18 +25,10 @@ class HeatMap extends Component {
       weight: 0,
     }));
 
-    // Instantiate the Google Maps Visualization Heat Map Layer with the data and radius
-    // const heatmap = new google.maps.visualization.HeatmapLayer({ // eslint-disable-line
-    //   data: points,
-    //   radius: getNewRadius(this.props.map, google, 256), // eslint-disable-line
-    //   // radius: 25,
-    // });
     const heatmap = this.props.heatMapDisplay;
 
-    // Associate the Heat Map with the current data
+    // Associate the Heat Map with the current data and current map
     heatmap.setData(points);
-
-    // Associate the Heat Map with the current map
     heatmap.setMap(this.props.map);
 
     // Add listener
@@ -65,7 +44,7 @@ class HeatMap extends Component {
 }
 
 HeatMap.propTypes = {
-  heatMapResponse: React.PropTypes.array, // eslint-disable-line
+  heatMapResponse: React.PropTypes.array.isRequired, // eslint-disable-line
   heatMapDisplay: React.PropTypes.object.isRequired, // eslint-disable-line
   map: React.PropTypes.object, // eslint-disable-line
 };

@@ -1,5 +1,5 @@
 const getNewRadius = (map, google, TILE_SIZE) => {
-  function MercatorProjection(center, moved) {
+  function mercatorProjection(center, moved) {
     const pixelOrigin = new google.maps.Point(TILE_SIZE / 2, TILE_SIZE / 2);
     const pixelsPerLonDegree = TILE_SIZE / 360;
     const pixelsPerLonRadian = TILE_SIZE / (2 * Math.PI);
@@ -42,7 +42,7 @@ const getNewRadius = (map, google, TILE_SIZE) => {
   const center = map.getCenter();
   // 1000 meters to the right
   const moved = google.maps.geometry.spherical.computeOffset(center, 10000, 90);
-  const projection = MercatorProjection(center, moved);
+  const projection = mercatorProjection(center, moved);
   const initCoord = projection.initCoord;
   const endCoord = projection.endCoord;
   const initPoint = new google.maps.Point(
