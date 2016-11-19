@@ -11,26 +11,35 @@ const requestHandler = (request, response) => {
   // Send query to trip server
   axios.get(`${tripServerUrl}/trip?${queryObj}`)
     .then((tripResponse) => {
-      response.status(200).json(tripResponse.data);
+      // Pass response from trip server to risk server
+      axios.post(`${riskServerUrl}/risk`, {
+        point: tripResponse.data.path,
+      })
+        .then((riskResponse) => {
+          const routeObj = tripResponse.data;
 
-      // ====UNCOMMENT ONCE RISK SERVER IS COMPLETE=====
+          const riskPoints = riskResponse.data.risk;
 
-      // const routeObj = qs.stringify(tripResponse.data);
-      // // Pass response from trip server to risk server
-      // axios.get(`${riskServerUrl}/risk?${routeObj}`)
-      //   .then((riskResponse) => {
-      //     // Send fully decorated object back to client
-      //     response.status(200).json(riskResponse.data);
-      //   })
-      //   .catch((error) => {
-      //     response.status(502).json({
-      //       error: {
-      //         message: 'Failed to retrieve risk rating from risk server',
-      //       },
-      //     });
-      //   });
+          // Assign risk points received from risk server to each
+          // lat/lng point along the route
+          routeObj.path.forEach((coord, index) => {
+            coord.push(riskPoints[index]);
+          });
+
+          // Send route object with associated risks back to client
+          response.status(200).json(routeObj);
+        })
+        .catch((error) => {
+          console.log(error);
+          response.status(502).json({
+            error: {
+              message: 'Failed to retrieve risk rating from risk server',
+            },
+          });
+        });
     })
     .catch((error) => {
+      console.log(error);
       response.status(502).json({
         error: {
           message: 'Failed to retrieve directions from trip server',
