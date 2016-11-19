@@ -1,10 +1,11 @@
+require('dotenv').config({ silent: false });
+
 const shortid = require('shortid');
 const logger = require('../logger');
 const riskGenerator = require('./riskGenerator');
 const riskPointController = require('../db/riskPointController');
 const db = require('../db/connection');
 
-require('dotenv').config({ silent: true });
 
 /**
  * Takes an area and generates the risk points within that area, saving the
