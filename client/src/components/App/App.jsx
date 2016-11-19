@@ -55,7 +55,6 @@ class App extends Component {
 
     axios.get(`${this.serverUrl}/api/trip?${queryString}`)
       .then((response) => {
-
         // Check if directions renderer has already been instantiated
         if (!this.state.directionsDisplay) {
           // (Note: This is set in state because the same renderer must be
@@ -66,7 +65,6 @@ class App extends Component {
             directionsDisplay: new this.props.google.maps.DirectionsRenderer()
           });
         }
-          
 
         // Build Direction component and pass in the response data
         const direction = (
