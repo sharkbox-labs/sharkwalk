@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.15.2",
     "chai": "^3.5.0",
+    "colorcolor": "^1.1.1",
     "enzyme": "^2.6.0",
     "google-maps-react": "^1.0.19",
     "material-ui": "^0.16.1",
