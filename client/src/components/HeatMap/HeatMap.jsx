@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { GoogleApiWrapper } from 'google-maps-react';
 import googleApiKey from '../../apiKeys/googleApiKey';
-// import heatmapData2 from './heatmapsampledata';
 import getNewRadius from '../utils/heatMapRadiusHelper';
 
 class HeatMap extends Component {
@@ -21,8 +20,7 @@ class HeatMap extends Component {
     // Reformat heatMapResponse to the format required by Google Maps
     const points = this.props.heatMapResponse.map(point => ({
       location: new google.maps.LatLng(point[0], point[1]), // eslint-disable-line
-      // weight: point.weight,
-      weight: 0,
+      weight: point[2],
     }));
 
     const heatmap = this.props.heatMapDisplay;
