@@ -22,7 +22,26 @@ const pointsArray = specHelpers.pointsNear(woowooPoint, 5);
 describe('Risk Service API', () => {
   before(done => specHelpers.populateDatabaseWithChinatown(done));
   after(done => specHelpers.clearRiskPoints(done));
-  describe('POST /risk | Finding risk for points', () => {
+  describe('POST /path | Finding risk for paths', () => {
+    it('should get risk for a path', (done) => {
+      request(app)
+        .post('/path')
+        .send([{ path: coordsArray }, { path: coordsArray }])
+        .end((error, response) => {
+          expect(error).to.not.exist;
+          expect(response.body.error).to.not.exist;
+          expect(response.body).to.be.an('Array');
+          expect(response.body[0]).to.have.keys(['risks', 'maxRisk', 'averageRisk', 'totalRisk']);
+          expect(response.body[0].risks).to.be.an('Array');
+          expect(response.body[1].maxRisk).to.be.a('number');
+          expect(response.body[0].averageRisk).to.be.a('number');
+          expect(response.body[1].totalRisk).to.be.a('number');
+          done();
+        });
+    });
+  });
+
+  describe('POST /risk | Legacy risk finding enpoint', () => {
     it('should get risk for a single coordinate', (done) => {
       request(app)
         .post('/risk')

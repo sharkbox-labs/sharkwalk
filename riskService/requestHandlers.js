@@ -1,5 +1,6 @@
 const assessor = require('./riskHelpers/riskAssessors');
 const turf = require('@turf/turf');
+const routeProfiler = require('./riskHelpers/routeProfiler');
 
 const decoratePointWithRisk = function decoratePointWithRisk(point) {
   // Assert the point is well-formed
@@ -42,6 +43,28 @@ const getRisk = function getRisk(request, response) {
   }));
 };
 
+const getRiskPath = function getRiskPath(request, response) {
+  const input = request.body;
+  if (!Array.isArray(input)) {
+    return response.status(400).json({
+      error: {
+        message: 'Input must be an array of objects with key path.',
+      },
+    });
+  }
+  const risksPromises = [];
+  input.forEach(route => risksPromises.push(buildRiskPromise(route.path)));
+  return Promise.all(risksPromises)
+    .then(riskArrays => riskArrays.map(risks => routeProfiler.profileRoute(risks)))
+    .then(result => response.status(200).json(result))
+    .catch(e => response.status(400).json({
+      error: {
+        message: e.message,
+      },
+    }));
+};
+
 module.exports = {
   getRisk,
+  getRiskPath,
 };
