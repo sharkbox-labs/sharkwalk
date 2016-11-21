@@ -7,11 +7,11 @@ const app = require('../server');
 const testQuery = {
   origin: {
     lat: 37.7840081,
-    long: -122.406077,
+    lng: -122.406077,
   },
   destination: {
     lat: 37.7811631,
-    long: -122.409185,
+    lng: -122.409185,
   },
 };
 
