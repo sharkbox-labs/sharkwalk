@@ -187,7 +187,7 @@ class App extends Component {
     this.centerMapPin.className = 'center-map-pin-hide';
     // Set the destination marker and the direction on the map permanently
     this.setState({
-      mapElements: [this.state.originMarker, this.state.destinationMarker, direction, heatMap],
+      mapElements: [this.state.destinationMarker, direction, heatMap],
     });
   }
 
