@@ -1,9 +1,6 @@
 const polyline = require('polyline');
 const turf = require('turf');
 
-const exampleData = require('./multipleRouteExample');
-
-
 // The following functions convert the directioss object recieved from the googleMaps API into
 // an array of coordinates along the path.
 // The array of coordinates are separated by a prescribed threshold.
@@ -13,7 +10,6 @@ const exampleData = require('./multipleRouteExample');
 
 // extracts polylines from directions object
 
-// TO DO
 const retrievePolylines = (route) => {
   const polylines = [];
   const steps = route.legs[0].steps;
@@ -201,8 +197,6 @@ const getPath = (directionsObj) => {
   const path = generateEquidistantPath(coordinates);
   return path;
 };
-
-getPaths(exampleData);
 
 module.exports = {
   retrievePolylines,

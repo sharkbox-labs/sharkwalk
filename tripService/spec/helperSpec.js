@@ -7,6 +7,8 @@ const decodePolylines = helpers.decodePolylines;
 const convertLatLongs = helpers.convertLatLongs;
 const exampleDirectionsObject = require('./specData.js');
 
+// const exampleData = require('./multipleRouteExample').exampleData;
+
 const findDistance = helpers.findDistance;
 const generateEquidistantPath = helpers.generateEquidistantPath;
 const threshold = helpers.threshold;
