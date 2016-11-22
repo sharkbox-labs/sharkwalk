@@ -28,6 +28,7 @@ describe('Risk Service API', () => {
         .post('/path')
         .send([{ path: coordsArray }, { path: coordsArray }])
         .end((error, response) => {
+          console.log(response.body);
           expect(error).to.not.exist;
           expect(response.body.error).to.not.exist;
           expect(response.body).to.be.an('Array');
