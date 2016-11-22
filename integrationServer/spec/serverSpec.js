@@ -31,12 +31,6 @@ beforeEach(() => {
 
 describe('Integration Server:', () => {
   describe('GET', () => {
-    it('should respond with a 200 status code on / GET', (done) => {
-      request(app)
-        .get('/')
-        .expect(200, done);
-    });
-
     describe('/api', () => {
       it('should respond with a 404 status code on /api GET', (done) => {
         request(app)
