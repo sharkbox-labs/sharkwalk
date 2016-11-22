@@ -66,9 +66,20 @@ const findRiskPointsNear = function findRiskPointsNear(point, distance = 100) {
   }).exec();
 };
 
+const findRiskPointsWithinPolygon = function findRiskPointsWithinPolygon(polygon) {
+  return RiskPoint.find({
+    location: {
+      $geoWithin: {
+        $geometry: polygon,
+      },
+    },
+  });
+};
+
 module.exports = {
   createRiskPoint,
   createRiskPoints,
   findRiskPointsByBatchId,
   findRiskPointsNear,
+  findRiskPointsWithinPolygon,
 };

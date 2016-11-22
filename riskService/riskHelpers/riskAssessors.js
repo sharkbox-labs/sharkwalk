@@ -1,5 +1,6 @@
 const turf = require('@turf/turf');
 const riskPointController = require('../db/riskPointController');
+const config = require('../config');
 
 const precisionRound = function precisionRound(number, precision) {
   const factor = Math.pow(10, precision); // eslint-disable-line no-restricted-properties
@@ -33,6 +34,35 @@ const getRiskForGeoJSONPoint = function getRiskForGeoJSONPoint(point) {
     });
 };
 
+
+const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArray) {
+  const longLats = coordArray.map(coord => [coord[1], coord[0]]);
+  const lineString = turf.lineString(longLats);
+  const expandedString = turf.buffer(lineString, (config.gridDensity / 1000) * 1.05, 'kilometers');
+  return riskPointController.findRiskPointsWithinPolygon(expandedString.geometry)
+    .then((records) => {
+      const features = records.map(record => ({
+        type: 'Feature',
+        geometry: record.location,
+        properties: {
+          risk: record.risk,
+        },
+      }
+      ));
+      const pointsCollection = turf.featureCollection(features);
+      return longLats.map((coord) => {
+        // find closest point in feature collection
+        const point = turf.point(coord);
+        const nearest = turf.nearest(point, pointsCollection);
+        const distance = turf.distance(point, nearest, 'kilometers');
+        if (distance * 1000 > config.gridDensity) {
+          throw new Error(`No coverage near point: ${coord[1]}, ${coord[0]}.`);
+        }
+        return precisionRound(nearest.properties.risk, 2);
+      });
+    });
+};
+
 /**
  * Gets the risk for a coordinate.
  * @param {Array} coords - The points coordinates in latitude, longitude
@@ -47,7 +77,16 @@ const getRiskForCoordinates = function getRiskForCoordinates(coords) {
   });
 };
 
+const decoratePointWithRisk = function decoratePointWithRisk(point) {
+  // Assert the point is well-formed
+  turf.geojsonType(point, 'Point', `Invalid GeoJSON Point: ${point}`);
+  return getRiskForGeoJSONPoint(point)
+    .then(risk => Object.assign({}, point, { properties: { risk } }));
+};
+
 module.exports = {
   getRiskForCoordinates,
   getRiskForGeoJSONPoint,
+  getRiskForCoordinatesArray,
+  decoratePointWithRisk,
 };
