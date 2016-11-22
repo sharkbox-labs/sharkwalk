@@ -22,7 +22,7 @@ const requestHandler = (request, response) => {
     },
   })
   .then((route) => {
-    const paths = getPaths(route.data);
+    const paths = getPaths(route.data.routes);
     // repsonse object contains google directions and coordinates
     response.status(200).json({ route: route.data, paths });
   })
