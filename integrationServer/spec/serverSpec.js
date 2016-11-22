@@ -6,12 +6,12 @@ const app = require('../server');
 
 const testQuery = {
   origin: {
-    lat: 37.7840081,
-    long: -122.406077,
+    lat: 37.7842729,
+    lng: -122.4055131,
   },
   destination: {
-    lat: 37.7811631,
-    long: -122.409185,
+    lat: 37.7812491,
+    lng: -122.4090739,
   },
 };
 
@@ -92,6 +92,23 @@ describe('Integration Server:', () => {
               expect(error).to.not.exist;
               expect(response.status).to.equal(200);
               expect(travelMode).to.equal('WALKING');
+              done();
+            });
+        });
+
+        it('should provide directions for the origin and destination that was submitted', (done) => {
+          request(app)
+            .get('/api/trip')
+            .query(testQuery)
+            .end((error, response) => {
+              const directionsStart = response.body.route.routes[0].legs[0].start_location;
+              const directionsEnd = response.body.route.routes[0].legs[0].end_location;
+              expect(error).to.not.exist;
+              expect(response.status).to.equal(200);
+              expect(directionsStart.lat).to.equal(testQuery.origin.lat);
+              expect(directionsStart.lng).to.equal(testQuery.origin.lng);
+              expect(directionsEnd.lat).to.equal(testQuery.destination.lat);
+              expect(directionsEnd.lng).to.equal(testQuery.destination.lng);
               done();
             });
         });
