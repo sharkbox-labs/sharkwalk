@@ -10,9 +10,9 @@ const turf = require('turf');
 
 // extracts polylines from directions object
 
-const retrievePolylines = (directionsObj) => {
+const retrievePolylines = (route) => {
   const polylines = [];
-  const steps = directionsObj.routes[0].legs[0].steps;
+  const steps = route.legs[0].steps;
   steps.forEach((step) => {
     if (step.polyline) {
       polylines.push(step.polyline.points);
@@ -20,6 +20,17 @@ const retrievePolylines = (directionsObj) => {
   });
   return polylines;
 };
+
+// const retrievePolylines = (directionsObj) => {
+//   const polylines = [];
+//   const steps = directionsObj.routes[0].legs[0].steps;
+//   steps.forEach((step) => {
+//     if (step.polyline) {
+//       polylines.push(step.polyline.points);
+//     }
+//   });
+//   return polylines;
+// };
 
 // converts array of polylines into LatLngs
 
@@ -166,6 +177,20 @@ const handleCornersDifferently = (coordinates) => {
 // getPath input is directions object returned from google maps API
 // output is array of coordinates along walker's path
 
+const getPaths = (directionsObj) => {
+  const paths = [];
+  const routes = directionsObj.routes;
+  for (let i = 0; i < routes.length; i += 1) {
+    const route = routes[i];
+    const polylines = retrievePolylines(route);
+    const coordinates = decodePolylines(polylines);
+    const path = generateEquidistantPath(coordinates);
+    paths.push(path);
+  }
+  return paths;
+};
+
+
 const getPath = (directionsObj) => {
   const polylines = retrievePolylines(directionsObj);
   const coordinates = decodePolylines(polylines);
@@ -173,12 +198,12 @@ const getPath = (directionsObj) => {
   return path;
 };
 
-
 module.exports = {
   retrievePolylines,
   decodePolylines,
   convertLatLongs,
   getPath,
+  getPaths,
   findDistance,
   generateEquidistantPath,
   threshold,

@@ -1,6 +1,8 @@
 const axios = require('axios');
-const getPath = require('./tripHelpers.js').getPath;
-
+// const path = require('path');
+// require('dotenv').config({ path: path.join(__dirname, '/.env') });
+// const getPath = require('./tripHelpers.js').getPath;
+const getPaths = require('./tripHelpers.js').getPaths;
 
 const APIKEY = process.env.APIKEY;
 
@@ -16,12 +18,13 @@ const requestHandler = (request, response) => {
       destination,
       mode: 'walking',
       key: APIKEY,
+      alternatives: true, // send back alternatve routes
     },
   })
   .then((route) => {
-    const path = getPath(route.data);
+    const paths = getPaths(route.data);
     // repsonse object contains google directions and coordinates
-    response.status(200).json({ route: route.data, path });
+    response.status(200).json({ route: route.data, paths });
   })
   .catch((error) => {
     console.log(error);

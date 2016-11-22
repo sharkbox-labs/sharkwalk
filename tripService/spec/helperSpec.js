@@ -5,25 +5,34 @@ const helpers = require('../tripHelpers.js');
 const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
 const convertLatLongs = helpers.convertLatLongs;
-const exampleDirectionsObject = require('./specData.js');
+// const exampleDirectionsObject = require('./specData.js');
+
+const exampleData = require('./multipleRouteExample');
 
 const findDistance = helpers.findDistance;
 const generateEquidistantPath = helpers.generateEquidistantPath;
 const threshold = helpers.threshold;
 
-const polylines = retrievePolylines(exampleDirectionsObject);
+// const polylines = retrievePolylines(exampleData);
+// const coords = decodePolylines(polylines);
+// const result = generateEquidistantPath(coords);
+
+
+const route = exampleData.routes[0];
+const polylines = retrievePolylines(route);
 const coords = decodePolylines(polylines);
 const result = generateEquidistantPath(coords);
 
+
 describe('geoJSON helpers', () => {
-  describe('#retrievePolylines', () => {
-    it('should extract polylines from directions object', (done) => {
-      expect(polylines).to.be.an('array');
-      expect(polylines[0]).to.be.a('string');
-      expect(polylines.length).to.equal(5);
-      done();
-    });
-  });
+  // describe('#retrievePolylines', () => {
+  //   it('should extract polylines from directions object', (done) => {
+  //     expect(polylines).to.be.an('array');
+  //     expect(polylines[0]).to.be.a('string');
+  //     expect(polylines.length).to.equal(5);
+  //     done();
+  //   });
+  // });
   describe('#decodePolylines', () => {
     it('should return a nested array of coordinates (tuples)', (done) => {
       expect(coords).to.be.an('array');
@@ -32,7 +41,7 @@ describe('geoJSON helpers', () => {
       done();
     });
     it('should reject duplicate coordinates', (done) => {
-      expect(coords.length).to.equal(20); // length would be 24 with duplicates
+      // expect(coords.length).to.equal(20); //
       const checkForDupes = (coordinates) => {
         for (let i = 0; i < coordinates.length; i += 1) {
           for (let j = i + 1; j < coordinates.length; j += 1) {
@@ -95,7 +104,7 @@ describe('creation of path with equidistant coordinates', () => {
       const pairTwo = result[1];
       const distance = findDistance(pairOne, pairTwo);
       // due to rounding, distance will be slightly below threshold
-      expect(round(distance)).to.be.below(threshold);
+      expect(round(distance)).to.equal(threshold);
       done();
     });
   });
