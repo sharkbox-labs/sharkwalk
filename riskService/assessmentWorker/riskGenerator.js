@@ -98,7 +98,7 @@ const generateRiskForArea = function generateRiskForArea(area) {
         // eslint-disable-next-line no-param-reassign
         point.properties.risk = risk;
       });
-      riskValues.sort((a, b) => a + b);
+      riskValues.sort((a, b) => a - b);
       geoMeta.featureEach(pointGrid, (point) => {
         const riskPercentile = (riskValues.indexOf(point.properties.risk)
           / (riskValues.length - 1)) * 100;

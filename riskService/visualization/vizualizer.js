@@ -11,7 +11,7 @@ require('dotenv').config({ silent: false, path: path.join(__dirname, '../.env') 
 const RiskPoint = require('../db/riskPointModel');
 const db = require('../db/connection');
 
-const MAX_RISK = 300;
+const MAX_RISK = 100;
 
 const numberToRGBGreenRed = function numberToRGBGreenRed(num) {
   let hue = 120 - (120 * num);
