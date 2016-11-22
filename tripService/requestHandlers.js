@@ -1,10 +1,10 @@
 const axios = require('axios');
 // const path = require('path');
 // require('dotenv').config({ path: path.join(__dirname, '/.env') });
-// const getPath = require('./tripHelpers.js').getPath;
 const getPaths = require('./tripHelpers.js').getPaths;
 
 const APIKEY = process.env.APIKEY;
+
 
 const requestHandler = (request, response) => {
   // define origin and destination from request parameters
