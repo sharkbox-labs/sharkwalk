@@ -54,3 +54,6 @@ yarn.lock
 
 # Databases
 *.sqlite
+
+# Visualization
+riskVisualization.geojson

@@ -1,4 +1,5 @@
 const winston = require('winston');
+const path = require('path');
 
 module.exports = new (winston.Logger)({
   transports: [
@@ -6,7 +7,7 @@ module.exports = new (winston.Logger)({
       colorize: true,
     }),
     new (winston.transports.File)({
-      filename: './jellywave.log',
+      filename: path.join(__dirname, 'jellywave.log'),
       colorize: false,
       json: false,
     }),
