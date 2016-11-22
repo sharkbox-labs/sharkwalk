@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./riskService/node_modules/.bin/_mocha ./riskService/spec; ./riskService/node_modules/.bin/_mocha ./integrationServer/spec"
   },
   "repository": {
     "type": "git",
