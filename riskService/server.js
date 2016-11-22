@@ -1,6 +1,7 @@
+const path = require('path');
 require('dotenv').config({
   silent: true,
-  path: './.env',
+  path: path.join(__dirname, '.env'),
 });
 
 const express = require('express');
