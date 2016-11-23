@@ -1,10 +1,20 @@
 const axios = require('axios');
 const qs = require('qs');
+const path = require('path');
+require('dotenv').config({
+  path: path.join(__dirname, '../.env'),
+  silent: true,
+});
 
 const requestHandler = (request, response) => {
-  const tripServerUrl = 'http://localhost:3001';
-
-  const riskServerUrl = 'http://localhost:3002';
+  const tripServerUrl = process.env.TRIP_SERVICE_URL;
+  const riskServerUrl = process.env.RISK_SERVICE_URL;
+  if (!tripServerUrl) {
+    throw new Error('No URL for the Trip Service set in TRIP_SERVICE_URL');
+  }
+  if (!riskServerUrl) {
+    throw new Error('No URL for the Risk Service set in the RISK_SERVICE_URL');
+  }
 
   const queryObj = qs.stringify(request.query);
 
@@ -33,7 +43,7 @@ const requestHandler = (request, response) => {
           console.log(error);
           response.status(502).json({
             error: {
-              message: 'Failed to retrieve risk rating from risk server',
+              message: `Error trying to retrieve risk rating from risk server: ${error.message}.`,
             },
           });
         });
@@ -42,7 +52,7 @@ const requestHandler = (request, response) => {
       console.log(error);
       response.status(502).json({
         error: {
-          message: 'Failed to retrieve directions from trip server',
+          message: `Error trying to retrieve directions from trip server: ${error.message}.`,
         },
       });
     });
