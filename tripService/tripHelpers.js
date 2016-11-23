@@ -198,6 +198,7 @@ const getWayPoints = (originLatLng, destinationLatLng) => {
   return [waypoint1, waypoint2];
 };
 
+
 module.exports = {
   retrievePolylines,
   decodePolylines,
