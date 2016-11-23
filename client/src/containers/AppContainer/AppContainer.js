@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setDestination, setOrigin, setInteractionType, setCurrentRoute } from '../../actions/index';
+import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse } from '../../actions/index';
 import App from '../../components/App/App';
 
 
@@ -18,7 +18,8 @@ const mapDispatchToProps = dispatch => ({
   },
 
   onOriginChangeEvent: (origin) => {
-    dispatch(setOrigin(origin));
+    // Dispatch is handled by thunk middleware (see setOrigin action creator)
+    setOrigin(origin);
   },
 
   onInteractionTypeChangeEvent: (interactionType) => {
@@ -28,8 +29,12 @@ const mapDispatchToProps = dispatch => ({
   onRouteChangeEvent: (routeIndex) => {
     dispatch(setCurrentRoute(routeIndex));
   },
-});
 
+  onRouteResponse: (routeResponse) => {
+    // Dispatch is handled by thunk middleware (see setRouteResponse action creator)
+    setRouteResponse(routeResponse);
+  },
+});
 
 const AppContainer = connect(
   mapStateToProps,

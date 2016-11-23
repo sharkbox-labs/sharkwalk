@@ -10,9 +10,21 @@ import AppContainer from './containers/AppContainer/AppContainer';
 import reducer from './reducers/index';
 import './index.css';
 
+const initialStore = {
+  currentLocation: null,
+  destination: ' ',
+  origin: ' ',
+  interactionType: null,
+  currentRoute: null,
+  routeResponse: {
+    route: '',
+    path: '',
+  },
+};
+
 const store = createStore(
   reducer,
-  {},
+  initialStore,
   applyMiddleware(thunk),
 );
 
