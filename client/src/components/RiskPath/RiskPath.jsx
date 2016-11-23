@@ -71,7 +71,4 @@ RiskPath.propTypes = {
   points: React.PropTypes.array.isRequired, // eslint-disable-line
 };
 
-export default GoogleApiWrapper({
-  apiKey: googleApiKey,
-  libraries: ['geometry'], // eslint-disable-line
-})(RiskPath);
+export default RiskPath;
