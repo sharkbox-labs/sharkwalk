@@ -21,25 +21,20 @@ describe('Trip Server:', () => {
       .query(testQuery)
       .expect(200, done);
   });
-  it('should respond with a json object response body', (done) => {
+  it('should respond with trips', (done) => {
     request(app)
       .get('/trip')
       .query(testQuery)
       .end((error, response) => {
         expect(error).to.not.exist;
+        expect(response.body.error).to.not.exist;
         expect(response.status).to.equal(200);
-        expect(response.body).to.be.json;
-        done();
-      });
-  });
-  it('should have property "paths" in the response body', (done) => {
-    request(app)
-      .get('/trip')
-      .query(testQuery)
-      .end((error, response) => {
-        expect(error).to.not.exist;
-        expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('paths');
+        expect(response.body).to.be.an('Array');
+        expect(response.body[0]).to.have.keys(['route', 'path']);
+        expect(response.body[0].route).to.contain.all.keys(['legs', 'copyrights', 'bounds']);
+        expect(response.body[0].path).to.be.an('Array');
+        expect(response.body[0].path[0]).to.be.an('Array');
+        expect(response.body[0].path[0][0]).to.be.a('number');
         done();
       });
   });
@@ -50,35 +45,10 @@ describe('Trip Server:', () => {
       .end((error, response) => {
         expect(error).to.not.exist;
         expect(response.status).to.equal(200);
-        expect(response.body.paths.length).to.be.a('number');
-        expect(response.body.paths[0][0].length).to.equal(2);
-        expect(response.body.paths[0][0][0]).to.be.a('number');
-        done();
-      });
-  });
-
-  it('first value of path should be origin coordinates', (done) => {
-    request(app)
-      .get('/trip')
-      .query(testQuery)
-      .end((error, response) => {
-        expect(error).to.not.exist;
-        expect(response.status).to.equal(200);
-        const firstValue = response.body.paths[0][0];
-        const round = number => Math.round(number * 100000) / 100000;
-        expect(firstValue[0]).to.equal(round(testQuery.origin.lat));
-        expect(firstValue[1]).to.equal(round(testQuery.origin.lng));
-        done();
-      });
-  });
-  it('should have property "route" in the response body', (done) => {
-    request(app)
-      .get('/trip')
-      .query(testQuery)
-      .end((error, response) => {
-        expect(error).to.not.exist;
-        expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('route');
+        expect(response.body[0].path[0]).to.be.an('Array');
+        expect(response.body[0].path[0].length).to.be.equal(2);
+        expect(response.body[0].path[0][0]).to.be.a('number');
+        expect(response.body[0].path[0][1]).to.be.a('number');
         done();
       });
   });

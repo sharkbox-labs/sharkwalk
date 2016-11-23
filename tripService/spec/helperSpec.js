@@ -1,23 +1,17 @@
 const expect = require('chai').expect;
-// const turf = require('turf');
 const helpers = require('../tripHelpers.js');
+const exampleData = require('./multipleRouteExample');
 
+// trip helpers
 const retrievePolylines = helpers.retrievePolylines;
 const decodePolylines = helpers.decodePolylines;
 const convertLatLongs = helpers.convertLatLongs;
-// const exampleDirectionsObject = require('./specData.js');
-
-const exampleData = require('./multipleRouteExample');
-
 const findDistance = helpers.findDistance;
 const generateEquidistantPath = helpers.generateEquidistantPath;
 const threshold = helpers.threshold;
+const getWayPoints = helpers.getWayPoints;
 
-// const polylines = retrievePolylines(exampleData);
-// const coords = decodePolylines(polylines);
-// const result = generateEquidistantPath(coords);
-
-
+// test data
 const route = exampleData.routes[0];
 const polylines = retrievePolylines(route);
 const coords = decodePolylines(polylines);
@@ -25,14 +19,14 @@ const result = generateEquidistantPath(coords);
 
 
 describe('geoJSON helpers', () => {
-  // describe('#retrievePolylines', () => {
-  //   it('should extract polylines from directions object', (done) => {
-  //     expect(polylines).to.be.an('array');
-  //     expect(polylines[0]).to.be.a('string');
-  //     expect(polylines.length).to.equal(5);
-  //     done();
-  //   });
-  // });
+  describe('#retrievePolylines', () => {
+    it('should extract polylines from directions object', (done) => {
+      expect(polylines).to.be.an('array');
+      expect(polylines[0]).to.be.a('string');
+      expect(polylines.length).to.equal(4);
+      done();
+    });
+  });
   describe('#decodePolylines', () => {
     it('should return a nested array of coordinates (tuples)', (done) => {
       expect(coords).to.be.an('array');
@@ -41,7 +35,6 @@ describe('geoJSON helpers', () => {
       done();
     });
     it('should reject duplicate coordinates', (done) => {
-      // expect(coords.length).to.equal(20); //
       const checkForDupes = (coordinates) => {
         for (let i = 0; i < coordinates.length; i += 1) {
           for (let j = i + 1; j < coordinates.length; j += 1) {
@@ -88,6 +81,12 @@ describe('creation of path with equidistant coordinates', () => {
       expect(originalOrigin[1]).to.equal(newOrigin[1]);
       done();
     });
+    it('should increase the length of the coordinates array', (done) => {
+      const originalLength = coords.length;
+      const newLength = result.length;
+      expect(newLength).to.be.above(originalLength);
+      done();
+    });
     it('should inject points equidstant apart', (done) => {
       const originalLength = coords.length;
       const newLength = result.length;
@@ -110,3 +109,16 @@ describe('creation of path with equidistant coordinates', () => {
   });
 });
 
+describe('get alternate routes', () => {
+  describe('#getWayPoints', () => {
+    it('should return two LatLong waypoints', (done) => {
+      const origin = [];
+      const destination = [];
+      const waypoints = getWayPoints(origin, destination);
+      expect(waypoints[0]).to.be.an('array');
+      expect(waypoints[1]).to.be.an('array');
+      expect(waypoints[0][0]).to.be.a('number');
+      done();
+    });
+  });
+});

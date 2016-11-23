@@ -8,7 +8,7 @@ const turf = require('turf');
 // note: it is purposeful that we are not using the directionsObj's  overview_polyline
 // as this is only an approximation of the resulting directions (per the docs)
 
-// extracts polylines from directions object
+// extracts polylines from each route
 
 const retrievePolylines = (route) => {
   const polylines = [];
@@ -21,16 +21,6 @@ const retrievePolylines = (route) => {
   return polylines;
 };
 
-// const retrievePolylines = (directionsObj) => {
-//   const polylines = [];
-//   const steps = directionsObj.routes[0].legs[0].steps;
-//   steps.forEach((step) => {
-//     if (step.polyline) {
-//       polylines.push(step.polyline.points);
-//     }
-//   });
-//   return polylines;
-// };
 
 // converts array of polylines into LatLngs
 
@@ -174,12 +164,11 @@ const handleCornersDifferently = (coordinates) => {
 };
 
 
-// getPath input is directions object returned from google maps API
+// getPaths input is route property returned from google maps API
 // output is array of coordinates along walker's path
 
-const getPaths = (directionsObj) => {
+const getPaths = (routes) => {
   const paths = [];
-  const routes = directionsObj.routes;
   for (let i = 0; i < routes.length; i += 1) {
     const route = routes[i];
     const polylines = retrievePolylines(route);
@@ -190,22 +179,34 @@ const getPaths = (directionsObj) => {
   return paths;
 };
 
+// function getWayPoints takes origin and destination LatLngs, and returns two waypoints
+// using turf.js geoJSON functions
+// NOTE: if user inputs place rather than LatLngs, they must be converted prior
 
-const getPath = (directionsObj) => {
-  const polylines = retrievePolylines(directionsObj);
-  const coordinates = decodePolylines(polylines);
-  const path = generateEquidistantPath(coordinates);
-  return path;
+const getWayPoints = (originLatLng, destinationLatLng) => {
+  const origin = convertLatLongs(originLatLng);
+  const destination = convertLatLongs(destinationLatLng);
+  const distance = turf.distance(turf.point(origin), turf.point(destination), 'kilometers');
+  const midpoint = turf.midpoint(turf.point(origin), turf.point(destination));
+  const bearing = turf.bearing(turf.point(origin), turf.point(destination));
+  // define waypoint's distance from midpoint here:
+  const distanceFromMidpoint = distance / 3;
+  let waypoint1 = turf.destination(midpoint, distanceFromMidpoint, bearing + 90, 'kilometers');
+  let waypoint2 = turf.destination(midpoint, distanceFromMidpoint, bearing - 90, 'kilometers');
+  waypoint1 = convertLatLongs(waypoint1.geometry.coordinates);
+  waypoint2 = convertLatLongs(waypoint2.geometry.coordinates);
+  return [waypoint1, waypoint2];
 };
+
 
 module.exports = {
   retrievePolylines,
   decodePolylines,
   convertLatLongs,
-  getPath,
   getPaths,
   findDistance,
   generateEquidistantPath,
   threshold,
   handleCornersDifferently,
+  getWayPoints,
 };
