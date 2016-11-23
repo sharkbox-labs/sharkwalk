@@ -91,9 +91,19 @@ const generateRiskForArea = function generateRiskForArea(area) {
   const pointGrid = generateGridForArea(area, density, 'kilometers');
   return sf.fetchCrimeReports(reportArea, config.reportLookback)
     .then((reports) => {
+      const riskValues = [];
       geoMeta.featureEach(pointGrid, (point) => {
+        const risk = generateRiskForPoint(point, reports);
+        riskValues.push(risk);
         // eslint-disable-next-line no-param-reassign
-        point.properties.risk = generateRiskForPoint(point, reports);
+        point.properties.risk = risk;
+      });
+      riskValues.sort((a, b) => a - b);
+      geoMeta.featureEach(pointGrid, (point) => {
+        const riskPercentile = (riskValues.indexOf(point.properties.risk)
+          / (riskValues.length - 1)) * 100;
+        // eslint-disable-next-line no-param-reassign
+        point.properties.risk = riskPercentile;
       });
       return pointGrid;
     });
