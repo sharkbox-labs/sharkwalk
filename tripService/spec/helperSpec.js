@@ -9,7 +9,7 @@ const convertLatLongs = helpers.convertLatLongs;
 const findDistance = helpers.findDistance;
 const generateEquidistantPath = helpers.generateEquidistantPath;
 const threshold = helpers.threshold;
-const getWaypoints = helpers.getWaypoints;
+const getWayPoints = helpers.getWayPoints;
 
 // test data
 const route = exampleData.routes[0];
@@ -110,11 +110,11 @@ describe('creation of path with equidistant coordinates', () => {
 });
 
 describe('get alternate routes', () => {
-  describe('#getWaypoints', () => {
+  describe('#getWayPoints', () => {
     it('should return two LatLong waypoints', (done) => {
       const origin = [];
       const destination = [];
-      const waypoints = getWaypoints(origin, destination);
+      const waypoints = getWayPoints(origin, destination);
       expect(waypoints[0]).to.be.an('array');
       expect(waypoints[1]).to.be.an('array');
       expect(waypoints[0][0]).to.be.a('number');
