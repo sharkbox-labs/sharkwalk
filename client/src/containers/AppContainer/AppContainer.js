@@ -18,7 +18,8 @@ const mapDispatchToProps = dispatch => ({
   },
 
   onOriginChangeEvent: (origin) => {
-    dispatch(setOrigin(origin));
+    // Dispatch is handled by thunk middleware (see setOrigin action creator)
+    setOrigin(origin);
   },
 
   onInteractionTypeChangeEvent: (interactionType) => {
@@ -30,10 +31,10 @@ const mapDispatchToProps = dispatch => ({
   },
 
   onRouteResponse: (routeResponse) => {
-    dispatch(setRouteResponse(routeResponse));
+    // Dispatch is handled by thunk middleware (see setRouteResponse action creator)
+    setRouteResponse(routeResponse);
   },
 });
-
 
 const AppContainer = connect(
   mapStateToProps,
