@@ -35,6 +35,7 @@ const requestHandler = (request, response) => {
   // const googleMapsRequestURL = 'https://maps.googleapis.com/maps/api/directions/json?';
   // make call to googleMaps api with origin and destination
 
+  // make first call, then use response from first call to calculate waypoints and make subsequent calls
   return requestRoutes(origin, destination)
   .then((directionsObj) => {
     const originObj = directionsObj.routes[0].legs[0].start_location;
@@ -48,6 +49,7 @@ const requestHandler = (request, response) => {
     ]);
   })
   .then(directionsObjects => directionsObjects.map(directionObject => directionObject.routes))
+  // flatten 2D array into 1D array of route objects
   .then(routeArraysArray =>
     routeArraysArray.reduce((flattenedArray, routeArray) => [...flattenedArray, ...routeArray], []))
   .then((flatArray) => {
@@ -57,6 +59,7 @@ const requestHandler = (request, response) => {
       path: paths[i],
     }));
   })
+  // response body is an array of objects with route and path properties
   .then(responseArray => response.status(200).json(responseArray))
   .catch(error => response.status(400).json({ error: { message: `There was an error getting directions: ${error.message}.` } }));
 };
