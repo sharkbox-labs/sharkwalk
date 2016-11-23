@@ -25,3 +25,10 @@ export const setCurrentRoute = (routeIndex) => {
     routeIndex,
   };
 };
+
+export const setRouteResponse = (routeResponse) => {
+  return {
+    type: 'SET_ROUTE_RESPONSE',
+    routeResponse,
+  };
+};
