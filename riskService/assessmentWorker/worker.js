@@ -1,5 +1,4 @@
 require('dotenv').config({ silent: false });
-
 const shortid = require('shortid');
 const logger = require('../logger');
 const riskGenerator = require('./riskGenerator');
