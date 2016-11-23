@@ -18,12 +18,12 @@ const testQuery = {
 
 beforeEach(() => {
   // Set up mock servers for tripService and riskService
-  const testTripService = nock('http://localhost:3001') // eslint-disable-line
+  const testTripService = nock(process.env.TRIP_SERVICE_URL) // eslint-disable-line
     .get('/trip')
     .query(testQuery)
     .reply(200, specData.exampleTripServiceResponse);
 
-  const testRiskService = nock('http://localhost:3002') // eslint-disable-line
+  const testRiskService = nock(process.env.RISK_SERVICE_URL) // eslint-disable-line
     .post('/risk')
     .reply(200, specData.exampleRiskServiceResponse);
 });

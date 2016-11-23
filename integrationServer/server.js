@@ -11,7 +11,7 @@ app.use(morgan('dev'));
 // To handle CORS
 app.use(cors());
 
-app.use('/', express.static(path.join(__dirname, '../client/build')));
+app.use('/', express.static(path.join(__dirname, './client_build')));
 
 app.use('/api', routes);
 
