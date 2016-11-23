@@ -1,8 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
-
 /**
  * Set destination to state
  * @param  {Object} destination - The destination of the route. Must have keys `lat` and `lng`.
@@ -20,8 +18,8 @@ export const setDestination = destination => ({
  * either dispatch the 'SET_ORIGIN' action with the provided origin or use the
  * user's current location.
  */
-export const setOrigin = (origin) => {
-  return (dispatch) => {
+export const setOrigin = origin => (
+  (dispatch) => {
     if (!origin && 'geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         dispatch({
@@ -35,8 +33,8 @@ export const setOrigin = (origin) => {
         origin,
       });
     }
-  };
-};
+  }
+);
 
 /**
  * Set the interactionType to state
@@ -67,6 +65,8 @@ export const setCurrentRoute = routeIndex => ({
  * out a promisified, async request to the Integration Server.
  */
 export const setRouteResponse = (origin, destination) => {
+  const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
+
   const queryString = qs.stringify({
     origin,
     destination,
