@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import App from './components/App/App';
+import AppContainer from './containers/AppContainer/AppContainer';
 import reducer from './reducers/index';
 import './index.css';
 
@@ -14,7 +14,7 @@ const store = createStore(reducer);
 ReactDOM.render((
   <Provider store={store}>
     <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-      <App />
+      <AppContainer />
     </MuiThemeProvider>
   </Provider>
   ), document.getElementById('root'),
