@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import App from './components/App/App';
+import AppContainer from './containers/AppContainer/AppContainer';
+import reducer from './reducers/index';
 import './index.css';
 
+const store = createStore(reducer);
+
 ReactDOM.render((
-  <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-    <Router history={browserHistory}>
-      <Route path="/" component={App} />
-    </Router>
-  </MuiThemeProvider>
+  <Provider store={store}>
+    <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+      <AppContainer />
+    </MuiThemeProvider>
+  </Provider>
   ), document.getElementById('root'),
 );
