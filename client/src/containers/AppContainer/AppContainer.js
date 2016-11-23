@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setDestination, setOrigin, setInteractionType, setCurrentRoute } from '../../actions/index';
+import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse } from '../../actions/index';
 import App from '../../components/App/App';
 
 
@@ -27,6 +27,10 @@ const mapDispatchToProps = dispatch => ({
 
   onRouteChangeEvent: (routeIndex) => {
     dispatch(setCurrentRoute(routeIndex));
+  },
+
+  onRouteResponse: (routeResponse) => {
+    dispatch(setRouteResponse(routeResponse));
   },
 });
 
