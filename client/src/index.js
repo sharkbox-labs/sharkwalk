@@ -12,11 +12,14 @@ import './index.css';
 
 const initialStore = {
   currentLocation: null,
-  destination: null,
-  origin: null,
+  destination: ' ',
+  origin: ' ',
   interactionType: null,
   currentRoute: null,
-  routeResponse: null,
+  routeResponse: {
+    route: '',
+    path: '',
+  },
 };
 
 const store = createStore(
