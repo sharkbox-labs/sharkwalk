@@ -1,8 +1,10 @@
 import Map, { Marker } from 'google-maps-react';
 import React from 'react';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './App.css';
-import Nav from '../Nav/Nav';
 import RiskPath from '../RiskPath/RiskPath';
 
 injectTapEventPlugin();
@@ -11,18 +13,19 @@ const App = (props) => {
   // These styles are for development only, remove for production
   const mapStyle = {};
   const appContainerStyle = {};
-  const navStyle = {};
   const mapContainerStyle = {};
+
+  const searchToolbarStyle = {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: '2%',
+    left: '5%',
+    right: '5%',
+  };
 
   return (
     <div className="app-container" style={appContainerStyle} >
-      <div className="nav-container">
-        <Nav
-          className="nav-bar"
-          getDirections={''} // this.getDirections
-          style={navStyle}
-        />
-      </div>
+      
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
@@ -32,7 +35,6 @@ const App = (props) => {
           onClick={''} // this.setDestination
           style={mapStyle}
         >
-
           <Marker
             key={'origin'}
             position={props.origin}
@@ -43,13 +45,24 @@ const App = (props) => {
             position={props.destination}
             google={window.google}
           />
-          <RiskPath 
+          <RiskPath
             points={props.routeResponse.path}
           />
         </Map>
       </div>
+      <Toolbar className="search-toolbar" style={searchToolbarStyle}>
+        <ToolbarGroup className="toolbar-group">
+          <IconButton>
+            <SearchBarHamburgerIcon />
+          </IconButton>
+        </ToolbarGroup>
+      </Toolbar>
+
     </div>
   );
+};
+
+App.propTypes = {
 };
 
 export default App;
