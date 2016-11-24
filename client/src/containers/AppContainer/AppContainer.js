@@ -13,24 +13,24 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onDestinationChangeEvent: (destination) => {
+  changeDestination: (destination) => {
     dispatch(setDestination(destination));
   },
 
-  onOriginChangeEvent: (origin) => {
+  changeOrigin: (origin) => {
     // Dispatch is handled by thunk middleware (see setOrigin action creator)
     setOrigin(origin);
   },
 
-  onInteractionTypeChangeEvent: (interactionType) => {
+  changeInteractionType: (interactionType) => {
     dispatch(setInteractionType(interactionType));
   },
 
-  onRouteChangeEvent: (routeIndex) => {
+  changeRoute: (routeIndex) => {
     dispatch(setCurrentRoute(routeIndex));
   },
 
-  onRouteResponse: (routeResponse) => {
+  changeRouteResponse: (routeResponse) => {
     // Dispatch is handled by thunk middleware (see setRouteResponse action creator)
     setRouteResponse(routeResponse);
   },
