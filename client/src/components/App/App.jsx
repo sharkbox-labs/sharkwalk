@@ -1,12 +1,16 @@
-import Map, { Marker } from 'google-maps-react';
 import React from 'react';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import AutoComplete from 'material-ui/AutoComplete';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import Map, { Marker } from 'google-maps-react';
+import Drawer from 'material-ui/Drawer';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import MapsNavigation from 'material-ui/svg-icons/maps/navigation';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
+import appHelper from '../utils/appHelper';
 
 injectTapEventPlugin();
 
@@ -15,7 +19,6 @@ const App = (props) => {
   const mapStyle = {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
-
   const searchToolbarStyle = {
     backgroundColor: 'white',
     position: 'absolute',
@@ -40,9 +43,22 @@ const App = (props) => {
     // get search results for query
     // window.google.maps.places.SearchBox is a function...but don't know what it does
   };
+  // Create immutable interaction types for components to use
+  const interactionTypes = {
+    VIEWING_MAP: 'VIEWING_MAP',
+    SEARCHING_ORIGIN: 'SEARCHING_ORIGIN',
+    SEARCHING_DESTINATION: 'SEARCHING_DESTINATION',
+    SELECTING_ROUTE: 'SELECTING_ROUTE',
+    VIEWING_SIDEBAR: 'VIEWING_SIDEBAR',
+  };
 
   return (
-    <div className="app-container" style={appContainerStyle} >    
+    <div className="app-container" style={appContainerStyle} >
+      <Drawer
+        docked={false}
+        width={300}
+        open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
+      />
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
@@ -68,8 +84,17 @@ const App = (props) => {
         </Map>
       </div>
       <Toolbar className="search-toolbar" style={searchToolbarStyle}>
-        <ToolbarGroup firstChild>
-          <IconButton style={iconButtonStyle}>
+        <ToolbarGroup firstChild className="toolbar-group">
+          <IconButton
+            style={iconButtonStyle}
+            onClick={() => (
+              appHelper.toggleInteractionTypeFromMenuClick(
+                props.interactionType,
+                props.changeInteractionType,
+                interactionTypes,
+              )
+            )}
+          >
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
@@ -83,11 +108,16 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
+      <FloatingActionButton className="floating-action-button-show">
+        <MapsNavigation />
+      </FloatingActionButton>
     </div>
   );
 };
 
 App.propTypes = {
+  interactionType: React.PropTypes.string.isRequired,
+  // changeInteractionType: React.PropTypes.function.isRequired,
 };
 
 export default App;

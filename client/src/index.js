@@ -14,7 +14,7 @@ const initialStore = {
   currentLocation: null,
   destination: ' ',
   origin: ' ',
-  interactionType: null,
+  interactionType: 'VIEWING_MAP',
   currentRoute: null,
   routeResponse: {
     route: '',
