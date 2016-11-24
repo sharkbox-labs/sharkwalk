@@ -10,6 +10,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import MapsNavigation from 'material-ui/svg-icons/maps/navigation';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
+import toggleFloatingActionButtonClass from '../utils/appHelper';
 
 injectTapEventPlugin();
 
