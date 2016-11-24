@@ -10,7 +10,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import MapsNavigation from 'material-ui/svg-icons/maps/navigation';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
-import toggleFloatingActionButtonClass from '../utils/appHelper';
+import appHelper from '../utils/appHelper';
 
 injectTapEventPlugin();
 
@@ -84,8 +84,17 @@ const App = (props) => {
         </Map>
       </div>
       <Toolbar className="search-toolbar" style={searchToolbarStyle}>
-        <ToolbarGroup firstChild>
-          <IconButton style={iconButtonStyle}>
+        <ToolbarGroup firstChild className="toolbar-group">
+          <IconButton
+            style={iconButtonStyle}
+            onClick={() => (
+              appHelper.toggleInteractionTypeFromMenuClick(
+                props.interactionType,
+                props.changeInteractionType,
+                interactionTypes,
+              )
+            )}
+          >
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
@@ -108,6 +117,7 @@ const App = (props) => {
 
 App.propTypes = {
   interactionType: React.PropTypes.string.isRequired,
+  // changeInteractionType: React.PropTypes.function.isRequired,
 };
 
 export default App;
