@@ -3,6 +3,7 @@ import React from 'react';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
+import AutoComplete from 'material-ui/AutoComplete';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
@@ -21,11 +22,27 @@ const App = (props) => {
     top: '2%',
     left: '5%',
     right: '5%',
+    borderRadius: '3px',
+  };
+
+  const searchToolbarGroupStyle = {
+    width: '100%',
+    // display: 'none',
+  };
+
+  const iconButtonStyle = {
+    float: 'left',
+  };
+
+  const searchBarStyle = {};
+
+  const getSearchResults = (query) => {
+    // get search results for query
+    // window.google.maps.places.SearchBox is a function...but don't know what it does
   };
 
   return (
-    <div className="app-container" style={appContainerStyle} >
-      
+    <div className="app-container" style={appContainerStyle} >    
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
@@ -51,13 +68,21 @@ const App = (props) => {
         </Map>
       </div>
       <Toolbar className="search-toolbar" style={searchToolbarStyle}>
-        <ToolbarGroup className="toolbar-group">
-          <IconButton>
+        <ToolbarGroup firstChild>
+          <IconButton style={iconButtonStyle}>
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
+        <ToolbarGroup className="toolbar-group" style={searchToolbarGroupStyle}>
+          <AutoComplete
+            hintText="Search"
+            fullWidth
+            dataSource={['INSERT_DATA_HERE']}
+            style={searchBarStyle}
+            onNewRequest={getSearchResults}
+          />
+        </ToolbarGroup>
       </Toolbar>
-
     </div>
   );
 };
