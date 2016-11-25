@@ -13,17 +13,19 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  dispatch,
+
   changeDestination: (destination) => {
     dispatch(setDestination(destination));
   },
 
-  changeOrigin: (origin) => {
-    // Dispatch is handled by thunk middleware (see setOrigin action creator)
-    setOrigin(origin);
-  },
-
   changeInteractionType: (interactionType) => {
     dispatch(setInteractionType(interactionType));
+  },
+
+  changeOrigin: (dispatchFunction, origin) => {
+    // Dispatch is handled by thunk middleware (see setOrigin action creator)
+    setOrigin(dispatchFunction, origin);
   },
 
   changeRoute: (routeIndex) => {
