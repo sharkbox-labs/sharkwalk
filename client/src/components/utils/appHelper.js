@@ -4,17 +4,20 @@ const toggleFloatingActionButtonClass = (interactionType, interactionTypes) => (
 
 const toggleInteractionTypeFromMenuClick = (currentInteractionType, dispatcher, interactionTypes) => {
   if (currentInteractionType === interactionTypes.VIEWING_MAP) {
-    console.log('in VIEWING_MAP');
     dispatcher(interactionTypes.VIEWING_SIDEBAR);
   }
 
   if (currentInteractionType === interactionTypes.VIEWING_SIDEBAR) {
-    console.log('in VIEWING_SIDEBAR');
     dispatcher(interactionTypes.VIEWING_MAP);
   }
+};
+
+const getCurrentLocation = (dispatcher, dispatchFunction) => {
+  dispatcher(dispatchFunction);
 };
 
 export default {
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,
+  getCurrentLocation,
 };
