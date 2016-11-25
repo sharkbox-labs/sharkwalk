@@ -12,10 +12,16 @@ import './index.css';
 
 const initialStore = {
   currentLocation: null,
-  destination: ' ',
-  origin: ' ',
-  interactionType: 'VIEWING_MAP',
   currentRoute: null,
+  destination: {
+    lat: 400,
+    lng: 400,
+  },
+  interactionType: 'VIEWING_MAP',
+  origin: {
+    lat: 400,
+    lng: 400,
+  },
   routeResponse: {
     route: '',
     path: '',
