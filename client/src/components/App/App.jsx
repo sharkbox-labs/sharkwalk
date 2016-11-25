@@ -27,22 +27,20 @@ const App = (props) => {
     right: '5%',
     borderRadius: '3px',
   };
-
   const searchToolbarGroupStyle = {
     width: '100%',
     // display: 'none',
   };
-
   const iconButtonStyle = {
     float: 'left',
   };
-
   const searchBarStyle = {};
 
   const getSearchResults = (query) => {
     // get search results for query
     // window.google.maps.places.SearchBox is a function...but don't know what it does
   };
+  
   // Create immutable interaction types for components to use
   const interactionTypes = {
     VIEWING_MAP: 'VIEWING_MAP',
@@ -63,7 +61,9 @@ const App = (props) => {
         <Map
           className="map"
           google={window.google} // eslint-disable-line
-          onReady={''} // this.setDefaultMarkers
+          onReady={() => (
+            appHelper.getCurrentLocation(props.changeOrigin, props.dispatch)
+          )} // this.setDefaultMarkers
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
           style={mapStyle}
@@ -116,8 +116,20 @@ const App = (props) => {
 };
 
 App.propTypes = {
+  destination: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
   interactionType: React.PropTypes.string.isRequired,
-  // changeInteractionType: React.PropTypes.function.isRequired,
+  origin: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
+  changeDestination: React.PropTypes.func.isRequired,
+  changeInteractionType: React.PropTypes.func.isRequired,
+  changeOrigin: React.PropTypes.func.isRequired,
+  changeRoute: React.PropTypes.func.isRequired,
+  changeRouteResponse: React.PropTypes.func.isRequired,
 };
 
 export default App;
