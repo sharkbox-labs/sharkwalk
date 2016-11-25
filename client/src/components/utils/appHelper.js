@@ -12,12 +12,7 @@ const toggleInteractionTypeFromMenuClick = (currentInteractionType, dispatcher, 
   }
 };
 
-const getCurrentLocation = (dispatcher, dispatchFunction) => {
-  dispatcher(dispatchFunction);
-};
-
 export default {
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,
-  getCurrentLocation,
 };

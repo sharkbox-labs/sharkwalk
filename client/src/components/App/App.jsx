@@ -40,7 +40,7 @@ const App = (props) => {
     // get search results for query
     // window.google.maps.places.SearchBox is a function...but don't know what it does
   };
-  
+
   // Create immutable interaction types for components to use
   const interactionTypes = {
     VIEWING_MAP: 'VIEWING_MAP',
@@ -62,7 +62,7 @@ const App = (props) => {
           className="map"
           google={window.google} // eslint-disable-line
           onReady={() => (
-            appHelper.getCurrentLocation(props.changeOrigin, props.dispatch)
+            props.changeOrigin(props.dispatch)
           )} // this.setDefaultMarkers
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
