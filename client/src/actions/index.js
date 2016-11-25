@@ -18,23 +18,25 @@ export const setDestination = destination => ({
  * either dispatch the 'SET_ORIGIN' action with the provided origin or use the
  * user's current location.
  */
-export const setOrigin = origin => (
-  (dispatch) => {
-    if (!origin && 'geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
+export const setOrigin = (dispatch, origin) => {
+  if (!origin && 'geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      if (position) {
         dispatch({
           type: 'SET_ORIGIN',
           origin: { lat: position.coords.latitude, lng: position.coords.longitude },
         });
-      });
-    } else {
-      dispatch({
-        type: 'SET_CURRENT_ROUTE',
-        origin,
-      });
-    }
+      } else {
+        throw new Error('Error while fetching current location.');
+      }
+    });
+  } else {
+    dispatch({
+      type: 'SET_ORIGIN',
+      origin,
+    });
   }
-);
+};
 
 /**
  * Set the interactionType to state
