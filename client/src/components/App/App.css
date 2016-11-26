@@ -8,11 +8,28 @@
   display: none;
 }
 
-.first-card {
+.search-toolbar-show {
+  background-color: white !important;
+  position: absolute;
+  top: 2%;
+  left: 5%;
+  right: 5%;
+  border-radius: 3px;
+}
+
+.search-toolbar-hide {
+  display: none !important;
+}
+
+.searchbar-toolbar-group {
+  width: 100%;
+}
+
+.current-location-card {
   top: 11%;
 }
 
-.second-card {
+.search-results-card {
   top: 25%;
   bottom: 0%;
 }
@@ -26,5 +43,14 @@
 
 .search-results-hide {
   display: none;
+}
+
+.selecting-route-toolbar-show {
+  position: relative;
+  background-color: rgb(0, 188, 212) !important;
+}
+
+.selecting-route-toolbar-hide {
+  display: none !important;
 }
 

@@ -20,50 +20,14 @@ import appHelper from '../utils/appHelper';
 injectTapEventPlugin();
 
 const App = (props) => {
-  let searchResultFirstCard = null;
-  let searchResultSecondCard = null;
-
   // These styles are for development only, remove for production
   const mapStyle = {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
-  const searchToolbarStyle = {
-    backgroundColor: 'white',
-    position: 'absolute',
-    top: '2%',
-    left: '5%',
-    right: '5%',
-    borderRadius: '3px',
-    // display: 'none',
-  };
-  const searchToolbarGroupStyle = {
-    width: '100%',
-    // display: 'none',
-  };
-  const selectingRouteToolbarStyle = {
-    position: 'relative',
-    backgroundColor: 'rgb(0, 188, 212)',
-    // display: 'none',
-  };
   const iconButtonStyle = {
     float: 'left',
   };
   const searchBarStyle = {};
-  // const firstCardStyle = {
-  //   position: 'absolute',
-  //   left: '5%',
-  //   right: '5%',
-  //   top: '11%',
-  //   borderRadius: '3px',
-  // };
-  // const secondCardStyle = {
-  //   position: 'absolute',
-  //   left: '5%',
-  //   right: '5%',
-  //   top: '25%',
-  //   bottom: '0%',
-  //   borderRadius: '3px',
-  // };
 
   const getSearchResults = (query) => {
     // get search results for query
@@ -79,9 +43,19 @@ const App = (props) => {
     VIEWING_SIDEBAR: 'VIEWING_SIDEBAR',
   };
 
+  const searchBarToolbarClasses = classNames({
+    'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE || props.interactionType === interactionTypes.VIEWING_SIDEBAR,
+    'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE && props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
+  });
+
   const searchResultsCardsClasses = classNames({
     'search-results-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
     'search-results-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const selectingRouteToolbarClasses = classNames({
+    'selecting-route-toolbar-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE,
+    'selecting-route-toolbar-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
   return (
@@ -91,8 +65,11 @@ const App = (props) => {
         width={300}
         open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
       />
-      <Toolbar style={selectingRouteToolbarStyle}>
-        <ToolbarGroup style={searchToolbarGroupStyle}>
+      <Toolbar
+        className={selectingRouteToolbarClasses}
+        onClick={() => { props.changeInteractionType('SEARCHING_ORIGIN'); }}
+      >
+        <ToolbarGroup className="searchbar-toolbar-group">
           <OriginIcon />
           <AutoComplete
             hintText="Origin"
@@ -102,8 +79,11 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
-      <Toolbar style={selectingRouteToolbarStyle}>
-        <ToolbarGroup style={searchToolbarGroupStyle}>
+      <Toolbar
+        className={selectingRouteToolbarClasses}
+        onClick={() => { props.changeInteractionType('SEARCHING_DESTINATION'); }}
+      >
+        <ToolbarGroup className="searchbar-toolbar-group">
           <DestinationIcon />
           <AutoComplete
             hintText="Destination"
@@ -139,8 +119,7 @@ const App = (props) => {
           />
         </Map>
       </div>
-
-      <Toolbar className="search-toolbar" style={searchToolbarStyle}>
+      <Toolbar className={searchBarToolbarClasses}>
         <ToolbarGroup firstChild className="toolbar-group">
           <IconButton
             style={iconButtonStyle}
@@ -155,7 +134,7 @@ const App = (props) => {
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
-        <ToolbarGroup className="toolbar-group" style={searchToolbarGroupStyle}>
+        <ToolbarGroup className="searchbar-toolbar-group">
           <AutoComplete
             hintText="Search"
             fullWidth
@@ -168,17 +147,20 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
-
-
-      <Card className={`${searchResultsCardsClasses} first-card`} ref={(c) => { searchResultFirstCard = c; }}>
+      <Card
+        className={`${searchResultsCardsClasses} current-location-card`}
+        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+      >
         <CardHeader
           title="URL Avatar"
           subtitle="Subtitle"
           avatar="images/jsa-128.jpg"
         />
       </Card>
-
-      <Card className={`${searchResultsCardsClasses} second-card`} ref={(c) => { searchResultSecondCard = c; }}>
+      <Card
+        className={`${searchResultsCardsClasses} search-results-card`}
+        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+      >
         <CardHeader
           title="URL Avatar"
           subtitle="Subtitle"
@@ -196,7 +178,6 @@ const App = (props) => {
           <FlatButton label="Action2" />
         </CardActions>
       </Card>
-
       <FloatingActionButton className="floating-action-button-show">
         <MapsNavigation />
       </FloatingActionButton>
