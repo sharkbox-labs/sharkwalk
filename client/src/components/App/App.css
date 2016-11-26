@@ -7,3 +7,24 @@
 .floating-action-button-hide {
   display: none;
 }
+
+.first-card {
+  top: 11%;
+}
+
+.second-card {
+  top: 25%;
+  bottom: 0%;
+}
+
+.search-results-show {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  border-radius: 3px;
+}
+
+.search-results-hide {
+  display: none;
+}
+
