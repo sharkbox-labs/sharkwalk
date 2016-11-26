@@ -1,7 +1,9 @@
 import React from 'react';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
+import OriginIcon from 'material-ui/svg-icons/device/gps-fixed';
+import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
 import AutoComplete from 'material-ui/AutoComplete';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
@@ -26,9 +28,15 @@ const App = (props) => {
     left: '5%',
     right: '5%',
     borderRadius: '3px',
+    // display: 'none',
   };
   const searchToolbarGroupStyle = {
     width: '100%',
+    // display: 'none',
+  };
+  const selectingRouteToolbarStyle = {
+    position: 'relative',
+    backgroundColor: 'rgb(0, 188, 212)',
     // display: 'none',
   };
   const iconButtonStyle = {
@@ -57,6 +65,28 @@ const App = (props) => {
         width={300}
         open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
       />
+      <Toolbar style={selectingRouteToolbarStyle}>
+        <ToolbarGroup style={searchToolbarGroupStyle}>
+          <OriginIcon />
+          <AutoComplete
+            hintText="Origin"
+            fullWidth
+            dataSource={['INSERT_DATA_HERE']}
+            style={searchBarStyle}
+          />
+        </ToolbarGroup>
+      </Toolbar>
+      <Toolbar style={selectingRouteToolbarStyle}>
+        <ToolbarGroup style={searchToolbarGroupStyle}>
+          <DestinationIcon />
+          <AutoComplete
+            hintText="Destination"
+            fullWidth
+            dataSource={['INSERT_DATA_HERE']}
+            style={searchBarStyle}
+          />
+        </ToolbarGroup>
+      </Toolbar>
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
@@ -108,6 +138,9 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
+
+      
+
       <FloatingActionButton className="floating-action-button-show">
         <MapsNavigation />
       </FloatingActionButton>
