@@ -5,7 +5,7 @@
 }
 
 .floating-action-button-hide {
-  display: none;
+  display: none !important;
 }
 
 .search-toolbar-show {

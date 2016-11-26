@@ -58,6 +58,11 @@ const App = (props) => {
     'selecting-route-toolbar-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
+  const sendToGoogleMapsButtonClasses = classNames({
+    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE,
+    'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
+  });
+
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -178,7 +183,7 @@ const App = (props) => {
           <FlatButton label="Action2" />
         </CardActions>
       </Card>
-      <FloatingActionButton className="floating-action-button-show">
+      <FloatingActionButton className={sendToGoogleMapsButtonClasses}>
         <MapsNavigation />
       </FloatingActionButton>
     </div>
