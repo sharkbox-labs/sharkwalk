@@ -1,11 +1,11 @@
+.floating-action-button-hide {
+  display: none !important;
+}
+
 .floating-action-button-show {
   bottom: 40px;
   position: fixed;
   right: 40px;
-}
-
-.floating-action-button-hide {
-  display: none;
 }
 
 .search-toolbar-show {
