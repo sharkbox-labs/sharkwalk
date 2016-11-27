@@ -13,6 +13,7 @@ import Map, { Marker } from 'google-maps-react';
 import Drawer from 'material-ui/Drawer';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import MapsNavigation from 'material-ui/svg-icons/maps/navigation';
+import Close from 'material-ui/svg-icons/navigation/close';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
 import appHelper from '../utils/appHelper';
@@ -69,7 +70,20 @@ const App = (props) => {
         docked={false}
         width={300}
         open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
-      />
+      >
+        <IconButton
+          style={iconButtonStyle}
+          onClick={() => (
+            appHelper.toggleInteractionTypeFromMenuClick(
+              props.interactionType,
+              props.changeInteractionType,
+              interactionTypes,
+            )
+          )}
+        >
+          <Close />
+        </IconButton>
+      </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
         onClick={() => { props.changeInteractionType('SEARCHING_ORIGIN'); }}
