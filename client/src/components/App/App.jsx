@@ -8,6 +8,7 @@ import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import OriginIcon from 'material-ui/svg-icons/device/gps-fixed';
 import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
 import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
 import Drawer from 'material-ui/Drawer';
@@ -64,6 +65,26 @@ const App = (props) => {
     'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
+  // Create the autocomplete objects and associate it with the UI input controls.
+  // Restrict the search to San Francisco
+  const defaultBounds = new window.google.maps.LatLngBounds(
+    new window.google.maps.LatLng(37.7000, -122.5200),
+    new window.google.maps.LatLng(37.8100, -122.3500),
+  );
+
+  const search = document.getElementById('autocompleteSearch');
+  const origin = document.getElementById('autocompleteOrigin');
+  const destination = document.getElementById('autocompleteDestination');
+
+  const options = {
+    bounds: defaultBounds,
+  };
+
+  const autocompleteSearch = new window.google.maps.places.Autocomplete(search, options); // eslint-disable-line
+  const autocompleteOrigin = new window.google.maps.places.Autocomplete(origin, options); // eslint-disable-line
+  const autocompleteDestination = new window.google.maps.places.Autocomplete(destination, options); // eslint-disable-line
+
+
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -83,6 +104,8 @@ const App = (props) => {
         >
           <Close />
         </IconButton>
+        <FlatButton label="About" />
+        <FlatButton label="Fork Me On GitHub" />
       </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
@@ -90,10 +113,15 @@ const App = (props) => {
       >
         <ToolbarGroup className="searchbar-toolbar-group">
           <OriginIcon />
-          <AutoComplete
-            hintText="Origin"
+          <TextField
+            placeholder=""
             fullWidth
-            dataSource={['INSERT_DATA_HERE']}
+            hintText="Origin"
+            id="autocompleteOrigin"
+            onClick={() => {
+              props.changeInteractionType('SEARCHING_DESTINATION');
+            }}
+            onNewRequest={getSearchResults}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -104,10 +132,15 @@ const App = (props) => {
       >
         <ToolbarGroup className="searchbar-toolbar-group">
           <DestinationIcon />
-          <AutoComplete
-            hintText="Destination"
+          <TextField
+            placeholder=""
             fullWidth
-            dataSource={['INSERT_DATA_HERE']}
+            hintText="Destination"
+            id="autocompleteDestination"
+            onClick={() => {
+              props.changeInteractionType('SEARCHING_DESTINATION');
+            }}
+            onNewRequest={getSearchResults}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -115,10 +148,10 @@ const App = (props) => {
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
-          google={window.google} // eslint-disable-line
+          google={window.google}
           onReady={() => (
             props.changeOrigin(props.dispatch)
-          )} // this.setDefaultMarkers
+          )}
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
           style={mapStyle}
@@ -154,15 +187,16 @@ const App = (props) => {
           </IconButton>
         </ToolbarGroup>
         <ToolbarGroup className="searchbar-toolbar-group">
-          <AutoComplete
-            hintText="Search"
+          <TextField
+            placeholder=""
             fullWidth
-            dataSource={['INSERT_DATA_HERE']}
-            style={searchBarStyle}
-            onNewRequest={getSearchResults}
+            hintText="Search"
+            id="autocompleteSearch"
             onClick={() => {
               props.changeInteractionType('SEARCHING_DESTINATION');
             }}
+            onNewRequest={getSearchResults}
+            style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
