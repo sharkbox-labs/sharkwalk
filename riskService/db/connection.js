@@ -1,6 +1,10 @@
+const path = require('path');
 const mongoose = require('mongoose');
 const logger = require('../logger');
-require('dotenv').config({ silent: true });
+require('dotenv').config({
+  silent: true,
+  path: path.join(__dirname, '../../.env'),
+});
 
 mongoose.Promise = global.Promise;
 
