@@ -54,6 +54,22 @@
   display: none;
 }
 
+.search-result-destination-show {
+
+}
+
+.search-result-destination-hide {
+  display: none !important;
+}
+
+.search-result-origin-show {
+  
+}
+
+.search-result-origin-hide {
+  display: none !important;
+}
+
 .selecting-route-toolbar-show {
   position: relative;
   background-color: rgb(0, 188, 212) !important;

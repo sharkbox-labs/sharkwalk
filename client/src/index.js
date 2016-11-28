@@ -21,6 +21,7 @@ const initialStore = {
     path: '',
   },
   destinationSearchResults: [],
+  originSearchResults: [],
 };
 
 const store = createStore(

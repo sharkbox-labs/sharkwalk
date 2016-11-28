@@ -23,6 +23,7 @@ import appHelper from '../utils/appHelper';
 injectTapEventPlugin();
 
 const App = (props) => {
+  console.log('PROPS: ', props)
   // These styles are for development only, remove for production
   const mapStyle = {};
   const appContainerStyle = {};
@@ -61,6 +62,14 @@ const App = (props) => {
     'search-results-card': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
   });
 
+  const destinationSearchResultClasses = classNames({
+    'search-result-destination-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION,
+  });
+
+  const originSearchResultClasses = classNames({
+    'search-result-origin-hide': props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+  });
+
   const selectingRouteToolbarClasses = classNames({
     'selecting-route-toolbar-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE,
     'selecting-route-toolbar-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
@@ -82,18 +91,18 @@ const App = (props) => {
     if (query === '') {
       // If the search field was cleared out by the user,
       // reset search results to empty array
-      return props.changeDestinationSearchResults([]);
+      return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults([]) : props.changeDestinationSearchResults([]);
     }
 
     const mapSuggestions = (predictions, status) => {
       if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
         // If no search results were returned, reset search results to empty array
-        return props.changeDestinationSearchResults([]);
+        return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults([]) : props.changeDestinationSearchResults([]);
       }
 
       const results = predictions.map(prediction => prediction.description);
 
-      return props.changeDestinationSearchResults(results);
+      return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults(results) : props.changeDestinationSearchResults(results);
     };
 
 
@@ -107,7 +116,7 @@ const App = (props) => {
     if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
       // On user submit from field, set top result as the origin if the
       // user did not select from the search results.
-      props.changeOrigin(props.dispatch, props.destinationSearchResults[0]);
+      props.changeOrigin(props.dispatch, props.originSearchResults[0]);
     }
 
     if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
@@ -233,9 +242,9 @@ const App = (props) => {
             }}
             onNewRequest={searchBarSubmitHandler}
             onUpdateInput={googleMapsSearch}
-            searchText={props.interactionType === interactionTypes.SEARCHING_ORIGIN && props.origin ? 
+            searchText={props.interactionType === interactionTypes.SEARCHING_ORIGIN && props.origin ?
               typeof props.origin === 'string' ? props.origin : 'Current Location'
-              : props.destination
+              : props.interactionType === interactionTypes.VIEWING_MAP ? '' : props.destination
             }
             style={searchBarStyle}
           />
@@ -259,15 +268,18 @@ const App = (props) => {
         <List id="search-results">
           {props.destinationSearchResults.map(result => (
             <ListItem
+              className={destinationSearchResultClasses}
               leftIcon={<DestinationIcon />}
               primaryText={result}
-              onClick={(e) => {
-                if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
-                  props.changeOrigin(props.dispatch, e.target.textContent);
-                } else {
-                  props.changeDestination(e.target.textContent);
-                }
-              }}
+              onClick={(e) => { props.changeDestination(e.target.textContent); }}
+            />
+          ))}
+          {props.originSearchResults.map(result => (
+            <ListItem
+              className={originSearchResultClasses}
+              leftIcon={<DestinationIcon />}
+              primaryText={result}
+              onClick={(e) => { props.changeOrigin(e.target.textContent); }}
             />
           ))}
         </List>

@@ -87,13 +87,25 @@ export const setRouteResponse = (origin, destination) => {
 };
 
 /**
- * Set the results from a Google Maps Places query to state
+ * Set the results from a Google Maps Places destination query to state
  * @param  {Array} results - An array of strings that are the names of the places
  * returned from Google Maps Places. (Note: This is not simply the response object
  * received from Google Maps--it has been modified to include only the names.)
- * @return {Object} action - The `SET_MAP_SEARCH_RESULTS` action.
+ * @return {Object} action - The `SET_DESTINATION_SEARCH_RESULTS` action.
  */
-export const setDestinationSearchResults = results => ({
-  type: 'SET_MAP_SEARCH_RESULTS',
-  destinationSearchResults: results,
+export const setDestinationSearchResults = destinationResults => ({
+  type: 'SET_DESTINATION_SEARCH_RESULTS',
+  destinationSearchResults: destinationResults,
+});
+
+/**
+ * Set the results from a Google Maps Places origin query to state
+ * @param  {Array} results - An array of strings that are the names of the places
+ * returned from Google Maps Places. (Note: This is not simply the response object
+ * received from Google Maps--it has been modified to include only the names.)
+ * @return {Object} action - The `SET_ORIGIN_SEARCH_RESULTS` action.
+ */
+export const setOriginSearchResults = originResults => ({
+  type: 'SET_ORIGIN_SEARCH_RESULTS',
+  originSearchResults: originResults,
 });
