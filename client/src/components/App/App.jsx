@@ -146,8 +146,13 @@ const App = (props) => {
         >
           <Marker
             key={'origin'}
-            position={props.origin}
             google={window.google}
+            position={props.origin}
+            icon={{
+              url: './bluedot.png',
+              scaledSize: new window.google.maps.Size(35, 35),
+            }}
+            optimized={false}
           />
           <Marker
             key={'destination'}
