@@ -1,5 +1,8 @@
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'SET_CURRENT_LOCATION':
+      return Object.assign({}, state, { currentLocation: action.currentLocation });
+
     case 'SET_DESTINATION':
       return Object.assign({}, state, { destination: action.destination });
 

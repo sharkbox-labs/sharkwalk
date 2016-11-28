@@ -137,22 +137,25 @@ const App = (props) => {
         <Map
           className="map"
           google={window.google}
-          onReady={() => (
-            props.changeOrigin(props.dispatch)
-          )}
+          onReady={() => (props.changeCurrentLocation(props.dispatch))}
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
           style={mapStyle}
         >
           <Marker
-            key={'origin'}
+            key={'currentLocation'}
             google={window.google}
-            position={props.origin}
+            position={props.currentLocation}
             icon={{
               url: './bluedot.png',
               scaledSize: new window.google.maps.Size(35, 35),
             }}
             optimized={false}
+          />
+          <Marker
+            key={'origin'}
+            position={props.origin}
+            google={window.google}
           />
           <Marker
             key={'destination'}
@@ -234,6 +237,15 @@ const App = (props) => {
 };
 
 App.propTypes = {
+  changeDestination: React.PropTypes.func.isRequired,
+  changeInteractionType: React.PropTypes.func.isRequired,
+  changeOrigin: React.PropTypes.func.isRequired,
+  changeRoute: React.PropTypes.func.isRequired,
+  changeRouteResponse: React.PropTypes.func.isRequired,
+  currentLocation: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
   destination: React.PropTypes.shape({
     lat: React.PropTypes.number.isRequired,
     lng: React.PropTypes.number.isRequired,
@@ -243,11 +255,6 @@ App.propTypes = {
     lat: React.PropTypes.number.isRequired,
     lng: React.PropTypes.number.isRequired,
   }),
-  changeDestination: React.PropTypes.func.isRequired,
-  changeInteractionType: React.PropTypes.func.isRequired,
-  changeOrigin: React.PropTypes.func.isRequired,
-  changeRoute: React.PropTypes.func.isRequired,
-  changeRouteResponse: React.PropTypes.func.isRequired,
   destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
   originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };
