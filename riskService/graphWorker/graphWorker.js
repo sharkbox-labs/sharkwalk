@@ -101,7 +101,7 @@ const getEdgesForNode = function getEdgesForNode(node, nodes, segments) {
  */
 module.exports = function graphWorker(area, keepAlive = false) {
   const batchId = shortid.generate();
-  Promise.all([fetchStreetNodes(area), fetchStreetSegments(area)])
+  return Promise.all([fetchStreetNodes(area), fetchStreetSegments(area)])
     .then((results) => {
       const [nodes, segments] = results;
       return riskGenerator.generateRiskForPoints(nodes.map(node => node.the_geom))
