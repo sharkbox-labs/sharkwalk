@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
 import { Card, CardHeader } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
@@ -77,8 +78,8 @@ const App = (props) => {
     new window.google.maps.LatLng(37.8100, -122.3500),
   );
 
-  const googleMapsSearch = (event) => {
-    if (event.target.value === '') {
+  const googleMapsSearch = (query) => {
+    if (query === '') {
       // If the search field was cleared out by the user,
       // reset search results to empty array
       return props.changeMapSearchResults([]);
@@ -96,7 +97,7 @@ const App = (props) => {
     };
 
     const service = new window.google.maps.places.AutocompleteService();
-    return service.getPlacePredictions({ input: event.target.value, bounds: defaultBounds }, mapSuggestions);
+    return service.getPlacePredictions({ input: query, bounds: defaultBounds }, mapSuggestions);
   };
 
   return (
@@ -193,9 +194,10 @@ const App = (props) => {
           </IconButton>
         </ToolbarGroup>
         <ToolbarGroup className="searchbar-toolbar-group">
-          <TextField
+          <AutoComplete
             fullWidth
             hintText="Search"
+            dataSource={[null]}
             onClick={() => {
               if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
                 props.interactionType !== interactionTypes.SEARCHING_DESTINATION
@@ -203,7 +205,8 @@ const App = (props) => {
                 props.changeInteractionType('SEARCHING_DESTINATION');
               }
             }}
-            onChange={googleMapsSearch}
+            onNewRequest={() => { console.log('hello'); props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
+            onUpdateInput={googleMapsSearch}
             style={searchBarStyle}
           />
         </ToolbarGroup>
