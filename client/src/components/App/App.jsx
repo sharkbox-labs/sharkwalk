@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import TextField from 'material-ui/TextField';
 import { Card, CardHeader } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
@@ -8,7 +9,6 @@ import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import OriginIcon from 'material-ui/svg-icons/device/gps-fixed';
 import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
-import TextField from 'material-ui/TextField';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
 import Drawer from 'material-ui/Drawer';
@@ -45,9 +45,19 @@ const App = (props) => {
     'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE && props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
-  const searchResultsCardsClasses = classNames({
-    'search-results-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
-    'search-results-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  const searchCardsClasses = classNames({
+    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const currentLocationCardClasses = classNames({
+    'current-location-card-hide': props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'current-location-card-show': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const searchResultsCardClasses = classNames({
+    'search-results-card-only': props.interactionType === interactionTypes.SEARCHING_DESTINATION,
+    'search-results-card': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
   });
 
   const selectingRouteToolbarClasses = classNames({
@@ -187,7 +197,11 @@ const App = (props) => {
             fullWidth
             hintText="Search"
             onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
+              if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
+                props.interactionType !== interactionTypes.SEARCHING_DESTINATION
+              ) {
+                props.changeInteractionType('SEARCHING_DESTINATION');
+              }
             }}
             onChange={googleMapsSearch}
             style={searchBarStyle}
@@ -195,17 +209,18 @@ const App = (props) => {
         </ToolbarGroup>
       </Toolbar>
       <Card
-        className={`${searchResultsCardsClasses} current-location-card`}
+        className={`${searchCardsClasses} ${currentLocationCardClasses}`}
         onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
       >
-        <CardHeader
-          title="URL Avatar"
-          subtitle="Subtitle"
-          avatar="images/jsa-128.jpg"
-        />
+        <List>
+          <ListItem
+            leftIcon={<OriginIcon />}
+            primaryText="Use current location"
+          />
+        </List>
       </Card>
       <Card
-        className={`${searchResultsCardsClasses} search-results-card`}
+        className={`${searchCardsClasses} ${searchResultsCardClasses}`}
         onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
       >
         <List id="search-results">
