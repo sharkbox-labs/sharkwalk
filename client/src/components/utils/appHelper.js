@@ -3,7 +3,7 @@ const toggleFloatingActionButtonClass = (interactionType, interactionTypes) => (
 );
 
 const toggleInteractionTypeFromMenuClick = (currentInteractionType, dispatcher, interactionTypes) => {
-  if (currentInteractionType === interactionTypes.VIEWING_MAP) {
+  if (currentInteractionType !== interactionTypes.VIEWING_SIDEBAR) {
     dispatcher(interactionTypes.VIEWING_SIDEBAR);
   }
 
