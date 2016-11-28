@@ -46,7 +46,7 @@ const getJumpoffNode = function getJumpoffNode(point, goal) {
   return riskNodeController.findRiskNodesNear(point, 200)
     .then((nodes) => {
       if (!nodes.length) {
-        throw new Error(`Could not find a node near ${point}.`);
+        throw new Error(`Could not find a node near ${JSON.stringify(point)}.`);
       }
       nodes.map((node) => {
         const fScore = hueristic(point, node.location) + hueristic(node.location, goal);
@@ -102,7 +102,7 @@ const getNodeFromHeapOrDb = function getNodeFromHeapOrDb(cnn, heap) {
   if (ind >= 0) {
     return new Promise(resolve => resolve(heap.content[ind]));
   }
-  return riskNodeController.findRiskNodeByCnn(cnn)
+  return riskNodeController.findRiskNodeAndCacheNeighbors(cnn)
     .then(node => transformNodeToFeature(node))
     .then(node => astarifyNode(node));
 };
@@ -226,6 +226,31 @@ const findPathway = function findPathway(origin, destination, riskWeight) {
     });
 };
 
+const pointToLatLngArray = function pointToLatLngArray(point) {
+  const lonLat = turf.getCoord(point);
+  return [lonLat[1], lonLat[0]];
+};
+
+const findPathwayAroundRiskWeight =
+  function findPathwayAroundRiskWeight(origin, destination, riskWeight, tries = 0) {
+    return findPathway(origin, destination, riskWeight)
+      .then((pathway) => {
+        if (pathway.length < 24) {
+          return {
+            origin: pointToLatLngArray(origin),
+            destination: pointToLatLngArray(destination),
+            waypoints: pathway.map(point => pointToLatLngArray(point)),
+            riskWeight,
+          };
+        }
+        if (tries > 5) {
+          throw new Error('Could not find a risk path with less than 24 waypoints');
+        }
+        return findPathwayAroundRiskWeight(origin, destination, riskWeight + 1, tries + 1);
+      });
+  };
+
 module.exports = {
   findPathway,
+  findPathwayAroundRiskWeight,
 };
