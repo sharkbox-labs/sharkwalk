@@ -21,10 +21,9 @@ const requestHandler = (request, response) => {
   // Send query to trip server
   axios.get(`${tripServerUrl}/trip?${queryObj}`)
     .then((tripResponse) => {
+      const paths = tripResponse.map(route => ({ path: route.path }));
       // Pass response from trip server to risk server
-      axios.post(`${riskServerUrl}/risk`, {
-        point: tripResponse.data.path,
-      })
+      axios.post(`${riskServerUrl}/risk`, paths)
         .then((riskResponse) => {
           const routeObj = tripResponse.data;
 

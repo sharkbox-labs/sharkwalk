@@ -10,6 +10,10 @@ const turf = require('turf');
 
 // extracts polylines from each route
 
+/**
+ * @param  {Array} route - from directions object
+ * @return {Array} polylines - array of polylines along the route
+ */
 const retrievePolylines = (route) => {
   const polylines = [];
   const steps = route.legs[0].steps;
@@ -70,6 +74,12 @@ const threshold = 0.025; // (25 m threshold)
 // generate line between two coordinates
 // find and return point along line at prescribed distance
 
+/**
+ * @param  {number[]} pairOne - starting coordinate for segment of path (LatLng tuple)
+ * @param  {number[]} pairTwo - ending coordinate for segment of path (LatLng tuple)
+ * @param  {Number} distance - distance along path from starting point to travel (threshold)
+ * @return {number[]} coordinates - point distance along path from pairOne to pairTow (LatLng tuple)
+ */
 const insertCoordinate = (pairOne, pairTwo, distance) => {
   const line = {
     type: 'Feature',
@@ -134,7 +144,6 @@ const generateEquidistantPath = (coordinates) => {
   return recurse(result[0], coordinates[1], 2); // origin, target, nextTargets
 };
 
-
 const handleCornersDifferently = (coordinates) => {
   const result = [coordinates[0]];
   const recurse = (origin, target, indexOfNextTarget) => {
@@ -183,6 +192,11 @@ const getPaths = (routes) => {
 // using turf.js geoJSON functions
 // NOTE: if user inputs place rather than LatLngs, they must be converted prior
 
+/**
+ * @param  {number[]} originLatLng - origin LatLng
+ * @param  {number[]} destinationLatLng - destination LatLng
+ * @return {number[]} waypoints - a pair of LatLng tuples to be used as route waypoints
+ */
 const getWayPoints = (originLatLng, destinationLatLng) => {
   const origin = convertLatLongs(originLatLng);
   const destination = convertLatLongs(destinationLatLng);
