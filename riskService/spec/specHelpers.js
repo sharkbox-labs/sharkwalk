@@ -1,13 +1,11 @@
 process.env.MONGO_URL = 'mongodb://localhost/jellywave-test';
 
-const RiskPoint = require('../db/riskPointModel');
 const RiskNode = require('../db/riskNodeModel');
 const turf = require('@turf/turf');
 const sfRequest = require('../assessmentWorker/sanFranciscoDataConnector').request;
 const MockAdapter = require('axios-mock-adapter');
 const ctReports = require('./crimeReports/chinatownReports');
 const westSomaReports = require('./crimeReports/westSomaReports');
-const worker = require('../assessmentWorker/worker');
 const graphWorker = require('../graphWorker/graphWorker');
 const westSomaNodes = require('./geoData/westSomaNodes');
 const westSomaSegments = require('./geoData/westSomaSegments');
@@ -16,10 +14,6 @@ const getRandom = (min, max) => (Math.random() * (max - min)) + min;
 
 const generateRandomLocation = () =>
   turf.point([getRandom(-122.49, -122.38), getRandom(37.716, 37.788)]).geometry;
-
-const clearRiskPoints = function clearRiskPoints(done) {
-  RiskPoint.remove({}).then(() => done());
-};
 
 const clearRiskNodes = function clearRiskNodes(done) {
   RiskNode.remove({}).then(() => done());
@@ -161,7 +155,7 @@ const populateDatabaseWithChinatown = function populateDatabaseWithChinatown(don
     ],
   };
   const mock = mockChinatown();
-  worker(chinatown, true)
+  graphWorker(chinatown, true)
     .then(() => {
       mock.restore();
       done();
@@ -200,7 +194,6 @@ const pointsNear = function pointsNear(point, number) {
 
 module.exports = {
   generateRandomLocation,
-  clearRiskPoints,
   mockChinatown,
   populateDatabaseWithChinatown,
   coordsNear,

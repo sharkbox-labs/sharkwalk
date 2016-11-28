@@ -1,5 +1,4 @@
 const turf = require('@turf/turf');
-const riskPointController = require('../db/riskPointController');
 const riskNodeController = require('../db/riskNodeController');
 const config = require('../config');
 
@@ -17,7 +16,7 @@ const precisionRound = function precisionRound(number, precision) {
  * at that point.
  */
 const getRiskForGeoJSONPoint = function getRiskForGeoJSONPoint(point) {
-  return riskPointController.findRiskPointsNear(point, 100)
+  return riskNodeController.findRiskNodesNear(point, 100)
     .then((riskPoints) => {
       if (riskPoints.length === 0) {
         throw new Error(`No risk coverage near the point ${point}`);
