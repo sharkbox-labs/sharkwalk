@@ -13,20 +13,14 @@ import './index.css';
 const initialStore = {
   currentLocation: null,
   currentRoute: null,
-  destination: {
-    lat: 400,
-    lng: 400,
-  },
+  destination: '',
   interactionType: 'VIEWING_MAP',
-  origin: {
-    lat: 400,
-    lng: 400,
-  },
+  origin: '',
   routeResponse: {
     route: '',
     path: '',
   },
-  mapSearchResults: [],
+  destinationSearchResults: [],
 };
 
 const store = createStore(

@@ -93,7 +93,7 @@ export const setRouteResponse = (origin, destination) => {
  * received from Google Maps--it has been modified to include only the names.)
  * @return {Object} action - The `SET_MAP_SEARCH_RESULTS` action.
  */
-export const setMapSearchResults = results => ({
+export const setDestinationSearchResults = results => ({
   type: 'SET_MAP_SEARCH_RESULTS',
-  mapSearchResults: results,
+  destinationSearchResults: results,
 });

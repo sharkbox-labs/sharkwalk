@@ -82,36 +82,38 @@ const App = (props) => {
     if (query === '') {
       // If the search field was cleared out by the user,
       // reset search results to empty array
-      return props.changeMapSearchResults([]);
+      return props.changeDestinationSearchResults([]);
     }
 
     const mapSuggestions = (predictions, status) => {
       if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
         // If no search results were returned, reset search results to empty array
-        return props.changeMapSearchResults([]);
+        return props.changeDestinationSearchResults([]);
       }
 
       const results = predictions.map(prediction => prediction.description);
 
-      return props.changeMapSearchResults(results);
+      return props.changeDestinationSearchResults(results);
     };
+
 
     const service = new window.google.maps.places.AutocompleteService();
     return service.getPlacePredictions({ input: query, bounds: defaultBounds }, mapSuggestions);
   };
+
 
   const searchBarSubmitHandler = () => {
     // set either origin or destination to top result
     if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
       // On user submit from field, set top result as the origin if the
       // user did not select from the search results.
-      props.changeOrigin(props.dispatch, props.mapSearchResults[0]);
+      props.changeOrigin(props.dispatch, props.destinationSearchResults[0]);
     }
 
     if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
       // On user submit from field, set top result as the destination if the
       // user did not select from the search results.
-      props.changeDestination(props.mapSearchResults[0]);
+      props.changeDestination(props.destinationSearchResults[0]);
     }
 
     props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
@@ -148,7 +150,7 @@ const App = (props) => {
         className={selectingRouteToolbarClasses}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
-        <ToolbarGroup className="searchbar-toolbar-group">
+        <ToolbarGroup className="search-toolbargroup">
           <OriginIcon />
           <TextField
             fullWidth
@@ -163,7 +165,7 @@ const App = (props) => {
         className={selectingRouteToolbarClasses}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
-        <ToolbarGroup className="searchbar-toolbar-group">
+        <ToolbarGroup className="search-toolbargroup">
           <DestinationIcon />
           <TextField
             fullWidth
@@ -217,10 +219,10 @@ const App = (props) => {
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
-        <ToolbarGroup className="searchbar-toolbar-group">
+        <ToolbarGroup className="search-toolbargroup">
           <AutoComplete
             fullWidth
-            hintText="Search"
+            hintText={props.interactionType === interactionTypes.SEARCHING_ORIGIN ? 'Search for starting point' : 'Search for destination'}
             dataSource={[null]}
             onClick={() => {
               if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
@@ -231,6 +233,10 @@ const App = (props) => {
             }}
             onNewRequest={searchBarSubmitHandler}
             onUpdateInput={googleMapsSearch}
+            searchText={props.interactionType === interactionTypes.SEARCHING_ORIGIN && props.origin ? 
+              typeof props.origin === 'string' ? props.origin : 'Current Location'
+              : props.destination
+            }
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -251,7 +257,7 @@ const App = (props) => {
         onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
         <List id="search-results">
-          {props.mapSearchResults.map(result => (
+          {props.destinationSearchResults.map(result => (
             <ListItem
               leftIcon={<DestinationIcon />}
               primaryText={result}
@@ -288,7 +294,7 @@ App.propTypes = {
   changeOrigin: React.PropTypes.func.isRequired,
   changeRoute: React.PropTypes.func.isRequired,
   changeRouteResponse: React.PropTypes.func.isRequired,
-  mapSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
+  destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };
 
 export default App;

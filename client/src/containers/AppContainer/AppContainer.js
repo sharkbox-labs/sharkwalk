@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse, setMapSearchResults } from '../../actions/index';
+import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse, setDestinationSearchResults } from '../../actions/index';
 import App from '../../components/App/App';
 
 
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
   interactionType: state.interactionType,
   currentRoute: state.currentRoute,
   routeResponse: state.routeResponse,
-  mapSearchResults: state.mapSearchResults,
+  destinationSearchResults: state.destinationSearchResults,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -38,8 +38,8 @@ const mapDispatchToProps = dispatch => ({
     setRouteResponse(routeResponse);
   },
 
-  changeMapSearchResults: (results) => {
-    dispatch(setMapSearchResults(results));
+  changeDestinationSearchResults: (results) => {
+    dispatch(setDestinationSearchResults(results));
   },
 });
 
