@@ -11,6 +11,7 @@ const riskNodeSchema = new mongoose.Schema({
   },
   cnn: {
     type: String,
+    index: true,
   },
   location: {
     type: mongoose.Schema.Types.Point,
