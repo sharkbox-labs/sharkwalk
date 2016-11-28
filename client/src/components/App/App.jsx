@@ -1,13 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import { Card, CardActions, CardHeader, CardTitle, CardText } from 'material-ui/Card';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import { Card, CardHeader } from 'material-ui/Card';
+import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import OriginIcon from 'material-ui/svg-icons/device/gps-fixed';
 import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
-import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
@@ -30,11 +30,6 @@ const App = (props) => {
     float: 'left',
   };
   const searchBarStyle = {};
-
-  const getSearchResults = (query) => {
-    // get search results for query
-    // window.google.maps.places.SearchBox is a function...but don't know what it does
-  };
 
   // Create immutable interaction types for components to use
   const interactionTypes = {
@@ -72,18 +67,27 @@ const App = (props) => {
     new window.google.maps.LatLng(37.8100, -122.3500),
   );
 
-  const search = document.getElementById('autocompleteSearch');
-  const origin = document.getElementById('autocompleteOrigin');
-  const destination = document.getElementById('autocompleteDestination');
+  const googleMapsSearch = (event) => {
+    if (event.target.value === '') {
+      // If the search field was cleared out by the user,
+      // reset search results to empty array
+      return props.changeMapSearchResults([]);
+    }
 
-  const options = {
-    bounds: defaultBounds,
+    const mapSuggestions = (predictions, status) => {
+      if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
+        // If no search results were returned, reset search results to empty array
+        return props.changeMapSearchResults([]);
+      }
+
+      const results = predictions.map(prediction => prediction.description);
+
+      return props.changeMapSearchResults(results);
+    };
+
+    const service = new window.google.maps.places.AutocompleteService();
+    return service.getPlacePredictions({ input: event.target.value, bounds: defaultBounds }, mapSuggestions);
   };
-
-  const autocompleteSearch = new window.google.maps.places.Autocomplete(search, options); // eslint-disable-line
-  const autocompleteOrigin = new window.google.maps.places.Autocomplete(origin, options); // eslint-disable-line
-  const autocompleteDestination = new window.google.maps.places.Autocomplete(destination, options); // eslint-disable-line
-
 
   return (
     <div className="app-container" style={appContainerStyle} >
@@ -114,14 +118,9 @@ const App = (props) => {
         <ToolbarGroup className="searchbar-toolbar-group">
           <OriginIcon />
           <TextField
-            placeholder=""
             fullWidth
             hintText="Origin"
-            id="autocompleteOrigin"
-            onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
-            }}
-            onNewRequest={getSearchResults}
+            onClick={() => { props.changeInteractionType('SEARCHING_DESTINATION'); }}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -133,14 +132,11 @@ const App = (props) => {
         <ToolbarGroup className="searchbar-toolbar-group">
           <DestinationIcon />
           <TextField
-            placeholder=""
             fullWidth
             hintText="Destination"
-            id="autocompleteDestination"
             onClick={() => {
               props.changeInteractionType('SEARCHING_DESTINATION');
             }}
-            onNewRequest={getSearchResults}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -188,14 +184,12 @@ const App = (props) => {
         </ToolbarGroup>
         <ToolbarGroup className="searchbar-toolbar-group">
           <TextField
-            placeholder=""
             fullWidth
             hintText="Search"
-            id="autocompleteSearch"
             onClick={() => {
               props.changeInteractionType('SEARCHING_DESTINATION');
             }}
-            onNewRequest={getSearchResults}
+            onChange={googleMapsSearch}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -214,22 +208,14 @@ const App = (props) => {
         className={`${searchResultsCardsClasses} search-results-card`}
         onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
       >
-        <CardHeader
-          title="URL Avatar"
-          subtitle="Subtitle"
-          avatar="images/jsa-128.jpg"
-        />
-        <CardTitle title="Card title" subtitle="Card subtitle" />
-        <CardText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-          Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-          Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-        </CardText>
-        <CardActions>
-          <FlatButton label="Action1" />
-          <FlatButton label="Action2" />
-        </CardActions>
+        <List id="search-results">
+          {props.mapSearchResults.map(result => (
+            <ListItem
+              leftIcon={<DestinationIcon />}
+              primaryText={result}
+            />
+          ))}
+        </List>
       </Card>
       <FloatingActionButton className={sendToGoogleMapsButtonClasses}>
         <MapsNavigation />
@@ -253,6 +239,7 @@ App.propTypes = {
   changeOrigin: React.PropTypes.func.isRequired,
   changeRoute: React.PropTypes.func.isRequired,
   changeRouteResponse: React.PropTypes.func.isRequired,
+  mapSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };
 
 export default App;

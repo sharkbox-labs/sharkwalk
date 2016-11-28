@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse } from '../../actions/index';
+import { setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse, setMapSearchResults } from '../../actions/index';
 import App from '../../components/App/App';
 
 
@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
   interactionType: state.interactionType,
   currentRoute: state.currentRoute,
   routeResponse: state.routeResponse,
+  mapSearchResults: state.mapSearchResults,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -35,6 +36,10 @@ const mapDispatchToProps = dispatch => ({
   changeRouteResponse: (routeResponse) => {
     // Dispatch is handled by thunk middleware (see setRouteResponse action creator)
     setRouteResponse(routeResponse);
+  },
+
+  changeMapSearchResults: (results) => {
+    dispatch(setMapSearchResults(results));
   },
 });
 

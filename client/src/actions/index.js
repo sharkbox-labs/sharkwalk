@@ -85,3 +85,15 @@ export const setRouteResponse = (origin, destination) => {
     });
   };
 };
+
+/**
+ * Set the results from a Google Maps Places query to state
+ * @param  {Array} results - An array of strings that are the names of the places
+ * returned from Google Maps Places. (Note: This is not simply the response object
+ * received from Google Maps--it has been modified to include only the names.)
+ * @return {Object} action - The `SET_MAP_SEARCH_RESULTS` action.
+ */
+export const setMapSearchResults = results => ({
+  type: 'SET_MAP_SEARCH_RESULTS',
+  mapSearchResults: results,
+});

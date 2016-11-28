@@ -12,6 +12,9 @@ const reducer = (state, action) => {
     case 'SET_CURRENT_ROUTE':
       return Object.assign({}, state, { currentRoute: action.routeIndex });
 
+    case 'SET_MAP_SEARCH_RESULTS':
+      return Object.assign({}, state, { mapSearchResults: action.mapSearchResults });
+
     default:
       return state;
   }

@@ -26,6 +26,7 @@ const initialStore = {
     route: '',
     path: '',
   },
+  mapSearchResults: [],
 };
 
 const store = createStore(
