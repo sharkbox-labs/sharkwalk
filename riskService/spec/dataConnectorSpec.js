@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const sfData = require('../assessmentWorker/sanFranciscoDataConnector');
+const sfData = require('../graphWorker/sanFranciscoDataConnector');
 
 /* eslint-disable no-unused-expressions, arrow-body-style */
 

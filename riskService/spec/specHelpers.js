@@ -2,7 +2,7 @@ process.env.MONGO_URL = 'mongodb://localhost/jellywave-test';
 
 const RiskNode = require('../db/riskNodeModel');
 const turf = require('@turf/turf');
-const sfRequest = require('../assessmentWorker/sanFranciscoDataConnector').request;
+const sfRequest = require('../graphWorker/sanFranciscoDataConnector').request;
 const MockAdapter = require('axios-mock-adapter');
 const ctReports = require('./crimeReports/chinatownReports');
 const westSomaReports = require('./crimeReports/westSomaReports');

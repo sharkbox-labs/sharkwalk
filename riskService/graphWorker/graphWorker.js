@@ -6,7 +6,7 @@ require('dotenv').config({
 const request = require('axios');
 const turf = require('@turf/turf');
 const logger = require('../logger');
-const riskGenerator = require('../assessmentWorker/riskGenerator');
+const riskGenerator = require('./riskGenerator');
 const shortid = require('shortid');
 const db = require('../db/connection');
 

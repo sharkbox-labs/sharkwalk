@@ -34,7 +34,7 @@ RiskPoint.find({}).exec()
   .then(records => records.map(record => recordToGeoJSON(record)))
   .then(points => turf.featureCollection(points))
   .then((collection) => {
-    fs.writeFileSync('./visualization.geojson', JSON.stringify(collection, null, 2), 'utf-8');
+    fs.writeFileSync('./riskVisualization.geojson', JSON.stringify(collection, null, 2), 'utf-8');
     db.close();
   })
   .catch((err) => {
