@@ -117,6 +117,11 @@ const App = (props) => {
     props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
   };
 
+  const currentLocationClickHandler = () => {
+    props.changeOrigin(props.dispatch);
+    props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
+  };
+
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -148,7 +153,7 @@ const App = (props) => {
           <TextField
             fullWidth
             hintText="Origin"
-            value={props.origin}
+            value={typeof props.origin === 'string' ? props.origin : 'Current Location'}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
@@ -232,12 +237,12 @@ const App = (props) => {
       </Toolbar>
       <Card
         className={`${searchCardsClasses} ${currentLocationCardClasses}`}
-        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
         <List>
           <ListItem
             leftIcon={<OriginIcon />}
             primaryText="Use current location"
+            onClick={currentLocationClickHandler}
           />
         </List>
       </Card>
@@ -250,6 +255,13 @@ const App = (props) => {
             <ListItem
               leftIcon={<DestinationIcon />}
               primaryText={result}
+              onClick={(e) => {
+                if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
+                  props.changeOrigin(props.dispatch, e.target.textContent);
+                } else {
+                  props.changeDestination(e.target.textContent);
+                }
+              }}
             />
           ))}
         </List>
