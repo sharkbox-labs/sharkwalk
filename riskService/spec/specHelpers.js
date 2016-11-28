@@ -1,11 +1,16 @@
 process.env.MONGO_URL = 'mongodb://localhost/jellywave-test';
 
 const RiskPoint = require('../db/riskPointModel');
+const RiskNode = require('../db/riskNodeModel');
 const turf = require('@turf/turf');
 const sfRequest = require('../assessmentWorker/sanFranciscoDataConnector').request;
 const MockAdapter = require('axios-mock-adapter');
 const ctReports = require('./crimeReports/chinatownReports');
+const westSomaReports = require('./crimeReports/westSomaReports');
 const worker = require('../assessmentWorker/worker');
+const graphWorker = require('../graphWorker/graphWorker');
+const westSomaNodes = require('./geoData/westSomaNodes');
+const westSomaSegments = require('./geoData/westSomaSegments');
 
 const getRandom = (min, max) => (Math.random() * (max - min)) + min;
 
@@ -16,11 +21,102 @@ const clearRiskPoints = function clearRiskPoints(done) {
   RiskPoint.remove({}).then(() => done());
 };
 
+const clearRiskNodes = function clearRiskNodes(done) {
+  RiskNode.remove({}).then(() => done());
+};
+
 const mockChinatown = function mockChinatown() {
   const mock = new MockAdapter(sfRequest);
   mock.onGet('https://data.sfgov.org/resource/cuks-n6tp.json')
     .reply(200, ctReports);
   return mock;
+};
+
+const mockWestSoma = function mockWestSoma() {
+  const mock = new MockAdapter(sfRequest);
+  mock.onGet('https://data.sfgov.org/resource/cuks-n6tp.json')
+    .reply(200, westSomaReports);
+  mock.onGet('https://data.sfgov.org/resource/stqf-m6iw.json')
+    .reply(200, westSomaNodes);
+  mock.onGet('https://data.sfgov.org/resource/7hfy-8sz8')
+    .reply(200, westSomaSegments);
+  return mock;
+};
+
+const populateDatabaseWithWestSoma = function populateDatabaseWithWestSoma(done) {
+  const westSoma = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            -122.39960432052612,
+            37.773699921075135,
+          ],
+        },
+      },
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            -122.40595579147337,
+            37.778703223837695,
+          ],
+        },
+      },
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [
+                -122.39782333374022,
+                37.77230911236875,
+              ],
+              [
+                -122.39336013793945,
+                37.77587088725018,
+              ],
+              [
+                -122.40438938140868,
+                37.78329917982422,
+              ],
+              [
+                -122.41267204284668,
+                37.77746514993689,
+              ],
+              [
+                -122.40202903747559,
+                37.77047727561618,
+              ],
+              [
+                -122.39782333374022,
+                37.77230911236875,
+              ],
+            ],
+          ],
+        },
+      },
+    ],
+  };
+  const mock = mockWestSoma();
+  graphWorker(westSoma, true)
+    .then(() => {
+      mock.restore();
+      done();
+    })
+    .catch((error) => {
+      mock.restore();
+      console.log(error); // eslint-disable-line no-console
+      done();
+    });
 };
 
 const populateDatabaseWithChinatown = function populateDatabaseWithChinatown(done) {
@@ -109,4 +205,7 @@ module.exports = {
   populateDatabaseWithChinatown,
   coordsNear,
   pointsNear,
+  clearRiskNodes,
+  mockWestSoma,
+  populateDatabaseWithWestSoma,
 };
