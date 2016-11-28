@@ -1,7 +1,7 @@
 const RiskNode = require('./riskNodeModel');
 const lru = require('lru-cache');
 
-const cache = lru(100);
+const cache = lru(500);
 
 /**
  * Methods for interacting with Risk Nodes.
@@ -20,6 +20,13 @@ const cache = lru(100);
 const createRiskNodes = function createRiskNodes(points, batchId) {
   const batchedPoints = points.map(point => Object.assign(point, { batchId }));
   return RiskNode.create(batchedPoints);
+};
+
+const findRiskNodesByCnns = function findRiskNodesByCnns(cnns) {
+  const uncachedCnns = cnns.filter(cnn => !cache.get(cnn));
+  return RiskNode.find({
+    cnn: { $in: uncachedCnns },
+  }).exec();
 };
 
 const findRiskNodeByCnn = function findRiskNodeByCnn(cnn) {
@@ -68,10 +75,39 @@ const findRiskNodesNearCnn = function findRiskNodesNearCnn(cnn, distance = 100) 
     });
 };
 
+const findRiskNodeAndCacheNeighbors = function findRiskNodeAndCacheNeighbors(cnn) {
+  return findRiskNodeByCnn(cnn)
+    .then((node) => {
+      if (!node) {
+        throw new Error(`No node with CNN: ${cnn} found.`);
+      }
+      findRiskNodesByCnns(node.edges.map(edge => edge.cnn))
+        .then((neighbors) => {
+          neighbors.forEach(neighbor => cache.set(neighbor.cnn, neighbor));
+        });
+      return node;
+    });
+};
+
+const findRiskNodesWithinPolygon = function findRiskPointsWithinPolygon(polygon) {
+  return RiskNode.find({
+    location: {
+      $geoWithin: {
+        $geometry: polygon,
+      },
+    },
+  }, {
+    location: 1,
+    risk: 1,
+    _id: 0,
+  });
+};
 
 module.exports = {
   createRiskNodes,
   findRiskNodeByCnn,
   findRiskNodesNear,
   findRiskNodesNearCnn,
+  findRiskNodeAndCacheNeighbors,
+  findRiskNodesWithinPolygon,
 };
