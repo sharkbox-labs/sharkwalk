@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
-import { Card, CardHeader } from 'material-ui/Card';
+import { Card } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -100,6 +100,23 @@ const App = (props) => {
     return service.getPlacePredictions({ input: query, bounds: defaultBounds }, mapSuggestions);
   };
 
+  const searchBarSubmitHandler = () => {
+    // set either origin or destination to top result
+    if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
+      // On user submit from field, set top result as the origin if the
+      // user did not select from the search results.
+      props.changeOrigin(props.dispatch, props.mapSearchResults[0]);
+    }
+
+    if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
+      // On user submit from field, set top result as the destination if the
+      // user did not select from the search results.
+      props.changeDestination(props.mapSearchResults[0]);
+    }
+
+    props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
+  };
+
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -124,29 +141,31 @@ const App = (props) => {
       </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
-        onClick={() => { props.changeInteractionType('SEARCHING_ORIGIN'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
         <ToolbarGroup className="searchbar-toolbar-group">
           <OriginIcon />
           <TextField
             fullWidth
             hintText="Origin"
-            onClick={() => { props.changeInteractionType('SEARCHING_DESTINATION'); }}
+            value={props.origin}
+            onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
       <Toolbar
         className={selectingRouteToolbarClasses}
-        onClick={() => { props.changeInteractionType('SEARCHING_DESTINATION'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
         <ToolbarGroup className="searchbar-toolbar-group">
           <DestinationIcon />
           <TextField
             fullWidth
             hintText="Destination"
+            value={props.destination}
             onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
+              props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
             }}
             style={searchBarStyle}
           />
@@ -202,10 +221,10 @@ const App = (props) => {
               if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
                 props.interactionType !== interactionTypes.SEARCHING_DESTINATION
               ) {
-                props.changeInteractionType('SEARCHING_DESTINATION');
+                props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
               }
             }}
-            onNewRequest={() => { console.log('hello'); props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
+            onNewRequest={searchBarSubmitHandler}
             onUpdateInput={googleMapsSearch}
             style={searchBarStyle}
           />
@@ -213,7 +232,7 @@ const App = (props) => {
       </Toolbar>
       <Card
         className={`${searchCardsClasses} ${currentLocationCardClasses}`}
-        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
         <List>
           <ListItem
@@ -224,7 +243,7 @@ const App = (props) => {
       </Card>
       <Card
         className={`${searchCardsClasses} ${searchResultsCardClasses}`}
-        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
         <List id="search-results">
           {props.mapSearchResults.map(result => (
