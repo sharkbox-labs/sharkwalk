@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const turf = require('@turf/turf');
-const riskGenerator = require('../assessmentWorker/riskGenerator');
+const riskGenerator = require('../graphWorker/riskGenerator');
 const hrReports = require('./crimeReports/hackReactorReports');
 const bhReports = require('./crimeReports/bernalHeightsReports');
 const specHelpers = require('./specHelpers');

@@ -55,4 +55,4 @@ const downtownSF = {
   ],
 };
 
-require('./worker')(downtownSF);
+require('./graphWorker')(downtownSF);

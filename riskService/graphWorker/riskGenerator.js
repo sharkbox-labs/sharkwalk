@@ -109,7 +109,29 @@ const generateRiskForArea = function generateRiskForArea(area) {
     });
 };
 
+/**
+ * Generates an array of risk values for a set of points.
+ * @param  {GeoJSON[]} points An array of GeoJSON points.
+ * @return {Promise}        Resolves to an array of risk values corresponding
+ * to each point.
+ */
+const generateRiskForPoints = function generateRiskForPoints(points) {
+  const pointsCollection = turf.featureCollection(points.map(point => turf.feature(point)));
+  const buffer = turf.buffer(pointsCollection, config.maxCrimeDistance, 'meters');
+  const reportArea = turf.envelope(buffer);
+  return sf.fetchCrimeReports(reportArea, config.reportLookback)
+    .then((reports) => {
+      const riskValues = [];
+      geoMeta.featureEach(pointsCollection, (point) => {
+        const risk = generateRiskForPoint(point, reports);
+        riskValues.push(risk);
+      });
+      return riskValues;
+    });
+};
+
 module.exports = {
   generateRiskForArea,
   generateRiskForPoint,
+  generateRiskForPoints,
 };

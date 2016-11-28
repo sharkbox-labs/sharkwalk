@@ -1,5 +1,5 @@
 const turf = require('@turf/turf');
-const riskPointController = require('../db/riskPointController');
+const riskNodeController = require('../db/riskNodeController');
 const config = require('../config');
 
 const precisionRound = function precisionRound(number, precision) {
@@ -16,7 +16,7 @@ const precisionRound = function precisionRound(number, precision) {
  * at that point.
  */
 const getRiskForGeoJSONPoint = function getRiskForGeoJSONPoint(point) {
-  return riskPointController.findRiskPointsNear(point, 100)
+  return riskNodeController.findRiskNodesNear(point, 100)
     .then((riskPoints) => {
       if (riskPoints.length === 0) {
         throw new Error(`No risk coverage near the point ${point}`);
@@ -39,7 +39,7 @@ const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArra
   const longLats = coordArray.map(coord => [coord[1], coord[0]]);
   const lineString = turf.lineString(longLats);
   const expandedString = turf.buffer(lineString, (config.gridDensity / 1000) * 1.05, 'kilometers');
-  return riskPointController.findRiskPointsWithinPolygon(expandedString.geometry)
+  return riskNodeController.findRiskNodesWithinPolygon(expandedString.geometry)
     .then((records) => {
       const features = records.map(record => ({
         type: 'Feature',

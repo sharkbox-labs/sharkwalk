@@ -6,12 +6,12 @@ const fs = require('fs');
 const turf = require('@turf/turf');
 const path = require('path');
 const colorcolor = require('colorcolor');
-require('dotenv').config({ silent: false, path: path.join(__dirname, '../.env') });
+require('dotenv').config({ silent: false, path: path.join(__dirname, '../../.env') });
 
-const RiskPoint = require('../db/riskPointModel');
+const RiskPoint = require('../db/riskNodeModel');
 const db = require('../db/connection');
 
-const MAX_RISK = 100;
+const MAX_RISK = 400;
 
 const numberToRGBGreenRed = function numberToRGBGreenRed(num) {
   let hue = 120 - (120 * num);
@@ -22,7 +22,7 @@ const numberToRGBGreenRed = function numberToRGBGreenRed(num) {
 };
 
 const recordToGeoJSON = (record) => {
-  const point = record.location;
+  const point = turf.feature(record.location);
   point.properties = {};
   point.properties['marker-symbol'] = '';
   point.properties['marker-size'] = 'small';
@@ -34,7 +34,7 @@ RiskPoint.find({}).exec()
   .then(records => records.map(record => recordToGeoJSON(record)))
   .then(points => turf.featureCollection(points))
   .then((collection) => {
-    fs.writeFileSync('./visualization.geojson', JSON.stringify(collection, null, 2), 'utf-8');
+    fs.writeFileSync('./riskVisualization.geojson', JSON.stringify(collection, null, 2), 'utf-8');
     db.close();
   })
   .catch((err) => {

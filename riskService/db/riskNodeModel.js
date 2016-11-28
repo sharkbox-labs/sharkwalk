@@ -4,22 +4,24 @@ require('mongoose-geojson-schema');
 mongoose.Promise = global.Promise;
 
 // eslint-disable-next-line new-cap
-const riskPointSchema = new mongoose.Schema({
+const riskNodeSchema = new mongoose.Schema({
   risk: {
     type: Number,
-    required: [true, 'Risk is required for a Risk Point'],
     min: [0, 'Risk must be greater than or equal to zero'],
+  },
+  cnn: {
+    type: String,
+    index: true,
   },
   location: {
     type: mongoose.Schema.Types.Point,
     required: [true, 'Location is required for a Risk Point'],
   },
   batchId: String,
-}, {
-  timestamps: true,
+  edges: Array,
 });
 
-riskPointSchema.index({ location: '2dsphere' }); // enable geo-queries
+riskNodeSchema.index({ location: '2dsphere' }); // enable geo-queries
 
 // eslint-disable-next-line new-cap
-module.exports = mongoose.model('RiskPoint', riskPointSchema);
+module.exports = mongoose.model('RiskNode', riskNodeSchema);
