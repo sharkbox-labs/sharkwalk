@@ -31,6 +31,11 @@ const App = (props) => {
     float: 'left',
   };
   const searchBarStyle = {};
+  const flatButtonStyle = {
+    clear: 'both',
+    'text-align': 'left',
+    width: '300px',
+  };
 
   // Create immutable interaction types for components to use
   const interactionTypes = {
@@ -96,10 +101,10 @@ const App = (props) => {
             )
           )}
         >
-          <Close />
+          <Close color="rgb(0, 188, 212)" />
         </IconButton>
-        <FlatButton label="About" />
-        <FlatButton label="Fork Me On GitHub" />
+        <FlatButton label="About" style={flatButtonStyle} />
+        <FlatButton label="Fork Me On GitHub" style={flatButtonStyle} />
       </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
@@ -179,7 +184,7 @@ const App = (props) => {
               )
             )}
           >
-            <SearchBarHamburgerIcon />
+            <SearchBarHamburgerIcon color="rgb(0, 188, 212)" />
           </IconButton>
         </ToolbarGroup>
         <ToolbarGroup className="search-toolbargroup">
