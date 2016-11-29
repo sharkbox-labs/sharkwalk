@@ -2,29 +2,19 @@ const request = require('supertest');
 const expect = require('chai').expect;
 const app = require('../server');
 
-// temporary empty query
-const testQuery = {
-  origin: {
-    lat: 37.7836415,
-    lng: -122.409185,
-  },
-  destination: {
-    lat: 37.7811631,
-    lng: -122.406077,
-  },
-};
+const exampleRequestBody = require('./exampleData');
 
 describe('Trip Server:', () => {
   it('should respond with a 200 status code', (done) => {
     request(app)
-      .get('/trip')
-      .query(testQuery)
+      .post('/routes')
+      .send(exampleRequestBody)
       .expect(200, done);
   });
-  it('should respond with trips', (done) => {
+  it('should respond with array of route/path objects', (done) => {
     request(app)
-      .get('/trip')
-      .query(testQuery)
+      .post('/routes')
+      .send(exampleRequestBody)
       .end((error, response) => {
         expect(error).to.not.exist;
         expect(response.body.error).to.not.exist;
@@ -38,10 +28,10 @@ describe('Trip Server:', () => {
         done();
       });
   });
-  it('path should be an array of arrays of coordinates', (done) => {
+  xit('path should be an array of arrays of coordinates', (done) => {
     request(app)
-      .get('/trip')
-      .query(testQuery)
+      .post('/routes')
+      .send(exampleRequestBody)
       .end((error, response) => {
         expect(error).to.not.exist;
         expect(response.status).to.equal(200);
@@ -52,10 +42,10 @@ describe('Trip Server:', () => {
         done();
       });
   });
-  it('path should be have the same origin as the query', (done) => {
+  xit('path should be have the same origin as the original request', (done) => {
     request(app)
-      .get('/trip')
-      .query(testQuery)
+      .post('/routes')
+      .send(exampleRequestBody)
       .end((error, response) => {
         expect(error).to.not.exist;
         expect(response.status).to.equal(200);
