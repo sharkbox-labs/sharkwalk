@@ -28,7 +28,7 @@ describe('Trip Server:', () => {
         done();
       });
   });
-  xit('path should be an array of arrays of coordinates', (done) => {
+  it('path should be an array of arrays of coordinates', (done) => {
     request(app)
       .post('/routes')
       .send(exampleRequestBody)
@@ -42,6 +42,7 @@ describe('Trip Server:', () => {
         done();
       });
   });
+  // FIX:
   xit('path should be have the same origin as the original request', (done) => {
     request(app)
       .post('/routes')
@@ -51,10 +52,8 @@ describe('Trip Server:', () => {
         expect(response.status).to.equal(200);
         expect(response.body[0].path[0]).to.be.an('Array');
         expect(response.body[0].path[0].length).to.be.equal(2);
-        expect(response.body[0].path[0][0]).to.equal(37.78364);
-        expect(response.body[0].path[0][1]).to.equal(-122.40918);
-        expect(response.body[1].path[0][0]).to.equal(37.78364);
-        expect(response.body[1].path[0][1]).to.equal(-122.40918);
+        expect(response.body[0].path[0][0]).to.equal(37.773699921075135);
+        expect(response.body[0].path[0][1]).to.equal(-122.39960432052612);
         done();
       });
   });
