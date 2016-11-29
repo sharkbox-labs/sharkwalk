@@ -72,14 +72,23 @@ const openSearchCards = (props, interactionTypes) => {
   }
 };
 
+const setOriginIfUndefined = (props) => {
+  // If origin hasn't been set, use currentLocation.
+  if (props.origin === ' ') {
+    props.changeOrigin(props.currentLocation);
+  }
+};
+
 const searchBarSubmitHandler = (props, interactionTypes) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
     // On user submit from input field, set top result as the origin if the
     // user did not select from the search results.
-    props.changeOrigin(props.dispatch, props.originSearchResults[0]);
+    props.changeOrigin(props.originSearchResults[0]);
   }
 
   if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
+    setOriginIfUndefined(props);
+
     // On user submit from input field, set top result as the destination if the
     // user did not select from the search results.
     props.changeDestination(props.destinationSearchResults[0]);
@@ -103,7 +112,7 @@ const toggleInteractionTypeFromMenuClick = (currentInteractionType, dispatcher, 
 };
 
 const useCurrentLocationClickHandler = (props, interactionTypes) => {
-  props.changeOrigin(props.dispatch);
+  props.changeOrigin(props.currentLocation);
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
@@ -113,6 +122,7 @@ export default {
   getGoogleMapsPlacePredictions,
   getSearchBarHintText,
   openSearchCards,
+  setOriginIfUndefined,
   searchBarSubmitHandler,
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,

@@ -221,7 +221,10 @@ const App = (props) => {
               className={destinationSearchResultClasses}
               leftIcon={<DestinationIcon />}
               primaryText={result}
-              onClick={(e) => { props.changeDestination(e.target.textContent); }}
+              onClick={(e) => {
+                appHelper.setOriginIfUndefined(props);
+                props.changeDestination(e.target.textContent);
+              }}
             />
           ))}
           {props.originSearchResults.map(result => (
@@ -229,7 +232,10 @@ const App = (props) => {
               className={originSearchResultClasses}
               leftIcon={<DestinationIcon />}
               primaryText={result}
-              onClick={(e) => { props.changeOrigin(e.target.textContent); }}
+              onClick={(e) => {
+                appHelper.setOriginIfUndefined(props);
+                props.changeOrigin(e.target.textContent);
+              }}
             />
           ))}
         </List>
