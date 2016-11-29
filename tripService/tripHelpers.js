@@ -188,30 +188,6 @@ const getPaths = (routes) => {
   return paths;
 };
 
-// function getWayPoints takes origin and destination LatLngs, and returns two waypoints
-// using turf.js geoJSON functions
-// NOTE: if user inputs place rather than LatLngs, they must be converted prior
-
-/**
- * @param  {number[]} originLatLng - origin LatLng
- * @param  {number[]} destinationLatLng - destination LatLng
- * @return {number[]} waypoints - a pair of LatLng tuples to be used as route waypoints
- */
-const getWayPoints = (originLatLng, destinationLatLng) => {
-  const origin = convertLatLongs(originLatLng);
-  const destination = convertLatLongs(destinationLatLng);
-  const distance = turf.distance(turf.point(origin), turf.point(destination), 'kilometers');
-  const midpoint = turf.midpoint(turf.point(origin), turf.point(destination));
-  const bearing = turf.bearing(turf.point(origin), turf.point(destination));
-  // define waypoint's distance from midpoint here:
-  const distanceFromMidpoint = distance / 3;
-  let waypoint1 = turf.destination(midpoint, distanceFromMidpoint, bearing + 90, 'kilometers');
-  let waypoint2 = turf.destination(midpoint, distanceFromMidpoint, bearing - 90, 'kilometers');
-  waypoint1 = convertLatLongs(waypoint1.geometry.coordinates);
-  waypoint2 = convertLatLongs(waypoint2.geometry.coordinates);
-  return [waypoint1, waypoint2];
-};
-
 
 module.exports = {
   retrievePolylines,
@@ -222,5 +198,4 @@ module.exports = {
   generateEquidistantPath,
   threshold,
   handleCornersDifferently,
-  getWayPoints,
 };

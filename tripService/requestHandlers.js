@@ -2,18 +2,16 @@ const axios = require('axios');
 // const path = require('path');
 // require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const getPaths = require('./tripHelpers.js').getPaths;
-const getWayPoints = require('./tripHelpers.js').getWayPoints;
-
 const APIKEY = process.env.APIKEY;
 
 /**
  * requests directions from google maps API
  * @param  {String || number} origin - starting point of directions
  * @param  {String || number} destination - ending point of directions
- * @param  {number[]} [waypoint=null] - LatLng tuple
+ * @param  {number[]} waypoints - array of LatLng tuples
  * @return {Promise} resolves to the google response body for directions request
  */
-const requestRoutes = (origin, destination, waypoint = null) => {
+const requestRoutes = (origin, destination, waypoints) => {
   const googleMapsRequestURL = 'https://maps.googleapis.com/maps/api/directions/json?';
   return axios.get(googleMapsRequestURL, {
     params: {
@@ -21,35 +19,23 @@ const requestRoutes = (origin, destination, waypoint = null) => {
       destination,
       mode: 'walking',
       key: APIKEY,
-      alternatives: true,
-      waypoints: waypoint ? [{ location: waypoint, stopover: false }] : null,
+      waypoints,
     },
   })
-  .then(response => response.data);
+  .then(response => response.data)
+  .catch(error => console.log(error, `error requesting Route with origin ${origin}, and destination ${destination}`));
 };
 
-const requestHandler = (request, response) => {
-  // define origin and destination from request parameters
-  const origin = `${request.query.origin.lat.toString()},${request.query.origin.lng.toString()}`;
-  const destination = `${request.query.destination.lat.toString()},${request.query.destination.lng.toString()}`;
-  // const googleMapsRequestURL = 'https://maps.googleapis.com/maps/api/directions/json?';
-  // make call to googleMaps api with origin and destination
 
-  // make first call, then use response from first call to calculate waypoints and make subsequent calls
-  return requestRoutes(origin, destination)
-  .then((directionsObj) => {
-    const originObj = directionsObj.routes[0].legs[0].start_location;
-    const destinationObj = directionsObj.routes[0].legs[0].end_location;
-    const [waypoint1, waypoint2] = getWayPoints([originObj.lat, originObj.lng],
-                                                [destinationObj.lat, destinationObj.lng]);
-    return Promise.all([
-      requestRoutes(origin, destination, waypoint1),
-      requestRoutes(origin, destination, waypoint2),
-      directionsObj,
-    ]);
-  })
-  .then(directionsObjects => directionsObjects.map(directionObject => directionObject.routes))
-  // flatten 2D array into 1D array of route objects
+const requestHandler = (request, response) => {
+  const promises = request.body.map((route) => {
+    const origin = route.origin.join(',');
+    const destination = route.destination.join(',');
+    const waypoints = route.waypoints.map(waypoint => `via:${waypoint.join(',')}`).join('|');
+    return requestRoutes(origin, destination, waypoints);
+  });
+  return Promise.all(promises)
+  .then(directionsObjs => directionsObjs.map(directionObject => directionObject.routes))
   .then(routeArraysArray =>
     routeArraysArray.reduce((flattenedArray, routeArray) => [...flattenedArray, ...routeArray], []))
   .then((flatArray) => {
@@ -59,7 +45,6 @@ const requestHandler = (request, response) => {
       path: paths[i],
     }));
   })
-  // response body is an array of objects with route and path properties
   .then(responseArray => response.status(200).json(responseArray))
   .catch(error => response.status(400).json({ error: { message: `There was an error getting directions: ${error.message}.` } }));
 };
