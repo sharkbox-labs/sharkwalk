@@ -1,7 +1,9 @@
 const axios = require('axios');
-// const path = require('path');
-// require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
 const getPaths = require('./tripHelpers.js').getPaths;
+
 const APIKEY = process.env.APIKEY;
 
 /**
@@ -23,7 +25,7 @@ const requestRoutes = (origin, destination, waypoints) => {
     },
   })
   .then(response => response.data)
-  .catch(error => console.log(error, `error requesting Route with origin ${origin}, and destination ${destination}`));
+  .catch((error) => { throw new Error(`Error requesting Route with origin ${origin}, and destination ${destination}: ${error.message}`); });
 };
 
 
@@ -31,7 +33,7 @@ const requestHandler = (request, response) => {
   const promises = request.body.map((route) => {
     const origin = route.origin.join(',');
     const destination = route.destination.join(',');
-    const waypoints = route.waypoints.map(waypoint => `via:${waypoint.join(',')}`).join('|');
+    const waypoints = route.waypoints.map(waypoint => `${waypoint.join(',')}`).join('|');
     return requestRoutes(origin, destination, waypoints);
   });
   return Promise.all(promises)
@@ -40,6 +42,14 @@ const requestHandler = (request, response) => {
     routeArraysArray.reduce((flattenedArray, routeArray) => [...flattenedArray, ...routeArray], []))
   .then((flatArray) => {
     const paths = getPaths(flatArray);
+    /*
+    paths.forEach((path) => {
+      console.log('---------------------------------');
+      path.forEach((latlng) => {
+        console.log(`${latlng[0]},${latlng[1]}`);
+      });
+    });
+    */
     return flatArray.map((route, i) => ({
       route,
       path: paths[i],

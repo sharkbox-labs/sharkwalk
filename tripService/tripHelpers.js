@@ -16,7 +16,8 @@ const turf = require('turf');
  */
 const retrievePolylines = (route) => {
   const polylines = [];
-  const steps = route.legs[0].steps;
+  let steps = [];
+  route.legs.forEach((leg) => { steps = steps.concat(leg.steps); });
   steps.forEach((step) => {
     if (step.polyline) {
       polylines.push(step.polyline.points);
