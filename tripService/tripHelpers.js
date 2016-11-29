@@ -45,7 +45,7 @@ const generateDirectionsURL = (legs) => {
   legs.forEach((leg) => {
     coords.push(`${leg.start_location.lat},${leg.start_location.lng}`);
   });
-  coords.push(`${legs[legs.length - 1].end_location.lat},${legs[legs.length - 1].end_location.lat}`);
+  coords.push(`${legs[legs.length - 1].end_location.lat},${legs[legs.length - 1].end_location.lng}`);
   return path.join(url, coords.join('/'), suffix);
 };
 
@@ -195,6 +195,12 @@ const handleCornersDifferently = (coordinates) => {
   return recurse(result[0], coordinates[1], 2);
 };
 
+const precisionRound = function precisionRound(number, precision) {
+  const factor = Math.pow(10, precision); // eslint-disable-line no-restricted-properties
+  const tempNumber = number * factor;
+  const roundedTempNumber = Math.round(tempNumber);
+  return roundedTempNumber / factor;
+};
 
 // getPaths input is route property returned from google maps API
 // output is array of coordinates along walker's path
@@ -206,7 +212,7 @@ const getPaths = (routes) => {
     const polylines = retrievePolylines(route);
     const coordinates = decodePolylines(polylines);
     const path = generateEquidistantPath(coordinates);
-    paths.push(path);
+    paths.push(path.map(coords => [precisionRound(coords[0], 5), precisionRound(coords[1], 5)]));
   }
   return paths;
 };

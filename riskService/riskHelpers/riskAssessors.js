@@ -30,7 +30,7 @@ const getRiskForGeoJSONPoint = function getRiskForGeoJSONPoint(point) {
         }
         return minDist;
       }, Infinity);
-      return precisionRound(risk, 2);
+      return Math.round(risk);
     });
 };
 
@@ -58,7 +58,7 @@ const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArra
         if (distance * 1000 > 250) {
           throw new Error(`No coverage near point: ${coord[1]}, ${coord[0]}.`);
         }
-        return precisionRound(nearest.properties.risk, 2);
+        return Math.round(nearest.properties.risk);
       });
     });
 };

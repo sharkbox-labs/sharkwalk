@@ -14,8 +14,8 @@ const findPath = function findPath(request, response) {
   const destination = turf.point([+request.query.destination.lng, +request.query.destination.lat]);
   let rawPaths;
   return Promise.all([
+    pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 6),
     pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 1),
-    // pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 2),
   ])
     .then((unprocessedPaths) => {
       if (JSON.stringify(unprocessedPaths[0]) === JSON.stringify(unprocessedPaths[1])) {
