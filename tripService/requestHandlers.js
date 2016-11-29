@@ -3,6 +3,9 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const getPaths = require('./tripHelpers.js').getPaths;
+const generateDirectionsURL = require('./tripHelpers.js').generateDirectionsURL;
+const generateTravelTime = require('./tripHelpers.js').generateTravelTime;
+const generateTravelDistance = require('./tripHelpers.js').generateTravelDistance;
 
 const APIKEY = process.env.APIKEY;
 
@@ -51,7 +54,9 @@ const requestHandler = (request, response) => {
     });
     */
     return flatArray.map((route, i) => ({
-      route,
+      distance: generateTravelDistance(route.legs),
+      time: generateTravelTime(route.legs),
+      googleMapsUrl: generateDirectionsURL(route.legs),
       path: paths[i],
     }));
   })
