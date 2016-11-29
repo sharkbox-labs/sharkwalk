@@ -23,7 +23,6 @@ import appHelper from '../utils/appHelper';
 injectTapEventPlugin();
 
 const App = (props) => {
-  console.log('PROPS: ', props)
   // These styles are for development only, remove for production
   const mapStyle = {};
   const appContainerStyle = {};
@@ -80,59 +79,6 @@ const App = (props) => {
     'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
-  // Create the autocomplete objects and associate it with the UI input controls.
-  // Restrict the search to San Francisco
-  const defaultBounds = new window.google.maps.LatLngBounds(
-    new window.google.maps.LatLng(37.7000, -122.5200),
-    new window.google.maps.LatLng(37.8100, -122.3500),
-  );
-
-  const googleMapsSearch = (query) => {
-    if (query === '') {
-      // If the search field was cleared out by the user,
-      // reset search results to empty array
-      return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults([]) : props.changeDestinationSearchResults([]);
-    }
-
-    const mapSuggestions = (predictions, status) => {
-      if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
-        // If no search results were returned, reset search results to empty array
-        return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults([]) : props.changeDestinationSearchResults([]);
-      }
-
-      const results = predictions.map(prediction => prediction.description);
-
-      return props.interactionType === interactionTypes.SEARCHING_ORIGIN ? props.changeOriginSearchResults(results) : props.changeDestinationSearchResults(results);
-    };
-
-
-    const service = new window.google.maps.places.AutocompleteService();
-    return service.getPlacePredictions({ input: query, bounds: defaultBounds }, mapSuggestions);
-  };
-
-
-  const searchBarSubmitHandler = () => {
-    // set either origin or destination to top result
-    if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
-      // On user submit from field, set top result as the origin if the
-      // user did not select from the search results.
-      props.changeOrigin(props.dispatch, props.originSearchResults[0]);
-    }
-
-    if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
-      // On user submit from field, set top result as the destination if the
-      // user did not select from the search results.
-      props.changeDestination(props.destinationSearchResults[0]);
-    }
-
-    props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
-  };
-
-  const currentLocationClickHandler = () => {
-    props.changeOrigin(props.dispatch);
-    props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
-  };
-
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -164,7 +110,7 @@ const App = (props) => {
           <TextField
             fullWidth
             hintText="Origin"
-            value={typeof props.origin === 'string' ? props.origin : 'Current Location'}
+            value={appHelper.displayCurrentOrigin(props)}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
@@ -231,21 +177,12 @@ const App = (props) => {
         <ToolbarGroup className="search-toolbargroup">
           <AutoComplete
             fullWidth
-            hintText={props.interactionType === interactionTypes.SEARCHING_ORIGIN ? 'Search for starting point' : 'Search for destination'}
+            hintText={appHelper.getSearchBarHintText(props, interactionTypes)}
             dataSource={[null]}
-            onClick={() => {
-              if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
-                props.interactionType !== interactionTypes.SEARCHING_DESTINATION
-              ) {
-                props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
-              }
-            }}
-            onNewRequest={searchBarSubmitHandler}
-            onUpdateInput={googleMapsSearch}
-            searchText={props.interactionType === interactionTypes.SEARCHING_ORIGIN && props.origin ?
-              typeof props.origin === 'string' ? props.origin : 'Current Location'
-              : props.interactionType === interactionTypes.VIEWING_MAP ? '' : props.destination
-            }
+            onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
+            onNewRequest={() => { appHelper.searchBarSubmitHandler(props, interactionTypes); }}
+            onUpdateInput={(query) => { appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes); }}
+            searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -257,7 +194,7 @@ const App = (props) => {
           <ListItem
             leftIcon={<OriginIcon />}
             primaryText="Use current location"
-            onClick={currentLocationClickHandler}
+            onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes); }}
           />
         </List>
       </Card>
@@ -307,6 +244,7 @@ App.propTypes = {
   changeRoute: React.PropTypes.func.isRequired,
   changeRouteResponse: React.PropTypes.func.isRequired,
   destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
+  originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };
 
 export default App;
