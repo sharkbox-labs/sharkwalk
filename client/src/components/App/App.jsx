@@ -94,11 +94,7 @@ const App = (props) => {
         <IconButton
           style={iconButtonStyle}
           onClick={() => (
-            appHelper.toggleInteractionTypeFromMenuClick(
-              props.interactionType,
-              props.changeInteractionType,
-              interactionTypes,
-            )
+            appHelper.toggleInteractionTypeFromMenuClick(props, interactionTypes)
           )}
         >
           <Close color="rgb(0, 188, 212)" />
@@ -178,8 +174,7 @@ const App = (props) => {
             style={iconButtonStyle}
             onClick={() => (
               appHelper.toggleInteractionTypeFromMenuClick(
-                props.interactionType,
-                props.changeInteractionType,
+                props,
                 interactionTypes,
               )
             )}
