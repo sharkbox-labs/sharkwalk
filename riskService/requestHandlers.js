@@ -47,7 +47,9 @@ const findPath = function findPath(request, response) {
         .then(routes => routes.map((route, i) =>
           Object.assign(route, {
             riskWeight: rawPaths[i].riskWeight,
-            route: processedPaths[i].route,
+            distance: processedPaths[i].distance,
+            duration: processedPaths[i].duration,
+            googleMapsUrl: processedPaths[i].googleMapsUrl,
             path: processedPaths[i].path,
           })))
         .then(result => response.status(200).json(result))

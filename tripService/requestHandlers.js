@@ -55,7 +55,7 @@ const requestHandler = (request, response) => {
     */
     return flatArray.map((route, i) => ({
       distance: generateTravelDistance(route.legs),
-      time: generateTravelTime(route.legs),
+      duration: generateTravelTime(route.legs),
       googleMapsUrl: generateDirectionsURL(route.legs),
       path: paths[i],
     }));
