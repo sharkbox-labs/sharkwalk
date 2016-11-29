@@ -1,14 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import { Card, CardActions, CardHeader, CardTitle, CardText } from 'material-ui/Card';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
+import { Card } from 'material-ui/Card';
+import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import SearchBarHamburgerIcon from 'material-ui/svg-icons/navigation/menu';
 import OriginIcon from 'material-ui/svg-icons/device/gps-fixed';
 import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
-import AutoComplete from 'material-ui/AutoComplete';
-import TextField from 'material-ui/TextField';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
 import Drawer from 'material-ui/Drawer';
@@ -31,11 +32,6 @@ const App = (props) => {
   };
   const searchBarStyle = {};
 
-  const getSearchResults = (query) => {
-    // get search results for query
-    // window.google.maps.places.SearchBox is a function...but don't know what it does
-  };
-
   // Create immutable interaction types for components to use
   const interactionTypes = {
     VIEWING_MAP: 'VIEWING_MAP',
@@ -50,9 +46,27 @@ const App = (props) => {
     'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE && props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
-  const searchResultsCardsClasses = classNames({
-    'search-results-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
-    'search-results-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  const searchCardsClasses = classNames({
+    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const currentLocationCardClasses = classNames({
+    'current-location-card-hide': props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'current-location-card-show': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const searchResultsCardClasses = classNames({
+    'search-results-card-only': props.interactionType === interactionTypes.SEARCHING_DESTINATION,
+    'search-results-card': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const destinationSearchResultClasses = classNames({
+    'search-result-destination-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION,
+  });
+
+  const originSearchResultClasses = classNames({
+    'search-result-origin-hide': props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
   });
 
   const selectingRouteToolbarClasses = classNames({
@@ -64,26 +78,6 @@ const App = (props) => {
     'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE,
     'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
-
-  // Create the autocomplete objects and associate it with the UI input controls.
-  // Restrict the search to San Francisco
-  const defaultBounds = new window.google.maps.LatLngBounds(
-    new window.google.maps.LatLng(37.7000, -122.5200),
-    new window.google.maps.LatLng(37.8100, -122.3500),
-  );
-
-  const search = document.getElementById('autocompleteSearch');
-  const origin = document.getElementById('autocompleteOrigin');
-  const destination = document.getElementById('autocompleteDestination');
-
-  const options = {
-    bounds: defaultBounds,
-  };
-
-  const autocompleteSearch = new window.google.maps.places.Autocomplete(search, options); // eslint-disable-line
-  const autocompleteOrigin = new window.google.maps.places.Autocomplete(origin, options); // eslint-disable-line
-  const autocompleteDestination = new window.google.maps.places.Autocomplete(destination, options); // eslint-disable-line
-
 
   return (
     <div className="app-container" style={appContainerStyle} >
@@ -109,38 +103,32 @@ const App = (props) => {
       </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
-        onClick={() => { props.changeInteractionType('SEARCHING_ORIGIN'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
-        <ToolbarGroup className="searchbar-toolbar-group">
+        <ToolbarGroup className="search-toolbargroup">
           <OriginIcon />
           <TextField
-            placeholder=""
             fullWidth
             hintText="Origin"
-            id="autocompleteOrigin"
-            onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
-            }}
-            onNewRequest={getSearchResults}
+            value={appHelper.displayCurrentOrigin(props)}
+            onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
       <Toolbar
         className={selectingRouteToolbarClasses}
-        onClick={() => { props.changeInteractionType('SEARCHING_DESTINATION'); }}
+        onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
-        <ToolbarGroup className="searchbar-toolbar-group">
+        <ToolbarGroup className="search-toolbargroup">
           <DestinationIcon />
           <TextField
-            placeholder=""
             fullWidth
             hintText="Destination"
-            id="autocompleteDestination"
+            value={props.destination}
             onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
+              props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
             }}
-            onNewRequest={getSearchResults}
             style={searchBarStyle}
           />
         </ToolbarGroup>
@@ -186,50 +174,52 @@ const App = (props) => {
             <SearchBarHamburgerIcon />
           </IconButton>
         </ToolbarGroup>
-        <ToolbarGroup className="searchbar-toolbar-group">
-          <TextField
-            placeholder=""
+        <ToolbarGroup className="search-toolbargroup">
+          <AutoComplete
             fullWidth
-            hintText="Search"
-            id="autocompleteSearch"
-            onClick={() => {
-              props.changeInteractionType('SEARCHING_DESTINATION');
-            }}
-            onNewRequest={getSearchResults}
+            hintText={appHelper.getSearchBarHintText(props, interactionTypes)}
+            dataSource={[null]}
+            onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
+            onNewRequest={() => { appHelper.searchBarSubmitHandler(props, interactionTypes); }}
+            onUpdateInput={(query) => { appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes); }}
+            searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
       <Card
-        className={`${searchResultsCardsClasses} current-location-card`}
-        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+        className={`${searchCardsClasses} ${currentLocationCardClasses}`}
       >
-        <CardHeader
-          title="URL Avatar"
-          subtitle="Subtitle"
-          avatar="images/jsa-128.jpg"
-        />
+        <List>
+          <ListItem
+            leftIcon={<OriginIcon />}
+            primaryText="Use current location"
+            onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes); }}
+          />
+        </List>
       </Card>
       <Card
-        className={`${searchResultsCardsClasses} search-results-card`}
-        onClick={() => { props.changeInteractionType('SELECTING_ROUTE'); }}
+        className={`${searchCardsClasses} ${searchResultsCardClasses}`}
+        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
-        <CardHeader
-          title="URL Avatar"
-          subtitle="Subtitle"
-          avatar="images/jsa-128.jpg"
-        />
-        <CardTitle title="Card title" subtitle="Card subtitle" />
-        <CardText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-          Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-          Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-        </CardText>
-        <CardActions>
-          <FlatButton label="Action1" />
-          <FlatButton label="Action2" />
-        </CardActions>
+        <List id="search-results">
+          {props.destinationSearchResults.map(result => (
+            <ListItem
+              className={destinationSearchResultClasses}
+              leftIcon={<DestinationIcon />}
+              primaryText={result}
+              onClick={(e) => { props.changeDestination(e.target.textContent); }}
+            />
+          ))}
+          {props.originSearchResults.map(result => (
+            <ListItem
+              className={originSearchResultClasses}
+              leftIcon={<DestinationIcon />}
+              primaryText={result}
+              onClick={(e) => { props.changeOrigin(e.target.textContent); }}
+            />
+          ))}
+        </List>
       </Card>
       <FloatingActionButton className={sendToGoogleMapsButtonClasses}>
         <MapsNavigation />
@@ -253,6 +243,8 @@ App.propTypes = {
   changeOrigin: React.PropTypes.func.isRequired,
   changeRoute: React.PropTypes.func.isRequired,
   changeRouteResponse: React.PropTypes.func.isRequired,
+  destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
+  originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };
 
 export default App;
