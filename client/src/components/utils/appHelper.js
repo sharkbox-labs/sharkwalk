@@ -101,14 +101,19 @@ const toggleFloatingActionButtonClass = (interactionType, interactionTypes) => (
   interactionType === interactionTypes.SELECTING_ROUTE ? 'floating-action-button-show' : 'floating-action-button-hide'
 );
 
-const toggleInteractionTypeFromMenuClick = (currentInteractionType, dispatcher, interactionTypes) => {
-  if (currentInteractionType !== interactionTypes.VIEWING_SIDEBAR) {
-    dispatcher(interactionTypes.VIEWING_SIDEBAR);
+const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
+  // If sidebar is currently not open, open sidebar
+  if (props.interactionType !== interactionTypes.VIEWING_SIDEBAR) {
+    return props.changeInteractionType(interactionTypes.VIEWING_SIDEBAR);
   }
 
-  if (currentInteractionType === interactionTypes.VIEWING_SIDEBAR) {
-    dispatcher(interactionTypes.VIEWING_MAP);
+  // If origin and destination has been set, transition to SELECTING_ROUTE view from sidebar
+  if (props.interactionType === interactionTypes.VIEWING_SIDEBAR && props.origin && props.destination) {
+    return props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
   }
+
+  // If none of the above, go back to VIEWING_MAP
+  return props.changeInteractionType(interactionTypes.VIEWING_MAP);
 };
 
 const useCurrentLocationClickHandler = (props, interactionTypes) => {
