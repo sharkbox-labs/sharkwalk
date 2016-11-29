@@ -17,9 +17,9 @@ const precisionRound = function precisionRound(number, precision) {
 const profileRoute = function profileRoute(risks) {
   const result = {};
   result.risks = risks;
-  result.totalRisk = precisionRound(risks.reduce((tot, risk) => risk + tot), 2);
+  const totalRisk = risks.reduce((tot, risk) => risk + tot);
   result.maxRisk = precisionRound(Math.max(...risks), 2);
-  result.averageRisk = precisionRound(result.totalRisk / risks.length, 2);
+  result.averageRisk = precisionRound(totalRisk / risks.length, 2);
   return result;
 };
 
