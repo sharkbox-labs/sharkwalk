@@ -1,6 +1,6 @@
 const polyline = require('polyline');
 const turf = require('turf');
-
+const path = require('path');
 // The following functions convert the directioss object recieved from the googleMaps API into
 // an array of coordinates along the path.
 // The array of coordinates are separated by a prescribed threshold.
@@ -26,6 +26,28 @@ const retrievePolylines = (route) => {
   return polylines;
 };
 
+const generateTravelTime = (legs) => {
+  let time = 0;
+  legs.forEach((leg) => { time += leg.duration.value; });
+  return time;
+};
+
+const generateTravelDistance = (legs) => {
+  let distance = 0;
+  legs.forEach((leg) => { distance += leg.distance.value; });
+  return distance;
+};
+
+const generateDirectionsURL = (legs) => {
+  const url = 'https://www.google.com/maps/dir';
+  const suffix = 'data=!3m1!4b1!4m2!4m1!3e2';
+  const coords = [];
+  legs.forEach((leg) => {
+    coords.push(`${leg.start_location.lat},${leg.start_location.lng}`);
+  });
+  coords.push(`${legs[legs.length - 1].end_location.lat},${legs[legs.length - 1].end_location.lat}`);
+  return path.join(url, coords.join('/'), suffix);
+};
 
 // converts array of polylines into LatLngs
 
@@ -199,4 +221,7 @@ module.exports = {
   generateEquidistantPath,
   threshold,
   handleCornersDifferently,
+  generateTravelTime,
+  generateTravelDistance,
+  generateDirectionsURL,
 };
