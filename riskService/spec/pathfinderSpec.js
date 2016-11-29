@@ -182,7 +182,7 @@ describe('Pathfinding', () => {
           expect(response.body.error).to.not.exist; // eslint-disable-line no-unused-expressions
           expect(response.body).to.be.an('Array');
           expect(response.body[0]).to.be.an('Object');
-          expect(response.body[1]).to.contain.keys(['route', 'riskWeight', 'path', 'risks']);
+          expect(response.body[1]).to.contain.keys(['riskWeight', 'path', 'risks', 'averageRisk', 'maxRisk']);
           done();
         });
     }).timeout(8000);
