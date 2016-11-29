@@ -55,7 +55,7 @@ const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArra
         const point = turf.point(coord);
         const nearest = turf.nearest(point, pointsCollection);
         const distance = turf.distance(point, nearest, 'kilometers');
-        if (distance * 1000 > config.gridDensity) {
+        if (distance * 1000 > 250) {
           throw new Error(`No coverage near point: ${coord[1]}, ${coord[0]}.`);
         }
         return precisionRound(nearest.properties.risk, 2);

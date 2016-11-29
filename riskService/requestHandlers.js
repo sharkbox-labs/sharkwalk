@@ -12,11 +12,10 @@ const findPath = function findPath(request, response) {
 
   const origin = turf.point([+request.query.origin.lng, +request.query.origin.lat]);
   const destination = turf.point([+request.query.destination.lng, +request.query.destination.lat]);
-
   let rawPaths;
   return Promise.all([
-    pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 2),
-    pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 10),
+    pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 1),
+    // pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 2),
   ])
     .then((unprocessedPaths) => {
       if (JSON.stringify(unprocessedPaths[0]) === JSON.stringify(unprocessedPaths[1])) {
@@ -24,6 +23,18 @@ const findPath = function findPath(request, response) {
       } else {
         rawPaths = unprocessedPaths;
       }
+      /*
+      rawPaths.forEach((path) => {
+        const coords = [path.origin, ...path.waypoints, path.destination];
+        console.log('------------------------');
+        coords.forEach((coord) => {
+          console.log(`${coord[0]},${coord[1]}`);
+        });
+        console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+        console.log(coords.map(coord => coord.join(',')).join('/'));
+      });
+      console.log(JSON.stringify(rawPaths, null, 2));
+      */
       return axios.post(`${tripServiceUrl}/routes`, rawPaths);
     })
     .then((tripResponse) => {
@@ -45,7 +56,12 @@ const findPath = function findPath(request, response) {
             message: e.message,
           },
         }));
-    });
+    })
+    .catch(error => response.status(400).json({
+      error: {
+        message: `There was an error getting risk paths: ${error.message}`,
+      },
+    }));
 };
 
 module.exports = {

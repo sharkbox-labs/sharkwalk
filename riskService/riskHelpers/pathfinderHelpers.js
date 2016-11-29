@@ -226,9 +226,16 @@ const findPathway = function findPathway(origin, destination, riskWeight) {
     });
 };
 
+const precisionRound = function precisionRound(number, precision) {
+  const factor = Math.pow(10, precision); // eslint-disable-line no-restricted-properties
+  const tempNumber = number * factor;
+  const roundedTempNumber = Math.round(tempNumber);
+  return roundedTempNumber / factor;
+};
+
 const pointToLatLngArray = function pointToLatLngArray(point) {
   const lonLat = turf.getCoord(point);
-  return [lonLat[1], lonLat[0]];
+  return [precisionRound(lonLat[1], 4), precisionRound(lonLat[0], 4)];
 };
 
 const findPathwayAroundRiskWeight =
