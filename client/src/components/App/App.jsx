@@ -31,6 +31,11 @@ const App = (props) => {
     float: 'left',
   };
   const searchBarStyle = {};
+  const flatButtonStyle = {
+    clear: 'both',
+    'text-align': 'left',
+    width: '300px',
+  };
 
   // Create immutable interaction types for components to use
   const interactionTypes = {
@@ -96,10 +101,10 @@ const App = (props) => {
             )
           )}
         >
-          <Close />
+          <Close color="rgb(0, 188, 212)" />
         </IconButton>
-        <FlatButton label="About" />
-        <FlatButton label="Fork Me On GitHub" />
+        <FlatButton label="About" style={flatButtonStyle} />
+        <FlatButton label="Fork Me On GitHub" style={flatButtonStyle} />
       </Drawer>
       <Toolbar
         className={selectingRouteToolbarClasses}
@@ -137,13 +142,21 @@ const App = (props) => {
         <Map
           className="map"
           google={window.google}
-          onReady={() => (
-            props.changeOrigin(props.dispatch)
-          )}
+          onReady={() => (props.changeCurrentLocation(props.dispatch))}
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
           style={mapStyle}
         >
+          <Marker
+            key={'currentLocation'}
+            google={window.google}
+            position={props.currentLocation}
+            icon={{
+              url: './bluedot.png',
+              scaledSize: new window.google.maps.Size(35, 35),
+            }}
+            optimized={false}
+          />
           <Marker
             key={'origin'}
             position={props.origin}
@@ -171,7 +184,7 @@ const App = (props) => {
               )
             )}
           >
-            <SearchBarHamburgerIcon />
+            <SearchBarHamburgerIcon color="rgb(0, 188, 212)" />
           </IconButton>
         </ToolbarGroup>
         <ToolbarGroup className="search-toolbargroup">
@@ -208,7 +221,10 @@ const App = (props) => {
               className={destinationSearchResultClasses}
               leftIcon={<DestinationIcon />}
               primaryText={result}
-              onClick={(e) => { props.changeDestination(e.target.textContent); }}
+              onClick={(e) => {
+                appHelper.setOriginIfUndefined(props);
+                props.changeDestination(e.target.textContent);
+              }}
             />
           ))}
           {props.originSearchResults.map(result => (
@@ -216,7 +232,9 @@ const App = (props) => {
               className={originSearchResultClasses}
               leftIcon={<DestinationIcon />}
               primaryText={result}
-              onClick={(e) => { props.changeOrigin(e.target.textContent); }}
+              onClick={(e) => {
+                props.changeOrigin(e.target.textContent);
+              }}
             />
           ))}
         </List>
@@ -229,6 +247,15 @@ const App = (props) => {
 };
 
 App.propTypes = {
+  changeDestination: React.PropTypes.func.isRequired,
+  changeInteractionType: React.PropTypes.func.isRequired,
+  changeOrigin: React.PropTypes.func.isRequired,
+  changeRoute: React.PropTypes.func.isRequired,
+  changeRouteResponse: React.PropTypes.func.isRequired,
+  currentLocation: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
   destination: React.PropTypes.shape({
     lat: React.PropTypes.number.isRequired,
     lng: React.PropTypes.number.isRequired,
@@ -238,11 +265,6 @@ App.propTypes = {
     lat: React.PropTypes.number.isRequired,
     lng: React.PropTypes.number.isRequired,
   }),
-  changeDestination: React.PropTypes.func.isRequired,
-  changeInteractionType: React.PropTypes.func.isRequired,
-  changeOrigin: React.PropTypes.func.isRequired,
-  changeRoute: React.PropTypes.func.isRequired,
-  changeRouteResponse: React.PropTypes.func.isRequired,
   destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
   originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
 };

@@ -11,7 +11,7 @@ import reducer from './reducers/index';
 import './index.css';
 
 const initialStore = {
-  currentLocation: null,
+  currentLocation: ' ',
   currentRoute: null,
   destination: ' ',
   interactionType: 'VIEWING_MAP',

@@ -2,6 +2,35 @@ import axios from 'axios';
 import qs from 'qs';
 
 /**
+ * Get geolocation and set current location to state
+ * @param  {Function} dispatch - The dispatch function to send actions to the reducers.
+ */
+export const setCurrentLocation = (dispatch) => {
+  if ('geolocation' in navigator) {
+    const success = (position) => {
+      dispatch({
+        type: 'SET_CURRENT_LOCATION',
+        currentLocation: { lat: position.coords.latitude, lng: position.coords.longitude },
+      });
+    };
+
+    const failure = (error) => {
+      console.warn('ERROR(' + error.code + '): ' + error.message); // eslint-disable-line
+    };
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+
+    navigator.geolocation.watchPosition(success, failure, options);
+  } else {
+    throw new Error('Sorry, no position available.');
+  }
+};
+
+/**
  * Set destination to state
  * @param  {Object} destination - The destination of the route. Must have keys `lat` and `lng`.
  * @return {Object} action - The `SET_DESTINATION` action.
@@ -12,31 +41,14 @@ export const setDestination = destination => ({
 });
 
 /**
- * Set origin to state (if origin is null, get user's geolocation)
+ * Set origin to state
  * @param  {Object} origin - The origin of the route. Must have keys `lat` and 'lng'.
- * @return {Function} callback - Using redux-thunk to return a callback that will
- * either dispatch the 'SET_ORIGIN' action with the provided origin or use the
- * user's current location.
+ * @return {Object} action - The `SET_ORIGIN` action.
  */
-export const setOrigin = (dispatch, origin) => {
-  if (!origin && 'geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      if (position) {
-        dispatch({
-          type: 'SET_ORIGIN',
-          origin: { lat: position.coords.latitude, lng: position.coords.longitude },
-        });
-      } else {
-        throw new Error('Error while fetching current location.');
-      }
-    });
-  } else {
-    dispatch({
-      type: 'SET_ORIGIN',
-      origin,
-    });
-  }
-};
+export const setOrigin = origin => ({
+  type: 'SET_ORIGIN',
+  origin,
+});
 
 /**
  * Set the interactionType to state
