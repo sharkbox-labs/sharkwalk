@@ -1,17 +1,5 @@
 version: '2'
 services:
-  integrationserver:
-    image: node:boron
-    volumes:
-    - ./integrationserver:/user/src/integrationserver
-    working_dir: /user/src/integrationserver
-    env_file: .env
-    ports:
-    - "80:3000"
-    depends_on:
-    - riskservice
-    - tripservice
-    command: npm run docker
   tripservice:
     image: node:boron
     volumes:
@@ -27,8 +15,11 @@ services:
     - ./riskservice:/user/src/riskservice
     working_dir: /user/src/riskservice
     env_file: .env
+    links:
+        - tripservice
+        - riskdb
     ports:
-    - "3002:3002"
+    - "80:3002"
     depends_on:
     - riskdb
     command: npm run docker
