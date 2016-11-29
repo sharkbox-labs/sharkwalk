@@ -31,7 +31,7 @@ const requestHandler = (request, response) => {
   const promises = request.body.map((route) => {
     const origin = route.origin.join(',');
     const destination = route.destination.join(',');
-    const waypoints = route.waypoints.map(waypoint => `via: + ${waypoint.join(',')}`).join('|');
+    const waypoints = route.waypoints.map(waypoint => `via:${waypoint.join(',')}`).join('|');
     return requestRoutes(origin, destination, waypoints);
   });
   return Promise.all(promises)
