@@ -233,7 +233,6 @@ const App = (props) => {
               leftIcon={<DestinationIcon />}
               primaryText={result}
               onClick={(e) => {
-                appHelper.setOriginIfUndefined(props);
                 props.changeOrigin(e.target.textContent);
               }}
             />
