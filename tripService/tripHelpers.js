@@ -194,33 +194,6 @@ const generateEquidistantPath = (coordinates) => {
   return recurse(result[0], coordinates[1], 2); // origin, target, nextTargets
 };
 
-const handleCornersDifferently = (coordinates) => {
-  const result = [coordinates[0]];
-  const recurse = (origin, target, indexOfNextTarget) => {
-    const segmentLength = findDistance(origin, target);
-    if (round(segmentLength) === threshold) {
-      result.push(target);
-      return recurse(target, coordinates[indexOfNextTarget], indexOfNextTarget + 1);
-    }
-    if (segmentLength > threshold) {
-      const newPoint = insertCoordinate(origin, target, threshold);
-      result.push(newPoint);
-      return recurse(result[result.length - 1], target, indexOfNextTarget);
-    }
-    if (segmentLength < threshold) {
-      if (!coordinates[indexOfNextTarget]) {
-        return result;
-      }
-      // const difference = threshold - segmentLength;
-      // const newPoint = insertCoordinate(target, coordinates[indexOfNextTarget], difference);
-      const newPoint = insertCoordinate(origin, coordinates[indexOfNextTarget], threshold);
-      result.push(newPoint);
-      return recurse(result[result.length - 1], coordinates[indexOfNextTarget],
-        indexOfNextTarget + 1);
-    }
-  };
-  return recurse(result[0], coordinates[1], 2);
-};
 
 const precisionRound = function precisionRound(number, precision) {
   const factor = Math.pow(10, precision); // eslint-disable-line no-restricted-properties
@@ -253,7 +226,6 @@ module.exports = {
   findDistance,
   generateEquidistantPath,
   threshold,
-  handleCornersDifferently,
   generateTravelTime,
   generateTravelDistance,
   generateDirectionsURL,
