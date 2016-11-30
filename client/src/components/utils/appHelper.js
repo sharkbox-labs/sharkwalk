@@ -111,22 +111,29 @@ const setOriginIfUndefined = (props) => {
   }
 };
 
-const searchBarSubmitHandler = (props, interactionTypes) => {
+const getDirections = (props, interactionTypes, place) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
-    // On user submit from input field, set top result as the origin if the
-    // user did not select from the search results.
-    convertPlaceIdToLatLng(props.originSearchResults[0]).then((geolocatedPlace) => {
+    // On user submit from input field, set top matched origin search result as the origin
+    convertPlaceIdToLatLng(place || props.originSearchResults[0]).then((geolocatedPlace) => {
       props.changeOrigin(geolocatedPlace);
+      props.changeRouteResponse(geolocatedPlace, props.destination);
     });
   }
 
   if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
+    // If origin hasn't been set before, set origin
     setOriginIfUndefined(props);
 
-    // On user submit from input field, set top result as the destination if the
-    // user did not select from the search results.
-    convertPlaceIdToLatLng(props.destinationSearchResults[0]).then((geolocatedPlace) => {
+    // On user submit from input field, set top matched destination search result as the destination
+    convertPlaceIdToLatLng(place || props.destinationSearchResults[0]).then((geolocatedPlace) => {
       props.changeDestination(geolocatedPlace);
+
+      // Use current location as origin if origin hasn't been set yet
+      if (!props.origin.lat) {
+        props.changeRouteResponse(props.currentLocation, geolocatedPlace);
+      } else {
+        props.changeRouteResponse(props.origin, geolocatedPlace);
+      }
     });
   }
 
@@ -161,11 +168,11 @@ export default {
   autofillSearchBar,
   displayCurrentOrigin,
   convertPlaceIdToLatLng,
+  getDirections,
   getGoogleMapsPlacePredictions,
   getSearchBarHintText,
   openSearchCards,
   setOriginIfUndefined,
-  searchBarSubmitHandler,
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,
   useCurrentLocationClickHandler,
