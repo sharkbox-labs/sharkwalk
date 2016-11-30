@@ -61,6 +61,11 @@ const App = (props) => {
     'current-location-card-show': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
   });
 
+  const useCurrentLocationListItemClassNames = classNames({
+    'current-location-found': props.currentLocation.lat && props.currentLocation.lng,
+    'current-location-not-found': !props.currentLocation.lat && !props.currentLocation.lng,
+  });
+
   const searchResultsCardClasses = classNames({
     'search-results-card-only': props.interactionType === interactionTypes.SEARCHING_DESTINATION,
     'search-results-card': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
@@ -111,7 +116,7 @@ const App = (props) => {
           <TextField
             fullWidth
             hintText="Origin"
-            value={appHelper.displayCurrentOrigin(props)}
+            value={props.origin.name}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
@@ -210,15 +215,15 @@ const App = (props) => {
       >
         <List>
           <ListItem
+            className={useCurrentLocationListItemClassNames}
             leftIcon={<OriginIcon />}
-            primaryText="Use current location"
+            primaryText={appHelper.getCurrentLocationCardPrimaryText(props)}
             onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes); }}
           />
         </List>
       </Card>
       <Card
         className={`${searchCardsClasses} ${searchResultsCardClasses}`}
-        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
         <List id="search-results">
           {props.destinationSearchResults.map(result => (

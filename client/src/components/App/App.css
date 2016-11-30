@@ -33,6 +33,15 @@
   display: none;
 }
 
+.current-location-found {
+  
+}
+
+.current-location-not-found {
+  color: red !important;
+  font-style: italic;
+}
+
 .search-results-card {
   top: 25%;
 }
