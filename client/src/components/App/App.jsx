@@ -24,8 +24,17 @@ import appHelper from '../utils/appHelper';
 injectTapEventPlugin();
 
 const App = (props) => {
+  // Create immutable interaction types for components to use
+  const interactionTypes = {
+    VIEWING_MAP: 'VIEWING_MAP',
+    SEARCHING_ORIGIN: 'SEARCHING_ORIGIN',
+    SEARCHING_DESTINATION: 'SEARCHING_DESTINATION',
+    SELECTING_ROUTE: 'SELECTING_ROUTE',
+    VIEWING_SIDEBAR: 'VIEWING_SIDEBAR',
+  };
+
   // These styles are for development only, remove for production
-  const mapStyle = {};
+  const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ? { height: 'calc(100% - 120px)' } : {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
   const searchBarStyle = {};
@@ -35,15 +44,6 @@ const App = (props) => {
     borderRadius: '5px',
     paddingLeft: '1%',
     height: '80%',
-  };
-
-  // Create immutable interaction types for components to use
-  const interactionTypes = {
-    VIEWING_MAP: 'VIEWING_MAP',
-    SEARCHING_ORIGIN: 'SEARCHING_ORIGIN',
-    SEARCHING_DESTINATION: 'SEARCHING_DESTINATION',
-    SELECTING_ROUTE: 'SELECTING_ROUTE',
-    VIEWING_SIDEBAR: 'VIEWING_SIDEBAR',
   };
 
   const searchBarToolbarClasses = classNames({
