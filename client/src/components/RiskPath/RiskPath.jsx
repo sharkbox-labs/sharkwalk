@@ -27,6 +27,7 @@ const generateSegment = (start, end, intensity) => {
     strokeOpacity: 0.75,
     strokeWeight: 7,
   });
+
   return segment;
 };
 
@@ -64,7 +65,16 @@ class RiskPath extends Component {
         );
     }
     // eslint-disable-next-line react/prop-types
-    segments.forEach(segment => segment.setMap(this.props.map));
+    segments.forEach((segment) => {
+      segment.setMap(this.props.map);
+
+      // Add listener
+      window.google.maps.event.addListener(segment, 'click', () => {
+        console.log('clicked: ', segment.getPath().b[0].lat());
+        console.log('key: ', this.props.index);
+      });
+    });
+
     this.setState({ segments });
   }
 
@@ -74,6 +84,7 @@ class RiskPath extends Component {
 }
 
 RiskPath.propTypes = {
+  index: React.PropTypes.number.isRequired,
   points: React.PropTypes.arrayOf(
     React.PropTypes.arrayOf(
       React.PropTypes.number,
