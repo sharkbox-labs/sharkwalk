@@ -14,7 +14,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import Map, { Marker } from 'google-maps-react';
 import Drawer from 'material-ui/Drawer';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import MapsNavigation from 'material-ui/svg-icons/maps/navigation';
+import Directions from 'material-ui/svg-icons/maps/directions';
 import Close from 'material-ui/svg-icons/navigation/close';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
@@ -137,6 +137,7 @@ const App = (props) => {
       <div className="map-container" style={mapContainerStyle}>
         <Map
           className="map"
+          gestureHandling={'greedy'}
           google={window.google}
           onReady={() => {
             props.changeCurrentLocation(props.dispatch);
@@ -165,9 +166,13 @@ const App = (props) => {
             position={props.destination}
             google={window.google}
           />
-          <RiskPath
-            points={props.routeResponse.path}
-          />
+          {props.routeResponse.map((segment, index) => (
+            <RiskPath
+              index={index}
+              key={index}
+              points={segment.path}
+            />
+          ))}
         </Map>
       </div>
       <Toolbar className={searchBarToolbarClasses}>
@@ -241,7 +246,7 @@ const App = (props) => {
         </List>
       </Card>
       <FloatingActionButton className={sendToGoogleMapsButtonClasses}>
-        <MapsNavigation />
+        <Directions />
       </FloatingActionButton>
     </div>
   );
@@ -268,6 +273,12 @@ App.propTypes = {
   }),
   destinationSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
   originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
+  routeResponse: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      route: React.PropTypes.string.isRequired,
+      path: React.PropTypes.array.isRequired,
+    }),
+  ),
 };
 
 export default App;
