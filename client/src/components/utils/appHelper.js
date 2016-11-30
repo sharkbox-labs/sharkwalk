@@ -4,19 +4,15 @@ const autofillSearchBar = (props, interactionTypes) => {
     return '';
   }
 
-  // If searching for origin and origin has already been set once
+  // If searching for origin and origin has been set
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN && props.origin) {
-    // Check if origin is the name of a place or a geolocation object
-    return props.origin.name ? props.origin.name : 'Current Location';
+    // Show current origin
+    return props.origin.name;
   }
 
   // If neither of the above, user is searching for destination so autofill with current destination
   return props.destination.name;
 };
-
-const displayCurrentOrigin = props => (
-  props.origin.name ? props.origin.name : 'Current Location'
-);
 
 const convertPlaceIdToLatLng = place => (
   new Promise((resolve, reject) => {
@@ -40,6 +36,10 @@ const convertPlaceIdToLatLng = place => (
   .catch((placeObject, status) => {
     throw new Error(`Failed to retrieve lat/lng for '${placeObject.name}'. Response status: ${status}`);
   })
+);
+
+const getCurrentLocationCardPrimaryText = props => (
+  props.currentLocation !== ' ' ? 'Use current location' : 'Current location not available'
 );
 
 const saveSearchResults = (predictions, status, props, interactionTypes) => {
@@ -106,8 +106,8 @@ const openSearchCards = (props, interactionTypes) => {
 
 const setOriginIfUndefined = (props) => {
   // If origin hasn't been set, use currentLocation.
-  if (props.origin === ' ') {
-    props.changeOrigin(props.currentLocation);
+  if (props.origin === ' ' && props.currentLocation.lat && props.currentLocation.lng) {
+    props.changeOrigin(Object.assign({}, props.currentLocation, { name: 'Current Location' }));
   }
 };
 
@@ -160,14 +160,16 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
 };
 
 const useCurrentLocationClickHandler = (props, interactionTypes) => {
-  props.changeOrigin(props.currentLocation);
+  if (props.currentLocation.lat && props.currentLocation.lng) {
+    props.changeOrigin(Object.assign({}, props.currentLocation, { name: 'Current Location' }));
+  }
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
 export default {
   autofillSearchBar,
-  displayCurrentOrigin,
   convertPlaceIdToLatLng,
+  getCurrentLocationCardPrimaryText,
   getDirections,
   getGoogleMapsPlacePredictions,
   getSearchBarHintText,

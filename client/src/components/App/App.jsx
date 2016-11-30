@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
-import { Card } from 'material-ui/Card';
+import Card from 'material-ui/Card';
+import Divider from 'material-ui/Divider';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -27,14 +28,13 @@ const App = (props) => {
   const mapStyle = {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
-  const iconButtonStyle = {
-    float: 'left',
-  };
   const searchBarStyle = {};
-  const flatButtonStyle = {
-    clear: 'both',
-    textAlign: 'left',
-    width: '300px',
+  const textFieldInputStyle = {
+    color: 'rgb(224,247,250)',
+    backgroundColor: 'rgb(77,208,225)',
+    borderRadius: '5px',
+    paddingLeft: '1%',
+    height: '80%',
   };
 
   // Create immutable interaction types for components to use
@@ -47,18 +47,29 @@ const App = (props) => {
   };
 
   const searchBarToolbarClasses = classNames({
-    'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE || props.interactionType === interactionTypes.VIEWING_SIDEBAR,
-    'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE && props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
+    'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE ||
+                            props.interactionType === interactionTypes.VIEWING_SIDEBAR,
+    'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE &&
+                            props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
   const searchCardsClasses = classNames({
-    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
-    'search-cards-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION &&
+                          props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-show': (props.interactionType === interactionTypes.SEARCHING_DESTINATION &&
+                          props.destinationSearchResults.length > 0) ||
+                         (props.interactionType === interactionTypes.SEARCHING_ORIGIN &&
+                          props.originSearchResults.length > 0),
   });
 
   const currentLocationCardClasses = classNames({
     'current-location-card-hide': props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
     'current-location-card-show': props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+  });
+
+  const useCurrentLocationListItemClassNames = classNames({
+    'current-location-found': props.currentLocation.lat && props.currentLocation.lng,
+    'current-location-not-found': !props.currentLocation.lat && !props.currentLocation.lng,
   });
 
   const searchResultsCardClasses = classNames({
@@ -92,38 +103,42 @@ const App = (props) => {
         open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
       >
         <IconButton
-          style={iconButtonStyle}
+          className="searchbar-menu-button"
           onClick={() => (
             appHelper.toggleInteractionTypeFromMenuClick(props, interactionTypes)
           )}
         >
           <Close color="rgb(0, 188, 212)" />
         </IconButton>
-        <FlatButton label="About" style={flatButtonStyle} />
-        <FlatButton label="Fork Me On GitHub" style={flatButtonStyle} />
+        <FlatButton label="About" className="flat-button" />
+        <FlatButton label="Fork Me On GitHub" className="flat-button" />
       </Drawer>
       <Toolbar
-        className={selectingRouteToolbarClasses}
+        className={`${selectingRouteToolbarClasses} current-origin`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
         <ToolbarGroup className="search-toolbargroup">
-          <OriginIcon />
+          <OriginIcon className="selecting-route-toolbar-icon" />
           <TextField
+            inputStyle={textFieldInputStyle}
+            underlineShow={false}
             fullWidth
             hintText="Origin"
-            value={appHelper.displayCurrentOrigin(props)}
+            value={props.origin.name}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
       <Toolbar
-        className={selectingRouteToolbarClasses}
+        className={`${selectingRouteToolbarClasses} current-destination`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
         <ToolbarGroup className="search-toolbargroup">
-          <DestinationIcon />
+          <DestinationIcon className="selecting-route-toolbar-icon" />
           <TextField
+            inputStyle={textFieldInputStyle}
+            underlineShow={false}
             fullWidth
             hintText="Destination"
             value={props.destination.name}
@@ -181,7 +196,7 @@ const App = (props) => {
       <Toolbar className={searchBarToolbarClasses}>
         <ToolbarGroup firstChild className="toolbar-group">
           <IconButton
-            style={iconButtonStyle}
+            className="searchbar-menu-button"
             onClick={() => (
               appHelper.toggleInteractionTypeFromMenuClick(
                 props,
@@ -206,40 +221,44 @@ const App = (props) => {
         </ToolbarGroup>
       </Toolbar>
       <Card
-        className={`${searchCardsClasses} ${currentLocationCardClasses}`}
+        className={`${currentLocationCardClasses}`}
       >
         <List>
           <ListItem
+            className={useCurrentLocationListItemClassNames}
             leftIcon={<OriginIcon />}
-            primaryText="Use current location"
+            primaryText={appHelper.getCurrentLocationCardPrimaryText(props)}
             onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes); }}
           />
         </List>
       </Card>
       <Card
         className={`${searchCardsClasses} ${searchResultsCardClasses}`}
-        onClick={() => { props.changeInteractionType(interactionTypes.SELECTING_ROUTE); }}
       >
-        <List id="search-results">
+        <List>
           {props.destinationSearchResults.map(result => (
-            <ListItem
-              className={destinationSearchResultClasses}
-              leftIcon={<DestinationIcon />}
-              primaryText={result.name}
-              onClick={() => {
-                appHelper.getDirections(props, interactionTypes, result);
-              }}
-            />
+            <div className={destinationSearchResultClasses}>
+              <ListItem
+                leftIcon={<DestinationIcon />}
+                primaryText={result.name}
+                onClick={() => {
+                  appHelper.getDirections(props, interactionTypes, result);
+                }}
+              />
+              <Divider />
+            </div>
           ))}
           {props.originSearchResults.map(result => (
-            <ListItem
-              className={originSearchResultClasses}
-              leftIcon={<DestinationIcon />}
-              primaryText={result.name}
-              onClick={() => {
-                appHelper.getDirections(props, interactionTypes, result);
-              }}
-            />
+            <div className={originSearchResultClasses}>
+              <ListItem
+                leftIcon={<DestinationIcon />}
+                primaryText={result.name}
+                onClick={() => {
+                  appHelper.getDirections(props, interactionTypes, result);
+                }}
+              />
+              <Divider />
+            </div>
           ))}
         </List>
       </Card>
@@ -247,7 +266,7 @@ const App = (props) => {
         className={sendToGoogleMapsButtonClasses}
         onClick={() => window.open(props.routeResponse[props.currentRouteIndex].googleMapsUrl)}
       >
-        <Directions />
+        <Directions className="directions-icon" />
       </FloatingActionButton>
     </div>
   );

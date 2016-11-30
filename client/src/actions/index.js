@@ -102,7 +102,7 @@ export const setRouteResponse = (origin, destination) => {
         routeResponse: response.data,
       });
     })
-    .catch((err) => { console.log('ERROR: ', err); });
+    .catch((error) => { throw new Error(`Failed request for directions (error: ${error})`); });
   };
 };
 
