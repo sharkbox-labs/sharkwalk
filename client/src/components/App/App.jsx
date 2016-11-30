@@ -33,7 +33,7 @@ const App = (props) => {
   const searchBarStyle = {};
   const flatButtonStyle = {
     clear: 'both',
-    'text-align': 'left',
+    textAlign: 'left',
     width: '300px',
   };
 
