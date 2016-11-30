@@ -13,6 +13,7 @@ services:
     image: node:boron
     volumes:
     - ./riskservice:/user/src/riskservice
+    - ssl-certs:/var/ssl
     working_dir: /user/src/riskservice
     env_file: .env
     links:
@@ -20,6 +21,7 @@ services:
         - riskdb
     ports:
     - "80:3002"
+    - "443:3012"
     depends_on:
     - riskdb
     command: npm run docker
