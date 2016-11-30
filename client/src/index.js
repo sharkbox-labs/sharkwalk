@@ -16,10 +16,20 @@ const initialStore = {
   destination: ' ',
   interactionType: 'VIEWING_MAP',
   origin: ' ',
-  routeResponse: {
-    route: ' ',
-    path: ' ',
-  },
+  routeResponse: [
+    {
+      route: ' ',
+      path: [],
+    },
+    {
+      route: ' ',
+      path: [],
+    },
+    {
+      route: ' ',
+      path: [],
+    },
+  ],
   destinationSearchResults: [],
   originSearchResults: [],
 };
