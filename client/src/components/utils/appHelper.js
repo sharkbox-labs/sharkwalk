@@ -107,7 +107,7 @@ const openSearchCards = (props, interactionTypes) => {
 const setOriginIfUndefined = (props) => {
   // If origin hasn't been set, use currentLocation.
   if (props.origin === ' ' && props.currentLocation.lat && props.currentLocation.lng) {
-    props.changeOrigin(Object.assign({}, props.currentLocation, { name: 'Current Location' }));
+    props.changeOrigin(Object.assign({}, { name: 'Current Location' }, props.currentLocation));
   }
 };
 
@@ -161,8 +161,11 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
 
 const useCurrentLocationClickHandler = (props, interactionTypes) => {
   if (props.currentLocation.lat && props.currentLocation.lng) {
-    props.changeOrigin(Object.assign({}, props.currentLocation, { name: 'Current Location' }));
+    const currentLocation = Object.assign({}, { name: 'Current Location' }, props.currentLocation);
+    props.changeOrigin(currentLocation);
+    props.changeRouteResponse(currentLocation, props.destination);
   }
+
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
