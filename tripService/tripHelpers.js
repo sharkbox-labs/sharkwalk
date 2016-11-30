@@ -38,43 +38,43 @@ const generateTravelDistance = (legs) => {
   return distance;
 };
 
-// const generateDirectionsURL = (legs) => {
-//   const url = 'https://www.google.com/maps/dir';
-//   const suffix = 'data=!3m1!4b1!4m2!4m1!3e2';
-//   const coords = [];
-//   legs.forEach((leg) => {
-//     coords.push(`${leg.start_location.lat},${leg.start_location.lng}`);
-//   });
-//   coords.push(`${legs[legs.length - 1].end_location.lat},${legs[legs.length - 1].end_location.lng}`);
-//   return path.join(url, coords.join('/'), suffix);
-// };
-//
-const getWaypoints = (legs) => {
+const generateDirectionsURL = (legs) => {
+  const url = 'https://www.google.com/maps/dir';
+  const suffix = 'data=!3m1!4b1!4m2!4m1!3e2';
   const coords = [];
   legs.forEach((leg) => {
-    coords.push([leg.start_location.lat, leg.start_location.lng]);
+    coords.push(`${leg.start_location.lat},${leg.start_location.lng}`);
   });
-  coords.push([legs[legs.length - 1].end_location.lat, legs[legs.length - 1].end_location.lng]);
-  return coords;
+  coords.push(`${legs[legs.length - 1].end_location.lat},${legs[legs.length - 1].end_location.lng}`);
+  return path.join(url, coords.join('/'), suffix);
 };
 
-const generateDirectionsURL = (legs) => {
-  const waypoints = getWaypoints(legs);
-  const url = 'https://www.google.com/maps/dir/';
-  const suffix = '!1m0!3e2'; // indicates end of waypoints & mode of travel
-  const coords = [];
-  coords.push(`${waypoints[0][0]},${waypoints[0][1]}`);
-  coords.push(`${waypoints[waypoints.length - 1][0]},${waypoints[waypoints.length - 1][1]}`);
-  coords.push('am=t');
-  const originDestin = coords.join('/');
-  const x = waypoints.length - 2; // number of VIA points
-  const data = `/data=!4m${(5 * x) + 4}!4m${(5 * x) + 3}!1m${5 * x}`;
-  let waypointString = '';
-  for (let i = 1; i < waypoints.length - 1; i += 1) {
-    waypointString += `!3m4!1m2!1d${waypoints[i][1]}!2d${waypoints[i][0]}!3s0x0:0x0`;
-  }
-  return `${url + originDestin + data + waypointString + suffix}`;
-};
+// const getWaypoints = (legs) => {
+//   const coords = [];
+//   legs.forEach((leg) => {
+//     coords.push([leg.start_location.lat, leg.start_location.lng]);
+//   });
+//   coords.push([legs[legs.length - 1].end_location.lat, legs[legs.length - 1].end_location.lng]);
+//   return coords;
+// };
+
+// const generateDirectionsURL = (legs) => {
+//   const waypoints = getWaypoints(legs);
+//   const url = 'https://www.google.com/maps/dir/';
+//   const suffix = '!1m0!3e2'; // indicates end of waypoints & mode of travel
+//   const coords = [];
+//   coords.push(`${waypoints[0][0]},${waypoints[0][1]}`);
+//   coords.push(`${waypoints[waypoints.length - 1][0]},${waypoints[waypoints.length - 1][1]}`);
+//   coords.push('am=t');
+//   const originDestin = coords.join('/');
+//   const x = waypoints.length - 2; // number of VIA points
+//   const data = `/data=!4m${(5 * x) + 4}!4m${(5 * x) + 3}!1m${5 * x}`;
+//   let waypointString = '';
+//   for (let i = 1; i < waypoints.length - 1; i += 1) {
+//     waypointString += `!3m4!1m2!1d${waypoints[i][1]}!2d${waypoints[i][0]}!3s0x0:0x0`;
+//   }
+//   return `${url + originDestin + data + waypointString + suffix}`;
+// };
 
 // converts array of polylines into LatLngs
 

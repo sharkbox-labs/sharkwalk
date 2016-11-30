@@ -1,3 +1,6 @@
+const https = require('https');
+const fs = require('fs');
+const cors = require('cors');
 const path = require('path');
 require('dotenv').config({
   silent: false,
@@ -13,6 +16,7 @@ const bodyParser = require('body-parser');
 require('./db/connection');
 
 const app = express();
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 
@@ -48,7 +52,21 @@ app.get('/pathfinder', requestHandlers.findPath);
 
 
 const port = 3002;
+const sslPort = 3012;
 
 app.listen(port, () => logger.info(`Risk service listening on ${port}`));
+
+try {
+  const options = {
+    key: fs.readFileSync('/var/ssl/key.pem'),
+    cert: fs.readFileSync('/var/ssl/cert.pem'),
+  };
+
+  https.createServer(options, app).listen(sslPort, () => {
+    logger.info(`https server listening on ${sslPort}`);
+  });
+} catch (e) {
+  logger.warn(`Error creating https server: ${e.message}`);
+}
 
 module.exports = app;
