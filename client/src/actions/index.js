@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import sampleRouteData from '../components/utils/sampleRouteData';
 
 /**
  * Get geolocation and set current location to state
@@ -15,7 +16,7 @@ export const setCurrentLocation = (dispatch) => {
     };
 
     const failure = (error) => {
-      console.warn('ERROR(' + error.code + '): ' + error.message); // eslint-disable-line
+      console.warn(`ERROR(${error.code}): ${error.message}`); // eslint-disable-line
     };
 
     const options = {
@@ -82,14 +83,28 @@ export const setRouteResponse = (origin, destination) => {
   const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
 
   const queryString = qs.stringify({
-    origin,
-    destination,
+    origin: {
+      lat: origin.lat,
+      lng: origin.lng,
+    },
+    destination: {
+      lat: destination.lat,
+      lng: destination.lng,
+    },
   });
 
-  const request = axios.get(`${serverUrl}/api/trip?${queryString}`);
+  // ********************************************************************************
+
+  // ==================== REMOVE PROMISE FOR PRODUCTION =============================
+
+  // ********************************************************************************
+  const request = new Promise((resolve, reject) => {
+    axios.get(`${serverUrl}/api/trip?${queryString}`);
+    resolve(sampleRouteData);
+  });
 
   return (dispatch) => {
-    request.then(({ data }) => {
+    request.then((data) => {
       dispatch({
         type: 'SET_ROUTE_RESPONSE',
         routeResponse: data,
