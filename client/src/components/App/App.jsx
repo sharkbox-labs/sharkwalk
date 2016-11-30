@@ -47,13 +47,19 @@ const App = (props) => {
   };
 
   const searchBarToolbarClasses = classNames({
-    'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE || props.interactionType === interactionTypes.VIEWING_SIDEBAR,
-    'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE && props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
+    'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE ||
+                            props.interactionType === interactionTypes.VIEWING_SIDEBAR,
+    'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE &&
+                            props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
   const searchCardsClasses = classNames({
-    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION && props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
-    'search-cards-show': props.interactionType === interactionTypes.SEARCHING_DESTINATION || props.interactionType === interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION &&
+                          props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+    'search-cards-show': (props.interactionType === interactionTypes.SEARCHING_DESTINATION &&
+                          props.destinationSearchResults.length > 0) ||
+                         (props.interactionType === interactionTypes.SEARCHING_ORIGIN &&
+                          props.originSearchResults.length > 0),
   });
 
   const currentLocationCardClasses = classNames({
@@ -211,7 +217,7 @@ const App = (props) => {
         </ToolbarGroup>
       </Toolbar>
       <Card
-        className={`${searchCardsClasses} ${currentLocationCardClasses}`}
+        className={`${currentLocationCardClasses}`}
       >
         <List>
           <ListItem
@@ -225,7 +231,7 @@ const App = (props) => {
       <Card
         className={`${searchCardsClasses} ${searchResultsCardClasses}`}
       >
-        <List id="search-results">
+        <List>
           {props.destinationSearchResults.map(result => (
             <ListItem
               className={destinationSearchResultClasses}
