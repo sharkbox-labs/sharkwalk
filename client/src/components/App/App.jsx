@@ -126,7 +126,7 @@ const App = (props) => {
           <TextField
             fullWidth
             hintText="Destination"
-            value={props.destination}
+            value={props.destination.name}
             onClick={() => {
               props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
             }}
@@ -138,7 +138,9 @@ const App = (props) => {
         <Map
           className="map"
           google={window.google}
-          onReady={() => (props.changeCurrentLocation(props.dispatch))}
+          onReady={() => {
+            props.changeCurrentLocation(props.dispatch);
+          }}
           onDragend={''} // this.setDestination
           onClick={''} // this.setDestination
           style={mapStyle}
@@ -215,10 +217,12 @@ const App = (props) => {
             <ListItem
               className={destinationSearchResultClasses}
               leftIcon={<DestinationIcon />}
-              primaryText={result}
-              onClick={(e) => {
-                appHelper.setOriginIfUndefined(props);
-                props.changeDestination(e.target.textContent);
+              primaryText={result.name}
+              onClick={() => {
+                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
+                  appHelper.setOriginIfUndefined(props);
+                  props.changeDestination(geolocatedPlace);
+                });
               }}
             />
           ))}
@@ -226,9 +230,11 @@ const App = (props) => {
             <ListItem
               className={originSearchResultClasses}
               leftIcon={<DestinationIcon />}
-              primaryText={result}
-              onClick={(e) => {
-                props.changeOrigin(e.target.textContent);
+              primaryText={result.name}
+              onClick={() => {
+                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
+                  props.changeOrigin(geolocatedPlace);
+                });
               }}
             />
           ))}
