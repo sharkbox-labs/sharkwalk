@@ -80,7 +80,7 @@ export const setCurrentRoute = routeIndex => ({
  * out a promisified, async request to the Integration Server.
  */
 export const setRouteResponse = (origin, destination) => {
-  const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
+  const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3002' : '';
 
   const queryString = qs.stringify({
     origin: {
@@ -93,23 +93,16 @@ export const setRouteResponse = (origin, destination) => {
     },
   });
 
-  // ********************************************************************************
-
-  // ==================== REMOVE PROMISE FOR PRODUCTION =============================
-
-  // ********************************************************************************
-  const request = new Promise((resolve, reject) => {
-    axios.get(`${serverUrl}/api/trip?${queryString}`);
-    resolve(sampleRouteData);
-  });
+  const request = axios.get(`${serverUrl}/pathfinder?${queryString}`);
 
   return (dispatch) => {
-    request.then((data) => {
+    request.then((response) => {
       dispatch({
         type: 'SET_ROUTE_RESPONSE',
-        routeResponse: data,
+        routeResponse: response.data,
       });
-    });
+    })
+    .catch((err) => { console.log('ERROR: ', err); });
   };
 };
 
