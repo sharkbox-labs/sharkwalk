@@ -27,7 +27,7 @@
 
 .current-location-card-show {
   position: absolute;
-  top: 11%;
+  top: 12%;
   left: 5%;
   right: 5%;
   border-radius: 3px;
@@ -47,11 +47,11 @@
 }
 
 .search-results-card {
-  top: 25%;
+  top: 24%;
 }
 
 .search-results-card-only {
-  top: 11%;
+  top: 12%;
 }
 
 .search-cards-show {

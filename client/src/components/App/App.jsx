@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
-import { Card } from 'material-ui/Card';
+import Card from 'material-ui/Card';
+import Divider from 'material-ui/Divider';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -233,24 +234,28 @@ const App = (props) => {
       >
         <List>
           {props.destinationSearchResults.map(result => (
-            <ListItem
-              className={destinationSearchResultClasses}
-              leftIcon={<DestinationIcon />}
-              primaryText={result.name}
-              onClick={() => {
-                appHelper.getDirections(props, interactionTypes, result);
-              }}
-            />
+            <div className={destinationSearchResultClasses}>
+              <ListItem
+                leftIcon={<DestinationIcon />}
+                primaryText={result.name}
+                onClick={() => {
+                  appHelper.getDirections(props, interactionTypes, result);
+                }}
+              />
+              <Divider />
+            </div>
           ))}
           {props.originSearchResults.map(result => (
-            <ListItem
-              className={originSearchResultClasses}
-              leftIcon={<DestinationIcon />}
-              primaryText={result.name}
-              onClick={() => {
-                appHelper.getDirections(props, interactionTypes, result);
-              }}
-            />
+            <div className={originSearchResultClasses}>
+              <ListItem
+                leftIcon={<DestinationIcon />}
+                primaryText={result.name}
+                onClick={() => {
+                  appHelper.getDirections(props, interactionTypes, result);
+                }}
+              />
+              <Divider />
+            </div>
           ))}
         </List>
       </Card>
