@@ -190,7 +190,7 @@ const App = (props) => {
             hintText={appHelper.getSearchBarHintText(props, interactionTypes)}
             dataSource={[null]}
             onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
-            onNewRequest={() => { appHelper.searchBarSubmitHandler(props, interactionTypes); }}
+            onNewRequest={() => { appHelper.getDirections(props, interactionTypes); }}
             onUpdateInput={(query) => { appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes); }}
             searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
@@ -219,10 +219,7 @@ const App = (props) => {
               leftIcon={<DestinationIcon />}
               primaryText={result.name}
               onClick={() => {
-                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
-                  appHelper.setOriginIfUndefined(props);
-                  props.changeDestination(geolocatedPlace);
-                });
+                appHelper.getDirections(props, interactionTypes, result);
               }}
             />
           ))}
@@ -232,9 +229,7 @@ const App = (props) => {
               leftIcon={<DestinationIcon />}
               primaryText={result.name}
               onClick={() => {
-                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
-                  props.changeOrigin(geolocatedPlace);
-                });
+                appHelper.getDirections(props, interactionTypes, result);
               }}
             />
           ))}
