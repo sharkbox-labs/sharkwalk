@@ -13,7 +13,7 @@ const reducer = (state, action) => {
       return Object.assign({}, state, { interactionType: action.interactionType });
 
     case 'SET_CURRENT_ROUTE':
-      return Object.assign({}, state, { currentRoute: action.routeIndex });
+      return Object.assign({}, state, { currentRouteIndex: action.routeIndex });
 
     case 'SET_ROUTE_RESPONSE':
       return Object.assign({}, state, { routeResponse: action.routeResponse });

@@ -12,7 +12,7 @@ import './index.css';
 
 const initialStore = {
   currentLocation: ' ',
-  currentRoute: null,
+  currentRouteIndex: 0,
   destination: ' ',
   interactionType: 'VIEWING_MAP',
   origin: ' ',
@@ -25,7 +25,6 @@ const initialStore = {
       distance: 0,
       duration: 0,
       googleMapsUrl: '',
-      route: ' ',
       path: [],
     },
     {
@@ -36,7 +35,6 @@ const initialStore = {
       distance: 0,
       duration: 0,
       googleMapsUrl: '',
-      route: ' ',
       path: [],
     },
     {
@@ -47,7 +45,6 @@ const initialStore = {
       distance: 0,
       duration: 0,
       googleMapsUrl: '',
-      route: ' ',
       path: [],
     },
   ],
