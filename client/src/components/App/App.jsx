@@ -243,7 +243,10 @@ const App = (props) => {
           ))}
         </List>
       </Card>
-      <FloatingActionButton className={sendToGoogleMapsButtonClasses}>
+      <FloatingActionButton
+        className={sendToGoogleMapsButtonClasses}
+        onClick={() => window.open(props.routeResponse[props.currentRouteIndex].googleMapsUrl)}
+      >
         <Directions />
       </FloatingActionButton>
     </div>
@@ -255,6 +258,7 @@ App.propTypes = {
   changeInteractionType: React.PropTypes.func.isRequired,
   changeOrigin: React.PropTypes.func.isRequired,
   changeRoute: React.PropTypes.func.isRequired,
+  currentRouteIndex: React.PropTypes.number.isRequired,
   changeRouteResponse: React.PropTypes.func.isRequired,
   currentLocation: React.PropTypes.shape({
     lat: React.PropTypes.number.isRequired,
@@ -273,7 +277,13 @@ App.propTypes = {
   originSearchResults: React.PropTypes.array.isRequired, // eslint-disable-line
   routeResponse: React.PropTypes.arrayOf(
     React.PropTypes.shape({
-      route: React.PropTypes.string.isRequired,
+      risks: React.PropTypes.array.isRequired,
+      maxRisk: React.PropTypes.number.isRequired,
+      averageRisk: React.PropTypes.number.isRequired,
+      riskWeight: React.PropTypes.number.isRequired,
+      distance: React.PropTypes.number.isRequired,
+      duration: React.PropTypes.number.isRequired,
+      googleMapsUrl: React.PropTypes.string.isRequired,
       path: React.PropTypes.array.isRequired,
     }),
   ),
