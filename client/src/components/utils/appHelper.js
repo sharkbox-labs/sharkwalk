@@ -18,7 +18,7 @@ const displayCurrentOrigin = props => (
   props.origin.name ? props.origin.name : 'Current Location'
 );
 
-const getGeolocation = place => (
+const convertPlaceIdToLatLng = place => (
   new Promise((resolve, reject) => {
     const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
 
@@ -115,7 +115,7 @@ const searchBarSubmitHandler = (props, interactionTypes) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
     // On user submit from input field, set top result as the origin if the
     // user did not select from the search results.
-    getGeolocation(props.originSearchResults[0]).then((geolocatedPlace) => {
+    convertPlaceIdToLatLng(props.originSearchResults[0]).then((geolocatedPlace) => {
       props.changeOrigin(geolocatedPlace);
     });
   }
@@ -125,7 +125,7 @@ const searchBarSubmitHandler = (props, interactionTypes) => {
 
     // On user submit from input field, set top result as the destination if the
     // user did not select from the search results.
-    getGeolocation(props.destinationSearchResults[0]).then((geolocatedPlace) => {
+    convertPlaceIdToLatLng(props.destinationSearchResults[0]).then((geolocatedPlace) => {
       props.changeDestination(geolocatedPlace);
     });
   }
@@ -160,7 +160,7 @@ const useCurrentLocationClickHandler = (props, interactionTypes) => {
 export default {
   autofillSearchBar,
   displayCurrentOrigin,
-  getGeolocation,
+  convertPlaceIdToLatLng,
   getGoogleMapsPlacePredictions,
   getSearchBarHintText,
   openSearchCards,

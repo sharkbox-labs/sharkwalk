@@ -219,7 +219,7 @@ const App = (props) => {
               leftIcon={<DestinationIcon />}
               primaryText={result.name}
               onClick={() => {
-                appHelper.getGeolocation(result).then((geolocatedPlace) => {
+                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
                   appHelper.setOriginIfUndefined(props);
                   props.changeDestination(geolocatedPlace);
                 });
@@ -232,7 +232,7 @@ const App = (props) => {
               leftIcon={<DestinationIcon />}
               primaryText={result.name}
               onClick={() => {
-                appHelper.getGeolocation(result).then((geolocatedPlace) => {
+                appHelper.convertPlaceIdToLatLng(result).then((geolocatedPlace) => {
                   props.changeOrigin(geolocatedPlace);
                 });
               }}
