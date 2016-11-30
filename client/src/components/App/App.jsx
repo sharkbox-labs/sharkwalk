@@ -28,14 +28,13 @@ const App = (props) => {
   const mapStyle = {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
-  const iconButtonStyle = {
-    float: 'left',
-  };
   const searchBarStyle = {};
-  const flatButtonStyle = {
-    clear: 'both',
-    textAlign: 'left',
-    width: '300px',
+  const textFieldInputStyle = {
+    color: 'rgb(224,247,250)',
+    backgroundColor: 'rgb(77,208,225)',
+    borderRadius: '5px',
+    paddingLeft: '1%',
+    height: '80%',
   };
 
   // Create immutable interaction types for components to use
@@ -104,23 +103,25 @@ const App = (props) => {
         open={props.interactionType === interactionTypes.VIEWING_SIDEBAR}
       >
         <IconButton
-          style={iconButtonStyle}
+          className="searchbar-menu-button"
           onClick={() => (
             appHelper.toggleInteractionTypeFromMenuClick(props, interactionTypes)
           )}
         >
           <Close color="rgb(0, 188, 212)" />
         </IconButton>
-        <FlatButton label="About" style={flatButtonStyle} />
-        <FlatButton label="Fork Me On GitHub" style={flatButtonStyle} />
+        <FlatButton label="About" className="flat-button" />
+        <FlatButton label="Fork Me On GitHub" className="flat-button" />
       </Drawer>
       <Toolbar
-        className={selectingRouteToolbarClasses}
+        className={`${selectingRouteToolbarClasses} current-origin`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
         <ToolbarGroup className="search-toolbargroup">
-          <OriginIcon />
+          <OriginIcon className="selecting-route-toolbar-icon" />
           <TextField
+            inputStyle={textFieldInputStyle}
+            underlineShow={false}
             fullWidth
             hintText="Origin"
             value={props.origin.name}
@@ -130,12 +131,14 @@ const App = (props) => {
         </ToolbarGroup>
       </Toolbar>
       <Toolbar
-        className={selectingRouteToolbarClasses}
+        className={`${selectingRouteToolbarClasses} current-destination`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
         <ToolbarGroup className="search-toolbargroup">
-          <DestinationIcon />
+          <DestinationIcon className="selecting-route-toolbar-icon" />
           <TextField
+            inputStyle={textFieldInputStyle}
+            underlineShow={false}
             fullWidth
             hintText="Destination"
             value={props.destination.name}
@@ -193,7 +196,7 @@ const App = (props) => {
       <Toolbar className={searchBarToolbarClasses}>
         <ToolbarGroup firstChild className="toolbar-group">
           <IconButton
-            style={iconButtonStyle}
+            className="searchbar-menu-button"
             onClick={() => (
               appHelper.toggleInteractionTypeFromMenuClick(
                 props,
@@ -263,7 +266,7 @@ const App = (props) => {
         className={sendToGoogleMapsButtonClasses}
         onClick={() => window.open(props.routeResponse[props.currentRouteIndex].googleMapsUrl)}
       >
-        <Directions />
+        <Directions className="directions-icon" />
       </FloatingActionButton>
     </div>
   );
