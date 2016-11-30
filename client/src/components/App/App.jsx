@@ -134,9 +134,9 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
-      <div id="map-container" style={mapContainerStyle}>
+      <div className="map-container" style={mapContainerStyle}>
         <Map
-          id="map"
+          className="map"
           google={window.google}
           onReady={() => {
             props.changeCurrentLocation(props.dispatch);

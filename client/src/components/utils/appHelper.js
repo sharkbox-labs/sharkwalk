@@ -20,8 +20,7 @@ const displayCurrentOrigin = props => (
 
 const getGeolocation = place => (
   new Promise((resolve, reject) => {
-    // const map = new window.google.maps.Map(document.getElementById('map-container'));
-    const placesService = new window.google.maps.places.PlacesService(document.getElementById('map-container'));
+    const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
 
     placesService.getDetails(place, (response, status) => {
       if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
@@ -39,7 +38,7 @@ const getGeolocation = place => (
   })
   .then(geolocatedPlace => geolocatedPlace)
   .catch((placeObject, status) => {
-    throw new Error(`Failed to retrieve lat/lng for '${placeObject.placeId}'. Response status: ${status}`);
+    throw new Error(`Failed to retrieve lat/lng for '${placeObject.name}'. Response status: ${status}`);
   })
 );
 
