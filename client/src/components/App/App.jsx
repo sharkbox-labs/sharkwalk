@@ -33,7 +33,7 @@ const App = (props) => {
   const searchBarStyle = {};
   const flatButtonStyle = {
     clear: 'both',
-    'text-align': 'left',
+    textAlign: 'left',
     width: '300px',
   };
 
@@ -168,9 +168,12 @@ const App = (props) => {
           />
           {props.routeResponse.map((segment, index) => (
             <RiskPath
+              changeRoute={props.changeRoute}
+              currentRouteIndex={props.currentRouteIndex}
               index={index}
               key={index}
               points={segment.path}
+              risks={segment.risks}
             />
           ))}
         </Map>

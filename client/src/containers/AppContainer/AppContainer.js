@@ -8,7 +8,7 @@ const mapStateToProps = state => ({
   destination: state.destination,
   origin: state.origin,
   interactionType: state.interactionType,
-  currentRoute: state.currentRoute,
+  currentRouteIndex: state.currentRouteIndex,
   routeResponse: state.routeResponse,
   destinationSearchResults: state.destinationSearchResults,
   originSearchResults: state.originSearchResults,

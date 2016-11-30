@@ -10,6 +10,14 @@ const numberToRGBGreenRed = function numberToRGBGreenRed(num) {
   return `${colorHex}`;
 };
 
+const numberToRGBGreenRedLowOpacity = function numberToRGBGreenRedLowOpacity(num) {
+  let hue = 120 - (120 * num);
+  if (hue < 0) hue = 0;
+  if (hue > 120) hue = 120;
+  const colorHex = colorcolor(`hsl(${Math.round(hue)}, 45%, 70%)`, 'hex');
+  return `${colorHex}`;
+};
+
 /**
  * Generate a line-segment polyline to place on a Google Map
  * @param  {Object} start     The start point. Must have keys `lat` and 'lng'.
@@ -19,13 +27,14 @@ const numberToRGBGreenRed = function numberToRGBGreenRed(num) {
  * @return {Object}           The polyline, ready to be set to a map with
  * `.setMap(<map reference>)`.
  */
-const generateSegment = (start, end, intensity) => {
+const generateSegment = (start, end, intensity, currentRouteIndex, index) => {
   const segment = new window.google.maps.Polyline({
     path: [{ lat: start[0], lng: start[1] }, { lat: end[0], lng: end[1] }],
     geodesic: true,
-    strokeColor: numberToRGBGreenRed(intensity),
-    strokeOpacity: 0.75,
-    strokeWeight: 7,
+    strokeColor: index === currentRouteIndex ? numberToRGBGreenRed(intensity) : numberToRGBGreenRedLowOpacity(intensity),
+    strokeOpacity: index === currentRouteIndex ? 0.75 : 0.55,
+    strokeWeight: index === currentRouteIndex ? 7 : 6,
+    zIndex: index === currentRouteIndex ? 1 : 0,
   });
 
   return segment;
@@ -40,11 +49,14 @@ class RiskPath extends Component {
   }
 
   componentDidMount() {
+    this.clear();
     this.renderRiskPath();
   }
 
   componentDidUpdate(prevProps) {
-    if (!deepEqual(this.props.points, prevProps.points)) {
+    if (!deepEqual(this.props.points, prevProps.points) ||
+        !deepEqual(this.props.currentRouteIndex, prevProps.currentRouteIndex)) {
+      this.clear();
       this.renderRiskPath();
     }
   }
@@ -61,8 +73,11 @@ class RiskPath extends Component {
         generateSegment(
           this.props.points[i],
           this.props.points[i + 1],
-          this.props.points[i][2] / 600),
-        );
+          this.props.risks[i] / 300,
+          this.props.currentRouteIndex,
+          this.props.index,
+        ),
+      );
     }
     // eslint-disable-next-line react/prop-types
     segments.forEach((segment) => {
@@ -70,8 +85,7 @@ class RiskPath extends Component {
 
       // Add listener
       window.google.maps.event.addListener(segment, 'click', () => {
-        console.log('clicked: ', segment.getPath().b[0].lat());
-        console.log('key: ', this.props.index);
+        this.props.changeRoute(this.props.index);
       });
     });
 
@@ -84,12 +98,17 @@ class RiskPath extends Component {
 }
 
 RiskPath.propTypes = {
+  changeRoute: React.PropTypes.func.isRequired,
+  currentRouteIndex: React.PropTypes.number.isRequired,
   index: React.PropTypes.number.isRequired,
   points: React.PropTypes.arrayOf(
     React.PropTypes.arrayOf(
       React.PropTypes.number,
     ),
   ).isRequired,
+  risks: React.PropTypes.arrayOf(
+    React.PropTypes.number,
+  ),
 };
 
 export default RiskPath;
