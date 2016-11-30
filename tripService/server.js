@@ -1,12 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const morgan = require('morgan');
-// const config = require('./config/maps');
+const morgan = require('morgan');
 const requestHandler = require('./requestHandlers.js').requestHandler;
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(morgan('dev'));
 
 app.post('/routes', requestHandler);
 
