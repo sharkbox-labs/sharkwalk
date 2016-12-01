@@ -40,12 +40,10 @@ Set the environment variables in `example.env` the same way you did with the Ris
 then run `npm start`.
 
 From there, build the React client by `cd`ing into the `client` directory and running
-`npm build`.
-
-Lastly, `cd` into the `integrationServer` directory and run `npm start`.
+`npm start`.
 
 The app will now be live at [http://localhost:3000](http://localhost:3000)
-in your browser! 
+in your browser!
 
 ## Requirements
 
