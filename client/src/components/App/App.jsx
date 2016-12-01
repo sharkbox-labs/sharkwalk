@@ -20,6 +20,7 @@ import Close from 'material-ui/svg-icons/navigation/close';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
+import InfoWindow from '../InfoWindow/InfoWindow';
 import appHelper from '../utils/appHelper';
 import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton'
 
@@ -49,6 +50,7 @@ const App = (props) => {
     paddingLeft: '10px',
     paddingRight: '10px',
     height: '80%',
+    width: '95%',
   };
 
   const mapClasses = classNames({
@@ -208,16 +210,18 @@ const App = (props) => {
             position={props.destination}
             google={window.google}
           />
-          {props.routeResponse.map((segment, index) => (
+          {props.routeResponse.map((route, index) => (
             <RiskPath
               changeRoute={props.changeRoute}
               currentRouteIndex={props.currentRouteIndex}
               index={index}
               key={index}
-              points={segment.path}
-              risks={segment.risks}
+              points={route.path}
+              risks={route.risks}
             />
           ))}
+          <InfoWindow className="info-window" route={props.routeResponse[0]} />
+          <InfoWindow className="info-window" route={props.routeResponse[1]} />
         </Map>
       </div>
       <Toolbar className={searchBarToolbarClasses}>
