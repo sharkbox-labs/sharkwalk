@@ -34,7 +34,7 @@ const App = (props) => {
   };
 
   // These styles are for development only, remove for production
-  const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ? { height: 'calc(100% - 120px)' } : {};
+  const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ? { height: 'calc(100% - 112px)' } : {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
   const searchBarStyle = {};
@@ -42,7 +42,7 @@ const App = (props) => {
     color: 'rgb(224,247,250)',
     backgroundColor: 'rgb(77,208,225)',
     borderRadius: '5px',
-    paddingLeft: '1%',
+    paddingLeft: '3%',
     height: '80%',
   };
 
