@@ -6,6 +6,7 @@
   bottom: 40px;
   position: fixed;
   right: 40px;
+  z-index: 3;
 }
 
 .flat-button {
@@ -18,6 +19,14 @@
   height: 35px !important;
   width: 35px !important;
   color: rgb(178,235,242) !important;
+}
+
+.fetching-route-data {
+  
+}
+
+.not-fetching-route-data {
+  display: none !important;
 }
 
 .map-viewing {
@@ -131,3 +140,6 @@
   display: none !important;
 }
 
+.shark-walk-gif-container {
+  bottom: 0%;
+}
