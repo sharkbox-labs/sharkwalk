@@ -50,6 +50,9 @@ app.use(bodyParser.json());
  */
 app.get('/pathfinder', requestHandlers.findPath);
 
+app.use('/logs', express.static(path.join(__dirname, 'riskService.log')));
+
+app.get('*', (request, response) => response.send('Visit us at www.shark-walk.com'));
 
 const port = 3002;
 const sslPort = 3012;
@@ -58,8 +61,8 @@ app.listen(port, () => logger.info(`Risk service listening on ${port}`));
 
 try {
   const options = {
-    key: fs.readFileSync('/var/ssl/key.pem'),
-    cert: fs.readFileSync('/var/ssl/cert.pem'),
+    key: fs.readFileSync('/var/ssl/live/api.shark-walk.com/privkey.pem'),
+    cert: fs.readFileSync('/var/ssl/live/api.shark-walk.com/cert.pem'),
   };
 
   https.createServer(options, app).listen(sslPort, () => {

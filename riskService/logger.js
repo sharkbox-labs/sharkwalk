@@ -7,7 +7,7 @@ module.exports = new (winston.Logger)({
       colorize: true,
     }),
     new (winston.transports.File)({
-      filename: path.join(__dirname, 'jellywave.log'),
+      filename: path.join(__dirname, 'riskService.log'),
       colorize: false,
       json: false,
     }),

@@ -30,8 +30,8 @@ const transformNodeToFeature = function transformNodeToFeature(node) {
 const hueristic = function hueristic(current, target, riskWeight = 1) {
   // distance + distance * aveargecrime * weight
   const dist = turf.distance(current, target, 'kilometers') * 1000;
-  return dist + (dist * (50 / 600) * riskWeight);
-  // 50 is approimately the risk for a lot of the city. Normalizing to a
+  return dist + (dist * (100 / 600) * riskWeight);
+  // 100 is approimately the risk for a lot of the city. Normalizing to a
   // max risk of 600 (although a few areas are higher)
 };
 

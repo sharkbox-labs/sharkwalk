@@ -3,7 +3,7 @@ services:
   tripservice:
     image: node:boron
     volumes:
-    - ./tripservice:/user/src/tripservice
+    - ./tripService:/user/src/tripservice
     working_dir: /user/src/tripservice
     env_file: .env
     ports:
@@ -12,8 +12,8 @@ services:
   riskservice:
     image: node:boron
     volumes:
-    - ./riskservice:/user/src/riskservice
-    - ssl-certs:/var/ssl
+    - ./riskService:/user/src/riskservice
+    - ssl-certs:/var/ssl:ro
     working_dir: /user/src/riskservice
     env_file: .env
     links:
@@ -28,3 +28,6 @@ services:
   riskdb:
     image: mongo
     command: mongod
+volumes:
+  ssl-certs:
+    external: true
