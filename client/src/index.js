@@ -16,10 +16,16 @@ const initialStore = {
     lng: 400,
   },
   currentRouteIndex: 0,
-  destination: ' ',
+  destination: {
+    lat: 400,
+    lng: 400,
+  },
   interactionType: 'VIEWING_MAP',
   isFetchingRouteData: false,
-  origin: ' ',
+  origin: {
+    lat: 400,
+    lng: 400,
+  },
   routeResponse: [
     {
       risks: [],
