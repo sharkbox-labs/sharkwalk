@@ -7,11 +7,18 @@ const logger = require('../logger');
 const db = require('../db/connection');
 
 const RiskNode = require('../db/riskNodeModel');
+const StreetPoint = require('../db/streetPointModel');
 
-RiskNode.remove({}).then(() => {
-  logger.info('Removed all risk nodes.');
+RiskNode.remove({})
+.then(() => StreetPoint.remove({}))
+.then(() => {
+  logger.info('Removed all street points');
+})
+.then(() => {
+  logger.info('Removed all risk nodes');
   db.close();
-}).catch((error) => {
+})
+.catch((error) => {
   logger.error(`Error removing risk nodes: ${error}`);
   db.close();
 });
