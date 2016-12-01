@@ -17,6 +17,7 @@ import Drawer from 'material-ui/Drawer';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Directions from 'material-ui/svg-icons/maps/directions';
 import Close from 'material-ui/svg-icons/navigation/close';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
 import appHelper from '../utils/appHelper';
@@ -53,14 +54,14 @@ const App = (props) => {
 
   const searchBarToolbarClasses = classNames({
     'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE ||
-                            props.interactionType === interactionTypes.VIEWING_SIDEBAR,
+                           props.interactionType === interactionTypes.VIEWING_SIDEBAR,
     'search-toolbar-show': props.interactionType !== interactionTypes.SELECTING_ROUTE &&
-                            props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
+                           props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
   const searchCardsClasses = classNames({
     'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION &&
-                          props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
+                         props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
     'search-cards-show': (props.interactionType === interactionTypes.SEARCHING_DESTINATION &&
                           props.destinationSearchResults.length > 0) ||
                          (props.interactionType === interactionTypes.SEARCHING_ORIGIN &&
@@ -96,7 +97,7 @@ const App = (props) => {
   });
 
   const sendToGoogleMapsButtonClasses = classNames({
-    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE,
+    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE || props.isFetchingRouteData,
     'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
@@ -117,6 +118,13 @@ const App = (props) => {
         </IconButton>
         <FlatButton label="About" className="flat-button" />
         <FlatButton label="Fork Me On GitHub" className="flat-button" />
+        <div className="shark-walk-gif-container" >
+          <img
+            alt={'shark walk'}
+            src={'./wave.gif'}
+            width={300}
+          />
+        </div>
       </Drawer>
       <Toolbar
         className={`${selectingRouteToolbarClasses} current-origin`}
@@ -177,6 +185,7 @@ const App = (props) => {
             optimized={false}
           />
           <Marker
+            icon={{ url: './green-marker.png' }}
             key={'origin'}
             position={props.origin}
             google={window.google}
@@ -218,7 +227,7 @@ const App = (props) => {
             hintText={appHelper.getSearchBarHintText(props, interactionTypes)}
             dataSource={[null]}
             onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
-            onNewRequest={() => { appHelper.getDirections(props, interactionTypes); }}
+            onNewRequest={() => { appHelper.getDirections(props, interactionTypes, null, props.dispatch); }}
             onUpdateInput={(query) => { appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes); }}
             searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
@@ -233,7 +242,7 @@ const App = (props) => {
             className={useCurrentLocationListItemClassNames}
             leftIcon={<OriginIcon />}
             primaryText={appHelper.getCurrentLocationCardPrimaryText(props)}
-            onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes); }}
+            onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes, props.dispatch); }}
           />
         </List>
       </Card>
@@ -247,7 +256,7 @@ const App = (props) => {
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}
                 onClick={() => {
-                  appHelper.getDirections(props, interactionTypes, result);
+                  appHelper.getDirections(props, interactionTypes, result, props.dispatch);
                 }}
               />
               <Divider />
@@ -259,7 +268,7 @@ const App = (props) => {
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}
                 onClick={() => {
-                  appHelper.getDirections(props, interactionTypes, result);
+                  appHelper.getDirections(props, interactionTypes, result, props.dispatch);
                 }}
               />
               <Divider />
@@ -273,6 +282,12 @@ const App = (props) => {
       >
         <Directions className="directions-icon" />
       </FloatingActionButton>
+      <RefreshIndicator
+        left={window.innerWidth - 96}
+        size={56}
+        status={props.isFetchingRouteData ? 'loading' : 'hide'}
+        top={window.innerHeight - 96}
+      />
     </div>
   );
 };
@@ -293,6 +308,7 @@ App.propTypes = {
     lng: React.PropTypes.number.isRequired,
   }),
   interactionType: React.PropTypes.string.isRequired,
+  isFetchingRouteData: React.PropTypes.bool.isRequired,
   origin: React.PropTypes.shape({
     lat: React.PropTypes.number.isRequired,
     lng: React.PropTypes.number.isRequired,

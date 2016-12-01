@@ -18,6 +18,7 @@ const initialStore = {
   currentRouteIndex: 0,
   destination: ' ',
   interactionType: 'VIEWING_MAP',
+  isFetchingRouteData: false,
   origin: ' ',
   routeResponse: [
     {
