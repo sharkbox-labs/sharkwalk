@@ -11,10 +11,14 @@ import reducer from './reducers/index';
 import './index.css';
 
 const initialStore = {
-  currentLocation: ' ',
+  currentLocation: {
+    lat: 400,
+    lng: 400,
+  },
   currentRouteIndex: 0,
   destination: ' ',
   interactionType: 'VIEWING_MAP',
+  isFetchingRouteData: false,
   origin: ' ',
   routeResponse: [
     {

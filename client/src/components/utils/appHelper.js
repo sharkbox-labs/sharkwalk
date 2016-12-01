@@ -111,12 +111,12 @@ const setOriginIfUndefined = (props) => {
   }
 };
 
-const getDirections = (props, interactionTypes, place) => {
+const getDirections = (props, interactionTypes, place, dispatchFunction) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
     // On user submit from input field, set top matched origin search result as the origin
     convertPlaceIdToLatLng(place || props.originSearchResults[0]).then((geolocatedPlace) => {
       props.changeOrigin(geolocatedPlace);
-      props.changeRouteResponse(geolocatedPlace, props.destination);
+      props.changeRouteResponse(geolocatedPlace, props.destination, dispatchFunction);
     });
   }
 
@@ -130,9 +130,9 @@ const getDirections = (props, interactionTypes, place) => {
 
       // Use current location as origin if origin hasn't been set yet
       if (!props.origin.lat) {
-        props.changeRouteResponse(props.currentLocation, geolocatedPlace);
+        props.changeRouteResponse(props.currentLocation, geolocatedPlace, dispatchFunction);
       } else {
-        props.changeRouteResponse(props.origin, geolocatedPlace);
+        props.changeRouteResponse(props.origin, geolocatedPlace, dispatchFunction);
       }
     });
   }
@@ -159,11 +159,11 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   return props.changeInteractionType(interactionTypes.VIEWING_MAP);
 };
 
-const useCurrentLocationClickHandler = (props, interactionTypes) => {
+const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunction) => {
   if (props.currentLocation.lat && props.currentLocation.lng) {
     const currentLocation = Object.assign({}, { name: 'Current Location' }, props.currentLocation);
     props.changeOrigin(currentLocation);
-    props.changeRouteResponse(currentLocation, props.destination);
+    props.changeRouteResponse(currentLocation, props.destination, dispatchFunction);
   }
 
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);

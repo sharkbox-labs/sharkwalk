@@ -1,17 +1,18 @@
 import { connect } from 'react-redux';
-import { setCurrentLocation, setDestination, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse, setDestinationSearchResults, setOriginSearchResults } from '../../actions/index';
+import { setCurrentLocation, setDestination, setIsFetchingRouteData, setOrigin, setInteractionType, setCurrentRoute, setRouteResponse, setDestinationSearchResults, setOriginSearchResults } from '../../actions/index';
 import App from '../../components/App/App';
 
 
 const mapStateToProps = state => ({
   currentLocation: state.currentLocation,
-  destination: state.destination,
-  origin: state.origin,
-  interactionType: state.interactionType,
   currentRouteIndex: state.currentRouteIndex,
-  routeResponse: state.routeResponse,
+  destination: state.destination,
   destinationSearchResults: state.destinationSearchResults,
+  interactionType: state.interactionType,
+  isFetchingRouteData: state.isFetchingRouteData,
+  origin: state.origin,
   originSearchResults: state.originSearchResults,
+  routeResponse: state.routeResponse,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -26,6 +27,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setDestination(destination));
   },
 
+  changeIsFetchingRouteData: (isFetchingRouteData) => {
+    dispatch(setIsFetchingRouteData(isFetchingRouteData));
+  },
+
   changeInteractionType: (interactionType) => {
     dispatch(setInteractionType(interactionType));
   },
@@ -38,9 +43,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setCurrentRoute(routeIndex));
   },
 
-  changeRouteResponse: (origin, destination) => {
+  changeRouteResponse: (origin, destination, dispatchFunction) => {
     // Dispatch is handled in action creator
-    setRouteResponse(origin, destination)(dispatch);
+    // setRouteResponse(origin, destination)(dispatch);
+    setRouteResponse(origin, destination, dispatchFunction);
   },
 
   changeDestinationSearchResults: (destinationResults) => {
