@@ -1,6 +1,8 @@
 const riskNodeController = require('../db/riskNodeController');
+const streetPointController = require('../db/streetPointController');
 const turf = require('@turf/turf');
 const BinaryHeap = require('../binaryHeap/binaryHeap');
+const logger = require('../logger');
 
 /**
  * Changes a node to a GeoJSON feature we can work with.
@@ -43,27 +45,36 @@ const hueristic = function hueristic(current, target, riskWeight = 1) {
  * @return {Promise}       A promise that resolves to the jumpoff point graph node.
  */
 const getJumpoffNode = function getJumpoffNode(point, goal) {
-  return riskNodeController.findRiskNodesNear(point, 200)
-    .then((nodes) => {
-      if (!nodes.length) {
-        throw new Error(`Could not find a node near ${JSON.stringify(point)}.`);
+  return streetPointController.findStreetPointsNear(point, 150)
+    .then((streetPoints) => {
+      if (streetPoints.length === 0) {
+        throw new Error(`Could not find street points near ${JSON.stringify(point)}`);
       }
-      nodes.map((node) => {
-        const fScore = hueristic(point, node.location) + hueristic(node.location, goal);
-        return Object.assign(node, { f: fScore });
-      });
-      let joIndex;
-      let minF = Infinity;
-      for (let i = 0; i < nodes.length; i += 1) {
-        if (nodes[i].f < minF) {
-          joIndex = i;
-          minF = nodes[i].f;
+      let minPointIndex = null;
+      let minPointDistance = Infinity;
+      streetPoints.forEach((streetPoint, i) => {
+        const dist = turf.distance(point, streetPoint.location);
+        if (dist < minPointDistance) {
+          minPointIndex = i;
+          minPointDistance = dist;
         }
-      }
-      return transformNodeToFeature(nodes[joIndex]);
+      });
+      const jumpOffPoint = streetPoints[minPointIndex];
+      const possNodeCnn1 = jumpOffPoint.f_node_cnn;
+      const possNodeCnn2 = jumpOffPoint.t_node_cnn;
+      return Promise.all([riskNodeController.findRiskNodeByCnn(possNodeCnn1),
+        riskNodeController.findRiskNodeByCnn(possNodeCnn2)])
+        .then(([possNode1, possNode2]) => {
+          const f1 = hueristic(point, possNode1.location) + hueristic(possNode1.location, goal);
+          const f2 = hueristic(point, possNode2.location) + hueristic(possNode2.location, goal);
+          if (f1 < f2) {
+            return possNode1;
+          }
+          return possNode2;
+        })
+        .then(ansNode => transformNodeToFeature(ansNode));
     });
 };
-
 
 const astarifyNode = function astarifyNode(node) {
   const astar = {
@@ -107,12 +118,17 @@ const getNodeFromHeapOrDb = function getNodeFromHeapOrDb(cnn, heap) {
     .then(node => astarifyNode(node));
 };
 
-const processHeap = function processHeap(end, riskWeight, openHeap) {
+const processHeap = function processHeap(end, riskWeight, openHeap, startTime = Date.now()) {
+  const MAX_TIME = 12500; // ms
   if (openHeap.size() === 0) {
     return null;
   }
   const currentNode = openHeap.pop();
   if (currentNode.properties.cnn === end.properties.cnn) {
+    return currentNode;
+  }
+  if (Date.now() - startTime > MAX_TIME) {
+    logger.warn('Max time reached. Exiting without optimal solution.');
     return currentNode;
   }
 
@@ -144,7 +160,7 @@ const processHeap = function processHeap(end, riskWeight, openHeap) {
           }
         }
       }
-      return processHeap(end, riskWeight, openHeap);
+      return processHeap(end, riskWeight, openHeap, startTime);
     });
 };
 
@@ -246,16 +262,13 @@ const findPathwayAroundRiskWeight =
   function findPathwayAroundRiskWeight(origin, destination, riskWeight, tries = 0) {
     return findPathway(origin, destination, riskWeight)
       .then((pathway) => {
-        if (pathway.length < 24) {
+        if (pathway.length < 24 || tries > 5) {
           return {
             origin: pointToLatLngArray(origin),
             destination: pointToLatLngArray(destination),
             waypoints: pathway.map(point => pointToLatLngArray(point)),
             riskWeight,
           };
-        }
-        if (tries > 5) {
-          throw new Error('Could not find a risk path with less than 24 waypoints');
         }
         return findPathwayAroundRiskWeight(origin, destination, riskWeight + 1, tries + 1);
       });
