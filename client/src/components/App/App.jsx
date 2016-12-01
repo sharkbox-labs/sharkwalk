@@ -75,7 +75,7 @@ const App = (props) => {
 
   const useCurrentLocationListItemClassNames = classNames({
     'current-location-found': props.currentLocation.lat && props.currentLocation.lng,
-    'current-location-not-found': !props.currentLocation.lat && !props.currentLocation.lng,
+    'current-location-not-found': props.currentLocation.lat === 400 && props.currentLocation.lng === 400,
   });
 
   const searchResultsCardClasses = classNames({
@@ -133,6 +133,7 @@ const App = (props) => {
         <ToolbarGroup className="search-toolbargroup">
           <OriginIcon className="selecting-route-toolbar-icon" />
           <TextField
+            id="text-field-controlled"
             inputStyle={textFieldInputStyle}
             underlineShow={false}
             fullWidth
@@ -150,6 +151,7 @@ const App = (props) => {
         <ToolbarGroup className="search-toolbargroup">
           <DestinationIcon className="selecting-route-toolbar-icon" />
           <TextField
+            id="text-field-controlled"
             inputStyle={textFieldInputStyle}
             underlineShow={false}
             fullWidth
@@ -251,7 +253,7 @@ const App = (props) => {
       >
         <List>
           {props.destinationSearchResults.map(result => (
-            <div className={destinationSearchResultClasses}>
+            <div className={destinationSearchResultClasses} key={result.name}>
               <ListItem
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}
@@ -263,7 +265,7 @@ const App = (props) => {
             </div>
           ))}
           {props.originSearchResults.map(result => (
-            <div className={originSearchResultClasses}>
+            <div className={originSearchResultClasses} key={result.name}>
               <ListItem
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}

@@ -39,7 +39,8 @@ const convertPlaceIdToLatLng = place => (
 );
 
 const getCurrentLocationCardPrimaryText = props => (
-  props.currentLocation !== ' ' ? 'Use current location' : 'Current location not available'
+  // Check that current location has been reset to a real location
+  props.currentLocation.lat !== 400 ? 'Use current location' : 'Current location not available'
 );
 
 const saveSearchResults = (predictions, status, props, interactionTypes) => {
@@ -104,9 +105,9 @@ const openSearchCards = (props, interactionTypes) => {
   }
 };
 
-const setOriginIfUndefined = (props) => {
-  // If origin hasn't been set, use currentLocation.
-  if (props.origin === ' ' && props.currentLocation.lat && props.currentLocation.lng) {
+const setOriginToCurrentLocation = (props) => {
+  // If origin hasn't been set, save currentLocation (if currentLocation is available) as the origin in store
+  if (props.origin.lat === 400 && props.currentLocation.lat !== 400) {
     props.changeOrigin(Object.assign({}, { name: 'Current Location' }, props.currentLocation));
   }
 };
@@ -121,15 +122,16 @@ const getDirections = (props, interactionTypes, place, dispatchFunction) => {
   }
 
   if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
-    // If origin hasn't been set before, set origin
-    setOriginIfUndefined(props);
+    
+    
 
     // On user submit from input field, set top matched destination search result as the destination
     convertPlaceIdToLatLng(place || props.destinationSearchResults[0]).then((geolocatedPlace) => {
       props.changeDestination(geolocatedPlace);
 
-      // Use current location as origin if origin hasn't been set yet
-      if (!props.origin.lat) {
+      // If origin hasn't been set before, set origin to currentLocation
+      if (props.origin.lat === 400) {
+        setOriginToCurrentLocation(props);
         props.changeRouteResponse(props.currentLocation, geolocatedPlace, dispatchFunction);
       } else {
         props.changeRouteResponse(props.origin, geolocatedPlace, dispatchFunction);
@@ -151,7 +153,7 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   }
 
   // If origin and destination has been set, transition to SELECTING_ROUTE view from sidebar
-  if (props.interactionType === interactionTypes.VIEWING_SIDEBAR && props.origin && props.destination) {
+  if (props.interactionType === interactionTypes.VIEWING_SIDEBAR && props.origin.lat !== 400 && props.destination.lat !== 400) {
     return props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
   }
 
@@ -160,7 +162,7 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
 };
 
 const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunction) => {
-  if (props.currentLocation.lat && props.currentLocation.lng) {
+  if (props.currentLocation.lat !== 400) {
     const currentLocation = Object.assign({}, { name: 'Current Location' }, props.currentLocation);
     props.changeOrigin(currentLocation);
     props.changeRouteResponse(currentLocation, props.destination, dispatchFunction);
@@ -177,7 +179,7 @@ export default {
   getGoogleMapsPlacePredictions,
   getSearchBarHintText,
   openSearchCards,
-  setOriginIfUndefined,
+  setOriginToCurrentLocation,
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,
   useCurrentLocationClickHandler,
