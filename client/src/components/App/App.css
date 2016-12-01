@@ -20,6 +20,14 @@
   color: rgb(178,235,242) !important;
 }
 
+.map-viewing {
+
+}
+
+.map-selecting-route {
+  top: 56px;
+}
+
 .selecting-route-toolbar-icon {
   padding-right: 2%;
   padding-bottom: 2%;

@@ -46,6 +46,11 @@ const App = (props) => {
     height: '80%',
   };
 
+  const mapClasses = classNames({
+    'map-viewing': props.interactionType !== interactionTypes.SELECTING_ROUTE,
+    'map-selecting-route': props.interactionType === interactionTypes.SELECTING_ROUTE,
+  });
+
   const searchBarToolbarClasses = classNames({
     'search-toolbar-hide': props.interactionType === interactionTypes.SELECTING_ROUTE ||
                             props.interactionType === interactionTypes.VIEWING_SIDEBAR,
@@ -149,7 +154,7 @@ const App = (props) => {
           />
         </ToolbarGroup>
       </Toolbar>
-      <div className="map-container" style={mapContainerStyle}>
+      <div className={mapClasses} style={mapContainerStyle}>
         <Map
           className="map"
           gestureHandling={'greedy'}
