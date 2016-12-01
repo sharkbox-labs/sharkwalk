@@ -1,13 +1,15 @@
-# Project Name
+# Shark Walk
 
-> 'Jellywave' is the codename for a safe walk app. The app integrates
+<img src='readme/shark.png' />
+
+> 'Jellywave' is the codename for Shark Walk. The app integrates
 mapping with crime data to help walkers find a safe path to their destinations.
 
 ## Team
 
-  - __Product Owner__: Ker Moua
-  - __Scrum Master__: David Walsh
-  - __Development Team Members__: Mike Stromberg, Analisa Heilmann
+  - __Product Owner__: [Ker Moua](https://github.com/kmoua92)
+  - __Scrum Master__: [David Walsh](https://github.com/rhinodavid)
+  - __Development Team Members__: [Mike Stromberg](https://github.com/mjstromberg), [Analisa Heilmann](https://github.com/anaheilmann)
 
 ## Table of Contents
 
@@ -16,10 +18,15 @@ mapping with crime data to help walkers find a safe path to their destinations.
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
     1. [Tasks](#tasks)
+    1. [Tech Stack](#techstack)
 1. [Team](#team)
 1. [Contributing](#contributing)
 
 ## Usage
+
+Go to [shark-walk.com](http://shark-walk.com) to start using the application.
+
+The application was developed and tested to be used from a mobile device, as well as on a desktop or laptop.
 
 Safe walk is designed using a service-oriented architecture. To use the app locally for
 development, [install the dependencies](#installing-dependencies) for each service.
@@ -39,7 +46,7 @@ To set up the Trip service, open a new tab and `cd` into the `/tripService` dire
 Set the environment variables in `example.env` the same way you did with the Risk Assessment service,
 then run `npm start`.
 
-From there, build the React client by `cd`ing into the `client` directory and running
+From there, build the React client by `cd`ing into the `/client` directory and running
 `npm start`.
 
 The app will now be live at [http://localhost:3000](http://localhost:3000)
@@ -54,7 +61,7 @@ in your browser!
 ### Installing Dependencies
 
 Install NPM modules in the **root** directory, then within each service's
-folder (`/integrationServer`, `/riskService`, `/tripService`, and `/client`) by executing:
+folder (`/riskService`, `/tripService`, and `/client`) by executing:
 
 ```sh
 npm install
@@ -65,6 +72,13 @@ from within each directory.
 ### Backlog
 
 View the project backlog [here](https://waffle.io/sharkbox-labs/jellywave)
+
+### Tech Stack
+
+The application was built using the MongoDB, Express, React/Redux, Node (MERN) stack, and incorporate the following technologies:
+- [SF Open Data API](https://data.sfgov.org/developers)
+- Google Maps API
+- Docker
 
 
 ## Contributing
