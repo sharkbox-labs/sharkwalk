@@ -36,6 +36,7 @@
     "mongoose-geojson-schema": "^2.1.2",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
+    "progress-barjs": "^2.2.1",
     "shortid": "^2.2.6",
     "sugar-date": "^2.0.2",
     "supertest": "^2.0.1",

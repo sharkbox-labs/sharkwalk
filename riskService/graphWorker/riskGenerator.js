@@ -1,5 +1,6 @@
 const turf = require('@turf/turf');
 const geoMeta = require('@turf/meta');
+const Bar = require('progress-barjs');
 const sf = require('./sanFranciscoDataConnector');
 const config = require('../config');
 
@@ -122,7 +123,14 @@ const generateRiskForPoints = function generateRiskForPoints(points) {
   return sf.fetchCrimeReports(reportArea, config.reportLookback)
     .then((reports) => {
       const riskValues = [];
+      const progressBarOptions = {
+        info: 'Generating risk for nodes',
+        total: points.length,
+        overwrite: true,
+      };
+      const bar = Bar(progressBarOptions);
       geoMeta.featureEach(pointsCollection, (point) => {
+        bar.tick('');
         const risk = generateRiskForPoint(point, reports);
         riskValues.push(risk);
       });
