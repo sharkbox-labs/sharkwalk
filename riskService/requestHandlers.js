@@ -18,8 +18,26 @@ const findPath = function findPath(request, response) {
     pathfinderHelpers.findPathwayAroundRiskWeight(origin.geometry, destination.geometry, 1),
   ])
     .then((unprocessedPaths) => {
-      if (JSON.stringify(unprocessedPaths[0]) === JSON.stringify(unprocessedPaths[1])) {
-        rawPaths = unprocessedPaths[0];
+      // check to see if the routes are the same
+      let equivalent = true;
+      const routeOneWaypoints = unprocessedPaths[0].waypoints;
+      const routeTwoWaypoints = unprocessedPaths[1].waypoints;
+      if (routeOneWaypoints.length !== routeTwoWaypoints.length) {
+        equivalent = false;
+      }
+      if (equivalent) {
+        // check to see if each item is the same
+        for (let i = 0; i < routeOneWaypoints.length; i += 1) {
+          if (routeOneWaypoints[i][0] !== routeTwoWaypoints[i][0] ||
+            routeOneWaypoints[i][1] !== routeTwoWaypoints[i][1]) {
+            equivalent = false;
+            break;
+          }
+        }
+      }
+      if (equivalent) {
+        // if the routes are the same only send one
+        rawPaths = [unprocessedPaths[0]];
       } else {
         rawPaths = unprocessedPaths;
       }

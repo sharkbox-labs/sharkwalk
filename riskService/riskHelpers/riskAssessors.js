@@ -2,13 +2,6 @@ const turf = require('@turf/turf');
 const riskNodeController = require('../db/riskNodeController');
 const config = require('../config');
 
-const precisionRound = function precisionRound(number, precision) {
-  const factor = Math.pow(10, precision); // eslint-disable-line no-restricted-properties
-  const tempNumber = number * factor;
-  const roundedTempNumber = Math.round(tempNumber);
-  return roundedTempNumber / factor;
-};
-
 /**
  * Gets the risk for a GeoJSON point.
  * @param {GeoJSON Point} point - The point to evaluate risk at.
