@@ -217,6 +217,10 @@ const findPathway = function findPathway(origin, destination, riskWeight) {
   // See: https://github.com/bgrins/javascript-astar
   return Promise.all([getJumpoffNode(origin, destination), getJumpoffNode(destination, origin)])
     .then(([start, end]) => {
+      if (start.properties.cnn === end.properties.cnn) {
+        // we're there!
+        return cleanPathway([start]);
+      }
       const openHeap = new BinaryHeap(node => node.properties.astar.f);
       const closestNode = astarifyNode(start);
       closestNode.properties.astar.h = hueristic(closestNode, end);
