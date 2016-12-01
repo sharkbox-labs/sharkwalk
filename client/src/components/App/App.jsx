@@ -97,7 +97,7 @@ const App = (props) => {
   });
 
   const sendToGoogleMapsButtonClasses = classNames({
-    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE || props.isFetchingRouteData || props.routeResponse[0].risks.length === 0,
+    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE || props.routeResponse[0].risks.length === 0,
     'floating-action-button-show': props.routeResponse[0].risks.length !== 0 && props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
