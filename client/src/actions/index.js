@@ -139,6 +139,7 @@ export const setRouteResponse = (origin, destination, dispatch) => {
       dispatch(setIsFetchingRouteData(false));
     })
     .catch((error) => {
+      dispatch(setIsFetchingRouteData(false));
       throw new Error(`Failed request for directions (error: ${error})`);
     });
 };
