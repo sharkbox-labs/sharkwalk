@@ -4,6 +4,7 @@ require('dotenv').config({
   path: path.join(__dirname, '../../.env'),
 });
 const request = require('axios');
+const Bar = require('progress-barjs');
 const turf = require('@turf/turf');
 const logger = require('../logger');
 const riskGenerator = require('./riskGenerator');
@@ -11,6 +12,7 @@ const shortid = require('shortid');
 const db = require('../db/connection');
 
 const riskNodeController = require('../db/riskNodeController');
+const streetPointController = require('../db/streetPointController');
 
 const fetchStreetNodes = function fetchStreetNodes(bounds) {
   const sfSteetNodesUrl = 'https://data.sfgov.org/resource/stqf-m6iw.json';
@@ -43,7 +45,7 @@ const fetchStreetSegments = function fetchStreetSegments(bounds) {
     params: {
       $where: `within_box(geometry, ${minY}, ${minX}, ${maxY}, ${maxX})`,
       $limit: 50000,
-      $select: 't_node_cnn, f_node_cnn, streetname',
+      $select: 't_node_cnn, f_node_cnn, streetname, geometry',
       $$app_token: process.env.SF_CRIME_APP_TOKEN,
     },
   })
@@ -124,6 +126,31 @@ module.exports = function graphWorker(area, keepAlive = false) {
     })
     .then((records) => {
       logger.info(`Saved ${records.length} risk nodes in batch ${batchId}`);
+    })
+    .then(() => fetchStreetSegments(area))
+    .then((segments) => {
+      const points = [];
+      const progressBarOptions = {
+        info: 'Generating street points',
+        total: segments.length,
+        overwrite: true,
+      };
+      const bar = Bar(progressBarOptions);
+      segments.forEach((segment) => {
+        bar.tick('');
+        segment.geometry.coordinates.forEach((coordinate) => {
+          points.push({
+            f_node_cnn: segment.f_node_cnn,
+            t_node_cnn: segment.t_node_cnn,
+            location: turf.point(coordinate).geometry,
+          });
+        });
+      });
+      logger.info(`Saving ${points.length} street points`);
+      return streetPointController.createStreetPoints(points, batchId);
+    })
+    .then((records) => {
+      logger.info(`Saved ${records.length} street points in batch ${batchId}`);
       if (!keepAlive) db.close();
       return records;
     })

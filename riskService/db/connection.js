@@ -8,11 +8,12 @@ require('dotenv').config({
 
 mongoose.Promise = global.Promise;
 
-const mongoURL = process.env.MONGO_URL;
+let mongoURL;
 
-if (!mongoURL) {
-  logger.error('No MONGO_URL enviroment variable specified.');
-  throw new Error('No MONGO_URL enviroment variable specified.');
+if (process.env.NODE_ENV === 'production') {
+  mongoURL = 'mongodb://riskdb/jellywave';
+} else {
+  mongoURL = process.env.MONGO_URL || 'mongodb://localhost/jellywave';
 }
 
 mongoose.connect(mongoURL);
