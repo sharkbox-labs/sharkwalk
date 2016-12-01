@@ -45,14 +45,14 @@ const requestHandler = (request, response) => {
     routeArraysArray.reduce((flattenedArray, routeArray) => [...flattenedArray, ...routeArray], []))
   .then((flatArray) => {
     const paths = getPaths(flatArray);
-    /*
-    paths.forEach((path) => {
-      console.log('---------------------------------');
-      path.forEach((latlng) => {
-        console.log(`${latlng[0]},${latlng[1]}`);
+    if (process.env.NODE_ENV === 'debug') {
+      paths.forEach((debugPath) => {
+        console.log('---------------------------------');
+        debugPath.forEach((latlng) => {
+          console.log(`${latlng[0]},${latlng[1]}`);
+        });
       });
-    });
-    */
+    }
     return flatArray.map((route, i) => ({
       distance: generateTravelDistance(route.legs),
       duration: generateTravelTime(route.legs),
