@@ -182,6 +182,51 @@ const generateEquidistantPath = (coordinates) => {
         return result;
       }
       const difference = threshold - segmentLength;  // how much more to move towards next target
+      const nextSegment = findDistance(target, coordinates[indexOfNextTarget]);
+      if (nextSegment < difference) {
+        return recurse(origin, coordinates[indexOfNextTarget], indexOfNextTarget + 1);
+      }
+      const newPoint = insertCoordinate(target, coordinates[indexOfNextTarget], difference);
+      // insert new point into result
+      result.push(newPoint);
+      // recurse using that new point
+      return recurse(result[result.length - 1], coordinates[indexOfNextTarget],
+        indexOfNextTarget + 1);
+    }
+  };
+  return recurse(result[0], coordinates[1], 2); // origin, target, nextTargets
+};
+
+
+const generateCoordinatePath = (coordinates) => {
+  // create results array with origin coordinates
+  const result = [coordinates[0]];
+  // define inner recursive function
+  const recurse = (origin, target, indexOfNextTarget) => {
+    // base case?
+    const segmentLength = findDistance(origin, target);
+    // check if equal
+    if (round(segmentLength) === threshold) { // round segment length to three decimal places
+      // push target coordinates in result array
+      result.push(target);
+      // recurse with target now as the origin
+      return recurse(target, coordinates[indexOfNextTarget], indexOfNextTarget + 1);
+    }
+    // if distance is greater than threshold, we need to inject points
+    if (segmentLength > threshold) {
+      // generate next point
+      const newPoint = insertCoordinate(origin, target, threshold);
+      result.push(newPoint);
+      // recurse, reassigning origin to injected point
+      return recurse(result[result.length - 1], target, indexOfNextTarget);
+    }
+    // // if distance is less than threshold
+    if (segmentLength < threshold) {
+      // if nextTarget does not exist
+      if (!coordinates[indexOfNextTarget]) {
+        return result;
+      }
+      const difference = threshold - segmentLength;  // how much more to move towards next target
       // start from target, and move difference towards next Target
       const newPoint = insertCoordinate(target, coordinates[indexOfNextTarget], difference);
       // insert new point into result
@@ -211,8 +256,8 @@ const getPaths = (routes) => {
     const route = routes[i];
     const polylines = retrievePolylines(route);
     const coordinates = decodePolylines(polylines);
-    const path = generateEquidistantPath(coordinates);
-    paths.push(path.map(coords => [precisionRound(coords[0], 5), precisionRound(coords[1], 5)]));
+    const pathh = generateCoordinatePath(coordinates);
+    paths.push(pathh.map(coords => [precisionRound(coords[0], 5), precisionRound(coords[1], 5)]));
   }
   return paths;
 };
