@@ -19,6 +19,9 @@ mapping with crime data to help walkers find a safe path to their destinations. 
     1. [Installing Dependencies](#installing-dependencies)
     1. [Tasks](#tasks)
     1. [Tech Stack](#techstack)
+1. [Diagrams](#diagrams)
+    1. [Sequence](#sequence)
+    1. [Architecture](#architecture)
 1. [Team](#team)
 1. [Contributing](#contributing)
 
@@ -80,6 +83,13 @@ The application was built using the MongoDB, Express, React/Redux, Node (MERN) s
 - Google Maps API
 - Docker
 
+## Diagrams
+
+### Sequence
+<img src='readme/SystemsDiagram.png' />
+
+### Architecture
+<img src='readme/SequenceDiagram.png' />
 
 ## Contributing
 
