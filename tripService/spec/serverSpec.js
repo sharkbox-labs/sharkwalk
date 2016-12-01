@@ -11,7 +11,7 @@ describe('Trip Server:', () => {
       .send(exampleRequestBody)
       .expect(200, done);
   });
-  it('should respond with array of route/path objects', (done) => {
+  it('should respond with array of route objects', (done) => {
     request(app)
       .post('/routes')
       .send(exampleRequestBody)
@@ -20,8 +20,10 @@ describe('Trip Server:', () => {
         expect(response.body.error).to.not.exist;
         expect(response.status).to.equal(200);
         expect(response.body).to.be.an('Array');
-        expect(response.body[0]).to.have.keys(['route', 'path']);
-        expect(response.body[0].route).to.contain.all.keys(['legs', 'copyrights', 'bounds']);
+        expect(response.body[0]).to.have.keys(['path', 'duration', 'distance', 'googleMapsUrl']);
+        expect(response.body[0].duration).to.be.a('number');
+        expect(response.body[0].distance).to.be.a('number');
+        expect(response.body[0].googleMapsUrl).to.be.a('string');
         expect(response.body[0].path).to.be.an('Array');
         expect(response.body[0].path[0]).to.be.an('Array');
         expect(response.body[0].path[0][0]).to.be.a('number');
