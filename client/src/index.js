@@ -5,9 +5,14 @@ import { createStore } from 'redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import screenfull from 'screenfull';
 import AppContainer from './containers/AppContainer/AppContainer';
 import reducer from './reducers/index';
 import './index.css';
+
+document.getElementById('root').addEventListener('mouseover', () => {
+  if (screenfull.enabled) screenfull.request();
+});
 
 const initialStore = {
   currentLocation: {
