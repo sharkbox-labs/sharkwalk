@@ -1,6 +1,5 @@
 const turf = require('@turf/turf');
 const riskNodeController = require('../db/riskNodeController');
-const config = require('../config');
 
 /**
  * Gets the risk for a GeoJSON point.
@@ -31,7 +30,7 @@ const getRiskForGeoJSONPoint = function getRiskForGeoJSONPoint(point) {
 const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArray) {
   const longLats = coordArray.map(coord => [coord[1], coord[0]]);
   const lineString = turf.lineString(longLats);
-  const expandedString = turf.buffer(lineString, (config.gridDensity / 1000) * 1.05, 'kilometers');
+  const expandedString = turf.buffer(lineString, (300 / 1000) * 1.05, 'kilometers');
   return riskNodeController.findRiskNodesWithinPolygon(expandedString.geometry)
     .then((records) => {
       const features = records.map(record => ({
@@ -48,7 +47,7 @@ const getRiskForCoordinatesArray = function getRiskForCoordinatesArray(coordArra
         const point = turf.point(coord);
         const nearest = turf.nearest(point, pointsCollection);
         const distance = turf.distance(point, nearest, 'kilometers');
-        if (distance * 1000 > 250) {
+        if (distance * 1000 > 300) {
           throw new Error(`No coverage near point: ${coord[1]}, ${coord[0]}.`);
         }
         return Math.round(nearest.properties.risk);
