@@ -3,7 +3,7 @@
 <img src='readme/shark.png' />
 
 > 'Jellywave' is the codename for Shark Walk. The app integrates
-mapping with crime data to help walkers find a safe path to their destinations.
+mapping with crime data to help walkers find a safe path to their destinations. Walkers are provided a color gradient polyline associated with the crime incidence at each location along the path, and a link to walking directions of the chosen route.
 
 ## Team
 
@@ -75,7 +75,7 @@ View the project backlog [here](https://waffle.io/sharkbox-labs/jellywave)
 
 ### Tech Stack
 
-The application was built using the MongoDB, Express, React/Redux, Node (MERN) stack, and incorporate the following technologies:
+The application was built using the MongoDB, Express, React/Redux, Node (MERN) stack, and incorporates the following technologies:
 - [SF Open Data API](https://data.sfgov.org/developers)
 - Google Maps API
 - Docker
