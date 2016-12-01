@@ -97,8 +97,8 @@ const App = (props) => {
   });
 
   const sendToGoogleMapsButtonClasses = classNames({
-    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE || props.isFetchingRouteData,
-    'floating-action-button-show': props.interactionType === interactionTypes.SELECTING_ROUTE,
+    'floating-action-button-hide': props.interactionType !== interactionTypes.SELECTING_ROUTE || props.routeResponse[0].risks.length === 0,
+    'floating-action-button-show': props.routeResponse[0].risks.length !== 0 && props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
   return (
@@ -229,8 +229,12 @@ const App = (props) => {
             hintText={appHelper.getSearchBarHintText(props, interactionTypes)}
             dataSource={[null]}
             onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
-            onNewRequest={() => { appHelper.getDirections(props, interactionTypes, null, props.dispatch); }}
-            onUpdateInput={(query) => { appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes); }}
+            onNewRequest={() => {
+              appHelper.getDirections(props, interactionTypes, null, props.dispatch);
+            }}
+            onUpdateInput={(query) => {
+              appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes);
+            }}
             searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
           />
@@ -244,7 +248,9 @@ const App = (props) => {
             className={useCurrentLocationListItemClassNames}
             leftIcon={<OriginIcon />}
             primaryText={appHelper.getCurrentLocationCardPrimaryText(props)}
-            onClick={() => { appHelper.useCurrentLocationClickHandler(props, interactionTypes, props.dispatch); }}
+            onClick={() => {
+              appHelper.useCurrentLocationClickHandler(props, interactionTypes, props.dispatch);
+            }}
           />
         </List>
       </Card>
