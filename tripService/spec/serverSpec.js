@@ -24,6 +24,7 @@ describe('Trip Server:', () => {
         expect(response.body[0].duration).to.be.a('number');
         expect(response.body[0].distance).to.be.a('number');
         expect(response.body[0].googleMapsUrl).to.be.a('string');
+        expect(response.body[0].googleMapsUrl.substr(0, 6)).to.equal('https:');
         expect(response.body[0].path).to.be.an('Array');
         expect(response.body[0].path[0]).to.be.an('Array');
         expect(response.body[0].path[0][0]).to.be.a('number');
