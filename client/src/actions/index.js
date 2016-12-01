@@ -112,10 +112,11 @@ export const setOriginSearchResults = originResults => ({
  * @return {Function} callback - Using redux-thunk to return a callback that sends
  * out a promisified, async request to the Integration Server.
  */
+
 export const setRouteResponse = (origin, destination, dispatch) => {
   dispatch(setIsFetchingRouteData(true));
 
-  const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3002' : '';
+  const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3002' : 'https://api.shark-walk.com';
 
   const queryString = qs.stringify({
     origin: {
