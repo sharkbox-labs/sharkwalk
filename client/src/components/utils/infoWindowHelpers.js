@@ -29,18 +29,19 @@ const getRiskDescription = (risk) => {
   const goodWords = ['smoother', 'mellower'];
   const randomWord = wordsArray => (wordsArray[Math.floor(Math.random() * wordsArray.length)]);
   const description = risk > 0 ? randomWord(badWords) : randomWord(goodWords);
+  const emoji = risk > 0 ? './gnarly-wave.png' : './shaka.png';
 
   const absoluteRisk = Math.abs(risk);
 
   if (absoluteRisk <= 5) {
-    return '<img src="./shaka.png" class="emoji"><i class="risk-description">Same swell...</i>';
+    return `<img src=` + emoji + ` class="emoji"><i class="risk-description">Same swell...</i>`;
   }
 
   if (absoluteRisk > 5 && absoluteRisk <= 20) {
-    return `<img src="./shaka.png" class="emoji"><i class="risk-description">A little ${description}</i>`;
+    return `<img src=` + emoji + ` class="emoji"><i class="risk-description">A little ${description}</i>`;
   }
 
-  return `<img src="./shaka.png" class="emoji"><i>Hella ${description}</i>`;
+  return `<img src=` + emoji + ` class="emoji"><i>Hella ${description}</i>`;
 };
 
 const displayRiskDifference = (currentRouteAvgRisk, alternateRouteAvgRisk) => {

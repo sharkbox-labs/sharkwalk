@@ -98,8 +98,8 @@ class RiskPath extends Component {
 
       this.props.map.fitBounds(
         new window.google.maps.LatLngBounds(
-          new window.google.maps.LatLng(southMostLat - 0.0005, westMostLng - 0.0015),
-          new window.google.maps.LatLng(northMostLat + 0.0005, eastMostLng + 0.0015),
+          new window.google.maps.LatLng(southMostLat - 0.0045, westMostLng - 0.0015),
+          new window.google.maps.LatLng(northMostLat + 0.0000, eastMostLng + 0.0015),
         ),
       );
     }

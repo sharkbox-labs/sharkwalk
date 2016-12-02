@@ -27,7 +27,7 @@ class InfoWindow extends Component {
         this.state.infoWindow.setZIndex(-10);
       } else {
         const distanceDescription = this.state.distance === 1 ? '' : 's';
-        this.state.infoWindow.setContent(`<div class='info-window-selected'>${this.state.duration}</br><b><i>${this.state.distance} mile${distanceDescription}</i></b></div>`);
+        this.state.infoWindow.setContent(`<div class='info-window-selected'><b><i>${this.state.distance}mile${distanceDescription}</i></b></br>${this.state.duration}</div>`);
         this.state.infoWindow.setZIndex(10);
       }
 
@@ -83,7 +83,7 @@ class InfoWindow extends Component {
 
       const distanceDescription = distance === 1 ? '' : 's';
 
-      const contentString = `<div ${contentClass}>${duration}</br> <b><i>${distance} mile${distanceDescription}</b></i></div>`;
+      const contentString = `<div <b><i>${distance} mile${distanceDescription}</i></b> ${contentClass}>${duration}</br> </div>`;
 
       const infoWindow = new window.google.maps.InfoWindow({
         content: contentString,
