@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import deepEqual from 'deep-equal';
-import DestinationIcon from 'material-ui/svg-icons/communication/location-on';
 import infoWindowHelpers from '../utils/infoWindowHelpers';
 import './InfoWindow.css';
 
@@ -27,7 +26,7 @@ class InfoWindow extends Component {
         this.state.infoWindow.setContent(`<div class='info-window-not-selected'><b>${this.state.durationDifference}</b></br>${this.state.riskAssessment}</div>`);
         this.state.infoWindow.setZIndex(-10);
       } else {
-        const distanceDescription = this.state.distance > 1 ? 's' : '';
+        const distanceDescription = this.state.distance === 1 ? '' : 's';
         this.state.infoWindow.setContent(`<div class='info-window-selected'>${this.state.duration}</br><b><i>${this.state.distance} mile${distanceDescription}</i></b></div>`);
         this.state.infoWindow.setZIndex(10);
       }
@@ -85,7 +84,7 @@ class InfoWindow extends Component {
 
       const contentClass = routeIsCurrentlyDisplayed ? 'info-window-selected' : 'info-window-not-selected';
 
-      const distanceDescription = distance > 1 ? 's' : '';
+      const distanceDescription = distance === 1 ? '' : 's';
 
       const contentString = `<div ${contentClass}>${duration}</br> <b><i>${distance} mile${distanceDescription}</b></i></div>`;
 
