@@ -53,6 +53,10 @@
   width: 30px !important;
 }
 
+.origin-not-available, .destination-not-available {
+  font-style: italic;
+}
+
 .searchbar-menu-button {
   float: left;
 }

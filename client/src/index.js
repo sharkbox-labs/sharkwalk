@@ -11,6 +11,7 @@ import './index.css';
 
 const initialStore = {
   currentLocation: {
+    name: 'Current location not available',
     lat: 400,
     lng: 400,
   },

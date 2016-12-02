@@ -110,7 +110,8 @@ const openSearchCards = (props, interactionTypes) => {
 };
 
 const setOriginToCurrentLocation = (props) => {
-  // If origin hasn't been set, save currentLocation (if currentLocation is available) as the origin in store
+  // If origin hasn't been set, save currentLocation (if currentLocation
+  // is available) as the origin in store
   if (props.origin.lat === 400 && props.currentLocation.lat !== 400) {
     props.changeOrigin(Object.assign({}, { name: 'Current Location' }, props.currentLocation));
   }
@@ -156,7 +157,8 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   }
 
   // If origin and destination has been set, transition to SELECTING_ROUTE view from sidebar
-  if (props.interactionType === interactionTypes.VIEWING_SIDEBAR && props.origin.lat !== 400 && props.destination.lat !== 400) {
+  if (props.interactionType === interactionTypes.VIEWING_SIDEBAR &&
+      props.origin.lat !== 400 && props.destination.lat !== 400) {
     return props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
   }
 

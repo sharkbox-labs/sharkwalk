@@ -66,6 +66,16 @@ const App = (props) => {
                            props.interactionType !== interactionTypes.VIEWING_SIDEBAR,
   });
 
+  const originTextFieldClasses = classNames({
+    'origin-not-available': props.origin.lat === 400 && props.currentLocation.lat === 400,
+    'origin-available': props.origin.lat !== 400 || props.currentLocation.lat !== 400,
+  });
+
+  const destinationTextFieldClasses = classNames({
+    'destination-not-available': props.destination.lat === 400,
+    'destination-available': props.destination.lat !== 400,
+  });
+
   const searchCardsClasses = classNames({
     'search-cards-hide': props.interactionType !== interactionTypes.SEARCHING_DESTINATION &&
                          props.interactionType !== interactionTypes.SEARCHING_ORIGIN,
@@ -142,7 +152,7 @@ const App = (props) => {
         className={`${selectingRouteToolbarClasses} current-origin`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
       >
-        <ToolbarGroup className="search-toolbargroup">
+        <ToolbarGroup className={`search-toolbargroup ${originTextFieldClasses}`}>
           <OriginIcon className="selecting-route-toolbar-icon" />
           <TextField
             id="text-field-controlled"
@@ -150,7 +160,7 @@ const App = (props) => {
             underlineShow={false}
             fullWidth
             hintText="Origin"
-            value={props.origin.name}
+            value={props.origin.name || 'Choose starting point...'}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
             style={searchBarStyle}
           />
@@ -160,7 +170,7 @@ const App = (props) => {
         className={`${selectingRouteToolbarClasses} current-destination`}
         onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION); }}
       >
-        <ToolbarGroup className="search-toolbargroup">
+        <ToolbarGroup className={`search-toolbargroup ${destinationTextFieldClasses}`}>
           <DestinationIcon className="selecting-route-toolbar-icon" />
           <TextField
             id="text-field-controlled"
@@ -168,7 +178,7 @@ const App = (props) => {
             underlineShow={false}
             fullWidth
             hintText="Destination"
-            value={props.destination.name}
+            value={props.destination.name || 'Choose destination...'}
             onClick={() => {
               props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
             }}
