@@ -30,7 +30,7 @@
 }
 
 .fetching-route-data {
-  
+
 }
 
 .not-fetching-route-data {
@@ -133,7 +133,6 @@
 }
 
 .search-result-origin-show {
-  
 }
 
 .search-result-origin-hide {
@@ -153,3 +152,11 @@
   bottom: 0%;
 }
 
+.shark-walk-about-container {
+  padding-top: 10%;
+  padding-right: 5%;
+  padding-left: 5%;
+  padding-bottom: 20%;
+  color: #444;
+  font-family: 'Roboto Condensed', sans-serif;
+}
