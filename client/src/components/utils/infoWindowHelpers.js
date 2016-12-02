@@ -25,9 +25,12 @@ const getDurationDifference = (currentRouteDuration, alternateRouteDuration) => 
 };
 
 const getRiskDescription = (risk) => {
+  const badWords = ['choppier', 'gnarlier'];
+  const goodWords = ['smoother', 'mellower'];
+  const randomWord = wordsArray => (wordsArray[Math.floor(Math.random() * wordsArray.length)]);
+  const description = risk > 0 ? randomWord(badWords) : randomWord(goodWords);
+
   const absoluteRisk = Math.abs(risk);
-  const smooth = risk > 5 && risk <= 15 ? 'smoother' : 'smooth';
-  const description = risk > 0 ? 'choppy' : `${smooth}`;
 
   if (absoluteRisk <= 5) {
     return '<i>Same swell...</i>';
@@ -35,10 +38,6 @@ const getRiskDescription = (risk) => {
 
   if (absoluteRisk > 5 && absoluteRisk <= 15) {
     return `<i>A little ${description}</i> `;
-  }
-
-  if (absoluteRisk > 15 && absoluteRisk <= 25) {
-    return `<i>Very ${description}</i>`;  
   }
 
   return `<i>Hella ${description}</i>`;
