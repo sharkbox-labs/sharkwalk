@@ -2,12 +2,23 @@
   display: none !important;
 }
 
-.floating-action-button-show {
-  bottom: 40px;
+.floating-action-button-show, .refresh-indicator {
+  bottom: 25px;
   position: fixed;
-  right: 40px;
+  right: 50px;
   z-index: 3;
 }
+
+.refresh-indicator {
+  z-index: 4;
+}
+
+.clear-button {
+  position: fixed;
+  right: 58px;
+  bottom: 95px;
+}
+
 
 .flat-button {
   clear: both;
@@ -16,9 +27,6 @@
 }
 
 .directions-icon {
-  height: 35px !important;
-  width: 35px !important;
-  color: rgb(178,235,242) !important;
 }
 
 .fetching-route-data {
@@ -144,3 +152,4 @@
 .shark-walk-gif-container {
   bottom: 0%;
 }
+

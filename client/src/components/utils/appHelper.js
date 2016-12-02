@@ -122,9 +122,6 @@ const getDirections = (props, interactionTypes, place, dispatchFunction) => {
   }
 
   if (props.interactionType === interactionTypes.SEARCHING_DESTINATION) {
-    
-    
-
     // On user submit from input field, set top matched destination search result as the destination
     convertPlaceIdToLatLng(place || props.destinationSearchResults[0]).then((geolocatedPlace) => {
       props.changeDestination(geolocatedPlace);
@@ -171,6 +168,59 @@ const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunctio
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
+
+const cancelRouting = (props) => {
+  props.changeOrigin({
+    lat: 400,
+    lng: 400,
+  });
+  props.changeDestination({
+    lat: 400,
+    lng: 400,
+  });
+
+  props.changeDestinationSearchResults([]);
+  props.changeOriginSearchResults([]);
+  props.dispatch({
+    type: 'SET_ROUTE_RESPONSE',
+    routeResponse:
+    [
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+    ],
+  });
+  props.changeInteractionType('VIEWING_MAP');
+  props.changeRoute(0);
+};
+
 export default {
   autofillSearchBar,
   convertPlaceIdToLatLng,
@@ -183,4 +233,5 @@ export default {
   toggleFloatingActionButtonClass,
   toggleInteractionTypeFromMenuClick,
   useCurrentLocationClickHandler,
+  cancelRouting,
 };
