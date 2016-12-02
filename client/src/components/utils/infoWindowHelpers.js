@@ -66,7 +66,7 @@ const displayHoursMinutes = (seconds) => {
   return `<span class='info-window-time'><b>${totalMinutes} min</b></span>`;
 };
 
-const displayMiles = meters => (Math.round(meters * 0.000621371));
+const displayMiles = meters => (Math.round((meters * 0.000621371) * 10) / 10);
 
 export default {
   getDurationDifference,
