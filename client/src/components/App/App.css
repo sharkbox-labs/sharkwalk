@@ -153,10 +153,22 @@
 }
 
 .shark-walk-about-container {
-  padding-top: 10%;
+  padding-top: 20%;
   padding-right: 5%;
   padding-left: 5%;
   padding-bottom: 20%;
   color: #444;
   font-family: 'Roboto Condensed', sans-serif;
 }
+
+.shark-walk-about-container h1 {
+  color: rgb(0, 188, 212);
+/*  text-align: center;*/
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+/*.shark-walk-about-container .shark-image {
+  padding-left: 33%;
+  padding-bottom: 0%;
+
+}*/
