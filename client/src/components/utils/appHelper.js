@@ -15,7 +15,6 @@ const autofillSearchBar = (props, interactionTypes) => {
 };
 
 const centerMapToOrigin = (props) => {
-  console.log('HERE!!!');
   props.map.setCenter(props.position);
 };
 
