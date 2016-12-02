@@ -46,8 +46,9 @@ const displayHoursMinutes = (seconds) => {
   const totalMinutes = Math.floor(seconds / 60);
   const hours = Math.floor(totalMinutes / 60);
   const minutesLeft = totalMinutes % 60;
-  const hoursDescription = hours > 10 ? 's' : '';
-  return `<span class='info-window-time'><b>${hours}hr${hoursDescription} ${minutesLeft}min</b></span>`;
+  const hoursDescription = hours > 1 ? 's' : '';
+  return hours > 0 ? `<span class='info-window-time'><b>${hours}hr${hoursDescription} ${minutesLeft}min</b></span>` :
+                     `<span class='info-window-time'><b>${minutesLeft} min</b></span>`;
 };
 
 const displayMiles = meters => (Math.round(meters * 0.000621371));

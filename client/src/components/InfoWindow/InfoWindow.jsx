@@ -27,7 +27,8 @@ class InfoWindow extends Component {
         this.state.infoWindow.setContent(`<div class='info-window-not-selected'><b>${this.state.durationDifference}</b></br>${this.state.riskAssessment}</div>`);
         this.state.infoWindow.setZIndex(-10);
       } else {
-        this.state.infoWindow.setContent(`<div class='info-window-selected'>${this.state.duration}</br><b><i>${this.state.distance} miles</i></b></div>`);
+        const distanceDescription = this.state.distance > 1 ? 's' : '';
+        this.state.infoWindow.setContent(`<div class='info-window-selected'>${this.state.duration}</br><b><i>${this.state.distance} mile${distanceDescription}</i></b></div>`);
         this.state.infoWindow.setZIndex(10);
       }
 
@@ -84,12 +85,15 @@ class InfoWindow extends Component {
 
       const contentClass = routeIsCurrentlyDisplayed ? 'info-window-selected' : 'info-window-not-selected';
 
-      const contentString = `<div ${contentClass}>${duration}</br> <b><i>${distance} miles</b></i></div>`;
+      const distanceDescription = distance > 1 ? 's' : '';
+      console.log('distance: ', distance);
+      console.log('distanceDescription: ', distanceDescription);
+
+      const contentString = `<div ${contentClass}>${duration}</br> <b><i>${distance} mile${distanceDescription}</b></i></div>`;
 
       const infoWindow = new window.google.maps.InfoWindow({
         content: contentString,
         position: { lat, lng },
-        maxWidth: 90,
       });
 
       infoWindow.open(this.props.map); // eslint-disable-line
