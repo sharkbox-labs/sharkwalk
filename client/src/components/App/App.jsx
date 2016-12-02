@@ -21,6 +21,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
 import appHelper from '../utils/appHelper';
+import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton'
 
 injectTapEventPlugin();
 
@@ -291,13 +292,24 @@ const App = (props) => {
         className={sendToGoogleMapsButtonClasses}
         onClick={() => window.open(props.routeResponse[props.currentRouteIndex].googleMapsUrl)}
       >
-        <Directions className="directions-icon" />
+        <Directions
+          className="directions-icon"
+          style={{ fill: 'rgb(178,235,242)' }}
+        />
       </FloatingActionButton>
       <RefreshIndicator
-        left={window.innerWidth - 96}
+        className="refresh-indicator"
+        left={window.innerWidth - 106}
         size={56}
         status={props.isFetchingRouteData ? 'loading' : 'hide'}
-        top={window.innerHeight - 96}
+        top={window.innerHeight - 81}
+      />
+      <CancelRoutesButton
+        routeResponse={props.routeResponse}
+        interactionType={props.interactionType}
+        clickAction={() => {
+          appHelper.cancelRouting(props);
+        }}
       />
     </div>
   );
