@@ -33,14 +33,14 @@ const getRiskDescription = (risk) => {
   const absoluteRisk = Math.abs(risk);
 
   if (absoluteRisk <= 5) {
-    return '<i>Same swell...</i>';
+    return '<img src="./shaka.png" class="emoji"><i class="risk-description">Same swell...</i>';
   }
 
-  if (absoluteRisk > 5 && absoluteRisk <= 15) {
-    return `<i>A little ${description}</i> `;
+  if (absoluteRisk > 5 && absoluteRisk <= 20) {
+    return `<img src="./shaka.png" class="emoji"><i class="risk-description">A little ${description}</i>`;
   }
 
-  return `<i>Hella ${description}</i>`;
+  return `<img src="./shaka.png" class="emoji"><i>Hella ${description}</i>`;
 };
 
 const displayRiskDifference = (currentRouteAvgRisk, alternateRouteAvgRisk) => {

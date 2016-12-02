@@ -23,7 +23,7 @@ class InfoWindow extends Component {
     } else {
       // If route is currently not displayed, show time travel difference
       if (this.props.routeIndex !== this.props.currentRouteDisplayedIndex && this.props.alternateRoute) {
-        this.state.infoWindow.setContent(`<div class='info-window-not-selected'><b>${this.state.durationDifference}</b></br>${this.state.riskAssessment}</div>`);
+        this.state.infoWindow.setContent(`<div class='info-window-not-selected'>${this.state.riskAssessment}</br><b>${this.state.durationDifference}</b></div>`);
         this.state.infoWindow.setZIndex(-10);
       } else {
         const distanceDescription = this.state.distance === 1 ? '' : 's';
@@ -42,8 +42,6 @@ class InfoWindow extends Component {
       }
     }
   }
-
-  
 
   // Used to clear map of old info window
   clear() {
@@ -71,7 +69,6 @@ class InfoWindow extends Component {
       const duration = infoWindowHelpers.displayHoursMinutes(this.props.route.duration);
       const distance = infoWindowHelpers.displayMiles(this.props.route.distance);
 
-      
       // Check for duration and risk difference if an alternate route exists
       let differenceDisplay;
       let riskAssessment;
@@ -79,7 +76,7 @@ class InfoWindow extends Component {
         differenceDisplay = infoWindowHelpers.getDurationDifference(this.props.route.duration,
                                                         this.props.alternateRoute.duration);
         riskAssessment = infoWindowHelpers.displayRiskDifference(this.props.route.averageRisk,
-                                                     this.props.alternateRoute.averageRisk);  
+                                                     this.props.alternateRoute.averageRisk);
       }
 
       const contentClass = routeIsCurrentlyDisplayed ? 'info-window-selected' : 'info-window-not-selected';
