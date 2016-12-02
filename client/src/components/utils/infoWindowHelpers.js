@@ -56,8 +56,14 @@ const displayHoursMinutes = (seconds) => {
   const totalMinutes = Math.floor(seconds / 60);
   const hours = Math.floor(totalMinutes / 60);
   const minutesLeft = totalMinutes % 60;
-  return hours > 0 ? `<span class='info-window-time'><b>${hours}hr ${minutesLeft}min</b></span>` :
-                     `<span class='info-window-time'><b>${totalMinutes} min</b></span>`;
+
+  if (hours > 0 && minutesLeft > 0) {
+    return `<span class='info-window-time'><b>${hours}hr ${minutesLeft}min</b></span>`;
+  } else if (hours > 0 && minutesLeft === 0) {
+    return `<span class='info-window-time'><b>${hours} hour</b></span>`;
+  }
+
+  return `<span class='info-window-time'><b>${totalMinutes} min</b></span>`;
 };
 
 const displayMiles = meters => (Math.round(meters * 0.000621371));
