@@ -265,6 +265,7 @@ const App = (props) => {
             }}
             searchText={appHelper.autofillSearchBar(props, interactionTypes)}
             style={searchBarStyle}
+            underlineStyle={{ color: 'rgb(0, 188, 212)' }}
           />
         </ToolbarGroup>
       </Toolbar>

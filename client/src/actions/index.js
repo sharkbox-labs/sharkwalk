@@ -115,6 +115,7 @@ export const setOriginSearchResults = originResults => ({
 
 export const setRouteResponse = (origin, destination, dispatch) => {
   dispatch(setIsFetchingRouteData(true));
+  
   // clear out old paths
   dispatch({
     type: 'SET_ROUTE_RESPONSE',
@@ -150,6 +151,12 @@ export const setRouteResponse = (origin, destination, dispatch) => {
         path: [],
       },
     ],
+  });
+
+  // reset currentRouteIndex
+  dispatch({
+    type: 'SET_CURRENT_ROUTE',
+    routeIndex: 0,
   });
 
   const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3002' : 'https://api.shark-walk.com';
