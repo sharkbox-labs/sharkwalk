@@ -15,7 +15,7 @@
 
 .clear-button {
   position: fixed;
-  right: 58px;
+  right: 57px;
   bottom: 95px;
 }
 
@@ -167,5 +167,19 @@
 
 .shark-walk-about-container h1 {
   color: rgb(0, 188, 212);
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.flash-text {
+  background-color: white;
+  color: rgb(200,8,8);
+  font-size: 24px;
+  z-index: 5;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(200,8,8);
+  box-shadow: 0 0 20px #555;
+  margin: 10px;
+  text-align: center;
   font-family: 'Roboto Condensed', sans-serif;
 }

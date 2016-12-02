@@ -117,12 +117,12 @@ const setOriginToCurrentLocation = (props) => {
   }
 };
 
-const getDirections = (props, interactionTypes, place, dispatchFunction) => {
+const getDirections = (props, interactionTypes, place, dispatchFunction, errorHandler) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
     // On user submit from input field, set top matched origin search result as the origin
     convertPlaceIdToLatLng(place || props.originSearchResults[0]).then((geolocatedPlace) => {
       props.changeOrigin(geolocatedPlace);
-      props.changeRouteResponse(geolocatedPlace, props.destination, dispatchFunction);
+      props.changeRouteResponse(geolocatedPlace, props.destination, dispatchFunction, errorHandler);
     });
   }
 
@@ -135,10 +135,10 @@ const getDirections = (props, interactionTypes, place, dispatchFunction) => {
       // set origin to currentLocation (if current location is available)
       if (props.origin.lat === 400 && props.currentLocation.lat !== 400) {
         setOriginToCurrentLocation(props);
-        props.changeRouteResponse(props.currentLocation, geolocatedPlace, dispatchFunction);
+        props.changeRouteResponse(props.currentLocation, geolocatedPlace, dispatchFunction, errorHandler);
       }
       if (props.origin.lat !== 400) {
-        props.changeRouteResponse(props.origin, geolocatedPlace, dispatchFunction);
+        props.changeRouteResponse(props.origin, geolocatedPlace, dispatchFunction, errorHandler);
       }
     });
   }
@@ -166,11 +166,11 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   return props.changeInteractionType(interactionTypes.VIEWING_MAP);
 };
 
-const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunction) => {
+const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunction, errorHandler) => {
   if (props.currentLocation.lat !== 400) {
     const currentLocation = Object.assign({}, { name: 'Current Location' }, props.currentLocation);
     props.changeOrigin(currentLocation);
-    props.changeRouteResponse(currentLocation, props.destination, dispatchFunction);
+    props.changeRouteResponse(currentLocation, props.destination, dispatchFunction, errorHandler);
   }
 
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);

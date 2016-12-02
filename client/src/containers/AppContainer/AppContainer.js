@@ -43,10 +43,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setCurrentRoute(routeIndex));
   },
 
-  changeRouteResponse: (origin, destination, dispatchFunction) => {
+  changeRouteResponse: (origin, destination, dispatchFunction, errorHandler) => {
     // Dispatch is handled in action creator
     // setRouteResponse(origin, destination)(dispatch);
-    setRouteResponse(origin, destination, dispatchFunction);
+    setRouteResponse(origin, destination, dispatchFunction, errorHandler);
   },
 
   changeDestinationSearchResults: (destinationResults) => {

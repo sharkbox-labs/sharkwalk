@@ -113,7 +113,7 @@ export const setOriginSearchResults = originResults => ({
  * out a promisified, async request to the Integration Server.
  */
 
-export const setRouteResponse = (origin, destination, dispatch) => {
+export const setRouteResponse = (origin, destination, dispatch, errorHandler) => {
   dispatch(setIsFetchingRouteData(true));
   
   // clear out old paths
@@ -172,17 +172,23 @@ export const setRouteResponse = (origin, destination, dispatch) => {
     },
   });
 
-  axios.get(`${serverUrl}/pathfinder?${queryString}`)
+  axios.get(`${serverUrl}/pathfinder?${queryString}`, {
+    validateStatus: status => status >= 200 && status < 500,
+  })
     .then((response) => {
-      dispatch({
-        type: 'SET_ROUTE_RESPONSE',
-        routeResponse: response.data,
-      });
-
-      dispatch(setIsFetchingRouteData(false));
+      if (response.status < 400) {
+        dispatch({
+          type: 'SET_ROUTE_RESPONSE',
+          routeResponse: response.data,
+        });
+        dispatch(setIsFetchingRouteData(false));
+      } else {
+        errorHandler(response);
+        dispatch(setIsFetchingRouteData(false));
+      }
     })
     .catch((error) => {
       dispatch(setIsFetchingRouteData(false));
-      throw new Error(`Failed request for directions (error: ${error})`);
+      throw error;
     });
 };
