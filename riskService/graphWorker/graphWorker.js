@@ -37,14 +37,15 @@ const fetchStreetNodes = function fetchStreetNodes(bounds) {
   });
 };
 
-const fetchStreetSegments = function fetchStreetSegments(bounds) {
+const fetchStreetSegments = function fetchStreetSegments(bounds, limit = 50000, offset = 0) {
   const basemapUrl = 'https://data.sfgov.org/resource/7hfy-8sz8';
   const envelope = turf.envelope(bounds);
   const [minX, minY, maxX, maxY] = turf.bbox(envelope); // eslint-disable-line prefer-const
   return request(basemapUrl, {
     params: {
       $where: `within_box(geometry, ${minY}, ${minX}, ${maxY}, ${maxX})`,
-      $limit: 50000,
+      $limit: limit,
+      $offset: offset,
       $select: 't_node_cnn, f_node_cnn, streetname, geometry',
       $$app_token: process.env.SF_CRIME_APP_TOKEN,
     },
@@ -91,6 +92,35 @@ const getEdgesForNode = function getEdgesForNode(node, nodes, segments) {
   return edges;
 };
 
+const buildStreetPoints =
+  function buildStreetPoints(area, batchId, offset = 0, totalGenerated = 0) {
+    const batchSize = 1000;
+    let numFetchedSegments;
+    return fetchStreetSegments(area, batchSize, offset)
+      .then((segments) => {
+        const points = [];
+        segments.forEach((segment) => {
+          segment.geometry.coordinates.forEach((coordinate) => {
+            points.push({
+              f_node_cnn: segment.f_node_cnn,
+              t_node_cnn: segment.t_node_cnn,
+              location: turf.point(coordinate).geometry,
+            });
+          });
+        });
+        numFetchedSegments = segments.length;
+        logger.info(`Saving ${points.length} street points`);
+        return streetPointController.createStreetPoints(points, batchId);
+      })
+      .then((records) => {
+        logger.info(`Saved ${records.length} street points in batch ${batchId}`);
+        if (numFetchedSegments === batchSize) {
+          return buildStreetPoints(area, batchId, offset + batchSize, totalGenerated + numFetchedSegments);
+        }
+        return totalGenerated + numFetchedSegments;
+      });
+  };
+
 
 /**
  * Takes an area and finds all the street intersections (nodes) in San Francisco
@@ -127,32 +157,11 @@ module.exports = function graphWorker(area, keepAlive = false) {
     .then((records) => {
       logger.info(`Saved ${records.length} risk nodes in batch ${batchId}`);
     })
-    .then(() => fetchStreetSegments(area))
-    .then((segments) => {
-      const points = [];
-      const progressBarOptions = {
-        info: 'Generating street points',
-        total: segments.length,
-        overwrite: true,
-      };
-      const bar = Bar(progressBarOptions);
-      segments.forEach((segment) => {
-        bar.tick('');
-        segment.geometry.coordinates.forEach((coordinate) => {
-          points.push({
-            f_node_cnn: segment.f_node_cnn,
-            t_node_cnn: segment.t_node_cnn,
-            location: turf.point(coordinate).geometry,
-          });
-        });
-      });
-      logger.info(`Saving ${points.length} street points`);
-      return streetPointController.createStreetPoints(points, batchId);
-    })
-    .then((records) => {
-      logger.info(`Saved ${records.length} street points in batch ${batchId}`);
+    .then(() => buildStreetPoints(area, batchId))
+    .then((numSaved) => {
+      logger.info(`Finished saving streetpoints. Saved  a total of ${numSaved} street points in batch ${batchId}`);
       if (!keepAlive) db.close();
-      return records;
+      return numSaved;
     })
     .catch((error) => {
       logger.error(`Error ${error.message} with risk nodes in ${batchId}`);
