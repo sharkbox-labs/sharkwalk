@@ -124,21 +124,19 @@ const App = (props) => {
           <Close color="rgb(0, 188, 212)" />
         </IconButton>
         <div className="shark-walk-about-container" >
-          <h2> Shark Walk </h2>
-          <h3> Find the Safe Wave There </h3>
+          <h1> <img
+            className={'shark-image'}
+            alt={'shark walk'}
+            src={'./shark.gif'}
+            width={66}
+          /> Shark Walk </h1>
+          <h2> Find the Safe Wave There </h2>
           <p>Shark Walk carefully calculates walking routes using up-to-date San Francisco crime data.
             Routes are represented by a risk gradient, letting you know where the waters are mellow
             and where to tread more carefully.
             Once you have selected your route, click the provided link for walking directions. </p>
         </div>
         <FlatButton label="Fork Me On GitHub" className="flat-button" href="https://github.com/sharkbox-labs/jellywave" />
-        <div className="shark-walk-gif-container" >
-          <img
-            alt={'shark walk'}
-            src={'./wave.gif'}
-            width={300}
-          />
-        </div>
       </Drawer>
       <Toolbar
         className={`${selectingRouteToolbarClasses} current-origin`}
