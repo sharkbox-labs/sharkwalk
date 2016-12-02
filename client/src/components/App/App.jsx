@@ -23,6 +23,7 @@ import RiskPath from '../RiskPath/RiskPath';
 import InfoWindow from '../InfoWindow/InfoWindow';
 import appHelper from '../utils/appHelper';
 import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton';
+import FlashMessage from '../FlashMessage/FlashMessage';
 
 
 injectTapEventPlugin();
@@ -118,6 +119,18 @@ const App = (props) => {
     'floating-action-button-show': props.routeResponse[0].risks.length !== 0 && props.interactionType === interactionTypes.SELECTING_ROUTE,
   });
 
+  let flashMessage;
+
+  const directionErrorHandler = (error) => {
+    // getting the response of a bad request
+    if (error.data.error.code === 'NO_COVERAGE') {
+      flashMessage.flashText('Sorry brah... Shark Walk currently only supports directions in San Francisco', 5);
+    } else {
+      flashMessage.flashText('Bummer dude... There was an error getting your directions', 5);
+    }
+    appHelper.cancelRouting(props);
+  };
+
   return (
     <div className="app-container" style={appContainerStyle} >
       <Drawer
@@ -191,7 +204,7 @@ const App = (props) => {
           className="map"
           gestureHandling={'greedy'}
           google={window.google}
-          onReady={() => {
+          onReady={(e) => {
             props.changeCurrentLocation(props.dispatch);
           }}
           onDragend={''} // this.setDestination
@@ -266,7 +279,7 @@ const App = (props) => {
             dataSource={[null]}
             onClick={() => { appHelper.openSearchCards(props, interactionTypes); }}
             onNewRequest={() => {
-              appHelper.getDirections(props, interactionTypes, null, props.dispatch);
+              appHelper.getDirections(props, interactionTypes, null, props.dispatch, directionErrorHandler);
             }}
             onUpdateInput={(query) => {
               appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes);
@@ -286,7 +299,7 @@ const App = (props) => {
             leftIcon={<OriginIcon />}
             primaryText={appHelper.getCurrentLocationCardPrimaryText(props)}
             onClick={() => {
-              appHelper.useCurrentLocationClickHandler(props, interactionTypes, props.dispatch);
+              appHelper.useCurrentLocationClickHandler(props, interactionTypes, props.dispatch, directionErrorHandler);
             }}
           />
         </List>
@@ -301,7 +314,7 @@ const App = (props) => {
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}
                 onClick={() => {
-                  appHelper.getDirections(props, interactionTypes, result, props.dispatch);
+                  appHelper.getDirections(props, interactionTypes, result, props.dispatch, directionErrorHandler);
                 }}
               />
               <Divider />
@@ -313,7 +326,7 @@ const App = (props) => {
                 leftIcon={<DestinationIcon />}
                 primaryText={result.name}
                 onClick={() => {
-                  appHelper.getDirections(props, interactionTypes, result, props.dispatch);
+                  appHelper.getDirections(props, interactionTypes, result, props.dispatch, directionErrorHandler);
                 }}
               />
               <Divider />
@@ -343,6 +356,9 @@ const App = (props) => {
         clickAction={() => {
           appHelper.cancelRouting(props);
         }}
+      />
+      <FlashMessage
+        ref={(x) => { if (!flashMessage) flashMessage = x; }}
       />
     </div>
   );
