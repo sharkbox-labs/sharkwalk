@@ -93,9 +93,10 @@ const getEdgesForNode = function getEdgesForNode(node, nodes, segments) {
 };
 
 const buildStreetPoints =
-  function buildStreetPoints(area, batchId, offset = 0, totalGenerated = 0) {
+  function buildStreetPoints(area, batchId, offset = 0, totalGeneratedPoints = 0) {
     const batchSize = 1000;
     let numFetchedSegments;
+    let numBuiltPoints;
     return fetchStreetSegments(area, batchSize, offset)
       .then((segments) => {
         const points = [];
@@ -115,9 +116,9 @@ const buildStreetPoints =
       .then((records) => {
         logger.info(`Saved ${records.length} street points in batch ${batchId}`);
         if (numFetchedSegments === batchSize) {
-          return buildStreetPoints(area, batchId, offset + batchSize, totalGenerated + numFetchedSegments);
+          return buildStreetPoints(area, batchId, offset + batchSize, totalGeneratedPoints + numBuiltPoints);
         }
-        return totalGenerated + numFetchedSegments;
+        return totalGeneratedPoints + numBuiltPoints;
       });
   };
 
