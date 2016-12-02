@@ -89,6 +89,21 @@ class RiskPath extends Component {
       });
     });
 
+    // Refocus map
+    if (this.props.map) {
+      const northMostLat = this.props.origin.lat >= this.props.destination.lat ? this.props.origin.lat : this.props.destination.lat;
+      const southMostLat = this.props.origin.lat >= this.props.destination.lat ? this.props.destination.lat : this.props.origin.lat;
+      const westMostLng = this.props.origin.lng <= this.props.destination.lng ? this.props.origin.lng : this.props.destination.lng;
+      const eastMostLng = this.props.origin.lng <= this.props.destination.lng ? this.props.destination.lng : this.props.origin.lng;
+
+      this.props.map.fitBounds(
+        new window.google.maps.LatLngBounds(
+          new window.google.maps.LatLng(southMostLat, westMostLng),
+          new window.google.maps.LatLng(northMostLat, eastMostLng),
+        ),
+      );
+    }
+
     this.setState({ segments });
   }
 
@@ -100,7 +115,15 @@ class RiskPath extends Component {
 RiskPath.propTypes = {
   changeRoute: React.PropTypes.func.isRequired,
   currentRouteIndex: React.PropTypes.number.isRequired,
+  destination: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
   index: React.PropTypes.number.isRequired,
+  origin: React.PropTypes.shape({
+    lat: React.PropTypes.number.isRequired,
+    lng: React.PropTypes.number.isRequired,
+  }),
   points: React.PropTypes.arrayOf(
     React.PropTypes.arrayOf(
       React.PropTypes.number,
