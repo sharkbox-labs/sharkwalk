@@ -38,8 +38,8 @@
 }
 
 .selecting-route-toolbar-icon {
-  padding-right: 2%;
-  padding-bottom: 2%;
+  padding-right: 10px;
+  padding-bottom: 10px;
   color: rgb(178,235,242) !important;
   height: 30px !important;
   width: 30px !important;
@@ -53,9 +53,9 @@
   background-color: white !important;
   position: absolute;
   height: auto;
-  top: 2%;
-  left: 5%;
-  right: 5%;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   border-radius: 3px;
 }
 
@@ -65,21 +65,22 @@
 
 .search-toolbargroup {
   width: 100%;
+  margin-right: 10px;
 }
 
 .current-origin {
-  padding: 10px 14px 0px 14px !important;
+  padding: 10px 10px 0px 10px !important;
 }
 
 .current-destination {
-  padding: 0px 14px 0px 14px !important;
+  padding: 0px 10px 0px 10px !important;
 }
 
 .current-location-card-show {
   position: absolute;
-  top: 12%;
-  left: 5%;
-  right: 5%;
+  top: 75px;
+  left: 10px;
+  right: 10px;
   border-radius: 3px;
 }
 
@@ -97,17 +98,17 @@
 }
 
 .search-results-card {
-  top: 24%;
+  top: 155px;
 }
 
 .search-results-card-only {
-  top: 12%;
+  top: 80px;
 }
 
 .search-cards-show {
   position: absolute;
-  left: 5%;
-  right: 5%;
+  left: 10px;
+  right: 10px;
   border-radius: 3px;
 }
 
