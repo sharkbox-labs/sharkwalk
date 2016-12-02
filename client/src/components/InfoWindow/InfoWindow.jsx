@@ -86,8 +86,6 @@ class InfoWindow extends Component {
       const contentClass = routeIsCurrentlyDisplayed ? 'info-window-selected' : 'info-window-not-selected';
 
       const distanceDescription = distance > 1 ? 's' : '';
-      console.log('distance: ', distance);
-      console.log('distanceDescription: ', distanceDescription);
 
       const contentString = `<div ${contentClass}>${duration}</br> <b><i>${distance} mile${distanceDescription}</b></i></div>`;
 
