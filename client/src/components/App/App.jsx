@@ -220,20 +220,17 @@ const App = (props) => {
               risks={route.risks}
             />
           ))}
-          <InfoWindow
-            className="info-window"
-            currentRouteDisplayedIndex={props.currentRouteIndex}
-            routeIndex={0}
-            route={props.routeResponse[0]}
-            alternateRoute={props.routeResponse[1]}
-          />
-          <InfoWindow
-            className="info-window"
-            currentRouteDisplayedIndex={props.currentRouteIndex}
-            routeIndex={1}
-            route={props.routeResponse[1]}
-            alternateRoute={props.routeResponse[0]}
-          />
+          {props.routeResponse.map((route, index, routesArray) => {
+            const alternateRouteIndex = index === 0 ? 1 : 0;
+            return (
+              <InfoWindow
+                className="info-window"
+                currentRouteDisplayedIndex={props.currentRouteIndex}
+                routeIndex={index}
+                route={props.routeResponse[index]}
+                alternateRoute={props.routeResponse[alternateRouteIndex]}
+              />
+          )})}
         </Map>
       </div>
       <Toolbar className={searchBarToolbarClasses}>

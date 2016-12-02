@@ -1,11 +1,14 @@
 .info-window-selected {
   text-align: center;
   color: rgb(0, 188, 212);
+  width: auto;
 }
 
 .info-window-not-selected {
   text-align: center;
   color: rgb(189,189,189);
+  width: auto;
+  padding: 1px;
 }
 
 .info-window-time {
