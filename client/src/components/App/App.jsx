@@ -22,7 +22,8 @@ import './App.css';
 import RiskPath from '../RiskPath/RiskPath';
 import InfoWindow from '../InfoWindow/InfoWindow';
 import appHelper from '../utils/appHelper';
-import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton'
+import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton';
+
 
 injectTapEventPlugin();
 
@@ -214,13 +215,15 @@ const App = (props) => {
             <RiskPath
               changeRoute={props.changeRoute}
               currentRouteIndex={props.currentRouteIndex}
+              destination={props.destination}
               index={index}
               key={index}
               points={route.path}
               risks={route.risks}
+              origin={props.origin}
             />
           ))}
-          {props.routeResponse.map((route, index, routesArray) => {
+          {props.routeResponse.map((route, index) => {
             const alternateRouteIndex = index === 0 ? 1 : 0;
             return (
               <InfoWindow
@@ -230,7 +233,8 @@ const App = (props) => {
                 route={props.routeResponse[index]}
                 alternateRoute={props.routeResponse[alternateRouteIndex]}
               />
-          )})}
+            );
+          })}
         </Map>
       </div>
       <Toolbar className={searchBarToolbarClasses}>

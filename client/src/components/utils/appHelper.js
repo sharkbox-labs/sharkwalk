@@ -14,6 +14,10 @@ const autofillSearchBar = (props, interactionTypes) => {
   return props.destination.name;
 };
 
+const centerMapToOrigin = (props) => {
+  props.map.setCenter(props.position);
+};
+
 const convertPlaceIdToLatLng = place => (
   new Promise((resolve, reject) => {
     const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
@@ -223,6 +227,7 @@ const cancelRouting = (props) => {
 
 export default {
   autofillSearchBar,
+  centerMapToOrigin,
   convertPlaceIdToLatLng,
   getCurrentLocationCardPrimaryText,
   getDirections,
