@@ -24,6 +24,7 @@ import InfoWindow from '../InfoWindow/InfoWindow';
 import appHelper from '../utils/appHelper';
 import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton';
 
+
 injectTapEventPlugin();
 
 const App = (props) => {
@@ -196,10 +197,6 @@ const App = (props) => {
             icon={{
               url: './bluedot.png',
               scaledSize: new window.google.maps.Size(35, 35),
-            }}
-            onPositionChanged={(markerProps) => {
-              console.log('in app');
-              appHelper.centerMapToOrigin(markerProps);
             }}
             optimized={false}
           />
