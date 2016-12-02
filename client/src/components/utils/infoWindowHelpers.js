@@ -1,23 +1,36 @@
 const getDurationDifference = (currentRouteDuration, alternateRouteDuration) => {
-  let durationDifference;
   const difference = currentRouteDuration - alternateRouteDuration;
-  const description = difference < 0 ? 'slower' : 'faster';
-  const absoluteDifference = Math.abs(difference);
+  let absoluteDifference;
 
-  if (absoluteDifference < 60) {
+  if (Math.abs(difference) > 60) {
+    // Get difference in minutes so that it is consistent with the total duration display
+    const differenceInMinutes = Math.floor(currentRouteDuration / 60) -
+                                Math.floor(alternateRouteDuration / 60);
+    absoluteDifference = Math.abs(differenceInMinutes);
+  } else {
+    absoluteDifference = Math.abs(difference);
+  }
+
+  const description = difference > 0 ? 'slower' : 'faster';
+
+  let durationDifference;
+
+  if (Math.abs(difference) < 60) {
     durationDifference = `${absoluteDifference} sec${(absoluteDifference !== 1 ? 's' : '')} ${description}`;
-  } else if (absoluteDifference < 60 * 60) {
-    const minutes = Math.floor(absoluteDifference / 60);
-    durationDifference = `${minutes}min ${description}`;
+  } else {
+    durationDifference = `${absoluteDifference}min ${description}`;
   }
 
   return durationDifference;
 };
 
 const getRiskDescription = (risk) => {
+  const badWords = ['choppier', 'gnarlier'];
+  const goodWords = ['smoother', 'mellower'];
+  const randomWord = wordsArray => (wordsArray[Math.floor(Math.random() * wordsArray.length)]);
+  const description = risk > 0 ? randomWord(badWords) : randomWord(goodWords);
+
   const absoluteRisk = Math.abs(risk);
-  const smooth = risk > 5 && risk <= 15 ? 'smoother' : 'smooth';
-  const description = risk > 0 ? 'choppy' : `${smooth}`;
 
   if (absoluteRisk <= 5) {
     return '<i>Same swell...</i>';
@@ -27,17 +40,14 @@ const getRiskDescription = (risk) => {
     return `<i>A little ${description}</i> `;
   }
 
-  if (absoluteRisk > 15 && absoluteRisk <= 25) {
-    return `<i>Very ${description}</i>`;  
-  }
-
   return `<i>Hella ${description}</i>`;
 };
 
 const displayRiskDifference = (currentRouteAvgRisk, alternateRouteAvgRisk) => {
-  // Risk description will be only displayed when the other route is selected so these should be in relation
-  // to the other route
-  const normalizedRiskDifference = Math.floor(((currentRouteAvgRisk - alternateRouteAvgRisk) / alternateRouteAvgRisk) * 100);
+  // Risk description will be only displayed when the other route is selected
+  // so it will be in relation to the other route
+  const normalizedRiskDifference =
+    Math.floor(((currentRouteAvgRisk - alternateRouteAvgRisk) / alternateRouteAvgRisk) * 100);
 
   return getRiskDescription(normalizedRiskDifference);
 };
@@ -46,12 +56,17 @@ const displayHoursMinutes = (seconds) => {
   const totalMinutes = Math.floor(seconds / 60);
   const hours = Math.floor(totalMinutes / 60);
   const minutesLeft = totalMinutes % 60;
-  const hoursDescription = hours > 1 ? 's' : '';
-  return hours > 0 ? `<span class='info-window-time'><b>${hours}hr${hoursDescription} ${minutesLeft}min</b></span>` :
-                     `<span class='info-window-time'><b>${minutesLeft} min</b></span>`;
+
+  if (hours > 0 && minutesLeft > 0) {
+    return `<span class='info-window-time'><b>${hours}hr ${minutesLeft}min</b></span>`;
+  } else if (hours > 0 && minutesLeft === 0) {
+    return `<span class='info-window-time'><b>${hours} hour</b></span>`;
+  }
+
+  return `<span class='info-window-time'><b>${totalMinutes} min</b></span>`;
 };
 
-const displayMiles = meters => (Math.round(meters * 0.000621371));
+const displayMiles = meters => (Math.round((meters * 0.000621371) * 10) / 10);
 
 export default {
   getDurationDifference,
@@ -59,4 +74,4 @@ export default {
   displayRiskDifference,
   displayHoursMinutes,
   displayMiles,
-}
+};
