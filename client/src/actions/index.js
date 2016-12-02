@@ -115,6 +115,42 @@ export const setOriginSearchResults = originResults => ({
 
 export const setRouteResponse = (origin, destination, dispatch) => {
   dispatch(setIsFetchingRouteData(true));
+  // clear out old paths
+  dispatch({
+    type: 'SET_ROUTE_RESPONSE',
+    routeResponse: [
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+      {
+        risks: [],
+        maxRisk: 0,
+        averageRisk: 0,
+        riskWeight: 0,
+        distance: 0,
+        duration: 0,
+        googleMapsUrl: '',
+        path: [],
+      },
+    ],
+  });
 
   const serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3002' : 'https://api.shark-walk.com';
 
