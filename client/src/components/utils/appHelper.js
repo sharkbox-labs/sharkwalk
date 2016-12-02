@@ -130,11 +130,13 @@ const getDirections = (props, interactionTypes, place, dispatchFunction) => {
     convertPlaceIdToLatLng(place || props.destinationSearchResults[0]).then((geolocatedPlace) => {
       props.changeDestination(geolocatedPlace);
 
-      // If origin hasn't been set before, set origin to currentLocation
-      if (props.origin.lat === 400) {
+      // If origin hasn't been set before,
+      // set origin to currentLocation (if current location is available)
+      if (props.origin.lat === 400 && props.currentLocation.lat !== 400) {
         setOriginToCurrentLocation(props);
         props.changeRouteResponse(props.currentLocation, geolocatedPlace, dispatchFunction);
-      } else {
+      }
+      if (props.origin.lat !== 400) {
         props.changeRouteResponse(props.origin, geolocatedPlace, dispatchFunction);
       }
     });
