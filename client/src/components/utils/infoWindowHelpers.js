@@ -19,19 +19,19 @@ const getRiskDescription = (risk) => {
   const smooth = risk > 5 && risk <= 15 ? 'smoother' : 'smooth';
   const description = risk > 0 ? 'choppy' : `${smooth}`;
 
-  switch (risk) {
-    case absoluteRisk <= 5:
-      return '<i>Same swell...</i>';
-
-    case absoluteRisk > 5 && absoluteRisk <= 15:
-      return `<i>A little ${description}</i> `;
-
-    case absoluteRisk > 15 && absoluteRisk <= 25:
-      return `<i>Very ${description}</i>`;
-
-    default:
-      return `<i>Hella ${description}</i>`;
+  if (absoluteRisk <= 5) {
+    return '<i>Same swell...</i>';
   }
+
+  if (absoluteRisk > 5 && absoluteRisk <= 15) {
+    return `<i>A little ${description}</i> `;
+  }
+
+  if (absoluteRisk > 15 && absoluteRisk <= 25) {
+    return `<i>Very ${description}</i>`;  
+  }
+
+  return `<i>Hella ${description}</i>`;
 };
 
 const displayRiskDifference = (currentRouteAvgRisk, alternateRouteAvgRisk) => {
