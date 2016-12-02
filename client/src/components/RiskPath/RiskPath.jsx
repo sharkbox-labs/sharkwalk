@@ -90,7 +90,7 @@ class RiskPath extends Component {
     });
 
     // Refocus map
-    if (this.props.map) {
+    if (this.props.map && this.props.origin.lat !== 400) {
       const northMostLat = this.props.origin.lat >= this.props.destination.lat ? this.props.origin.lat : this.props.destination.lat;
       const southMostLat = this.props.origin.lat >= this.props.destination.lat ? this.props.destination.lat : this.props.origin.lat;
       const westMostLng = this.props.origin.lng <= this.props.destination.lng ? this.props.origin.lng : this.props.destination.lng;
@@ -98,8 +98,8 @@ class RiskPath extends Component {
 
       this.props.map.fitBounds(
         new window.google.maps.LatLngBounds(
-          new window.google.maps.LatLng(southMostLat, westMostLng),
-          new window.google.maps.LatLng(northMostLat, eastMostLng),
+          new window.google.maps.LatLng(southMostLat - 0.0005, westMostLng - 0.0015),
+          new window.google.maps.LatLng(northMostLat + 0.0005, eastMostLng + 0.0015),
         ),
       );
     }
