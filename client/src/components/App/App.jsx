@@ -38,12 +38,15 @@ const App = (props) => {
   const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ? { height: 'calc(100% - 112px)' } : {};
   const appContainerStyle = {};
   const mapContainerStyle = {};
-  const searchBarStyle = {};
+  const searchBarStyle = {
+    marginRight: 10,
+  };
   const textFieldInputStyle = {
     color: 'rgb(224,247,250)',
     backgroundColor: 'rgb(77,208,225)',
     borderRadius: '5px',
-    paddingLeft: '3%',
+    paddingLeft: '10px',
+    paddingRight: '10px',
     height: '80%',
   };
 
