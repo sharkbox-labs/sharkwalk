@@ -6,6 +6,7 @@ const getPaths = require('./tripHelpers.js').getPaths;
 const generateDirectionsURL = require('./tripHelpers.js').generateDirectionsURL;
 const generateTravelTime = require('./tripHelpers.js').generateTravelTime;
 const generateTravelDistance = require('./tripHelpers.js').generateTravelDistance;
+const logger = require('./logger');
 
 const APIKEY = process.env.APIKEY;
 
@@ -28,7 +29,10 @@ const requestRoutes = (origin, destination, waypoints) => {
     },
   })
   .then(response => response.data)
-  .catch((error) => { throw new Error(`Error requesting Route with origin ${origin}, and destination ${destination}: ${error.message}`); });
+  .catch((error) => {
+    logger.error((`Error requesting Route with origin ${origin}, and destination ${destination}: ${error.message}`));
+    throw new Error(`Error requesting Route with origin ${origin}, and destination ${destination}: ${error.message}`);
+  });
 };
 
 
@@ -61,7 +65,14 @@ const requestHandler = (request, response) => {
     }));
   })
   .then(responseArray => response.status(200).json(responseArray))
-  .catch(error => response.status(400).json({ error: { message: `There was an error getting directions: ${error.message}.` } }));
+  .catch((error) => {
+    logger.error(`Response handler error: ${error}`);
+    return response.status(400).json({
+      error: {
+        message: `There was an error getting directions: ${error.message}`,
+      },
+    });
+  });
 };
 
 
