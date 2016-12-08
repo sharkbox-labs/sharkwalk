@@ -159,7 +159,7 @@ const App = (props) => {
             and where to tread more carefully.
             Once you have selected your route, click the provided link for walking directions. </p>
         </div>
-        <FlatButton label="Fork Me On GitHub" className="flat-button" href="https://github.com/sharkbox-labs/jellywave" />
+        <FlatButton label="Fork Me On GitHub" className="flat-button" href="https://github.com/sharkbox-labs/sharkwalk" />
       </Drawer>
       <Toolbar
         className={`${selectingRouteToolbarClasses} current-origin`}
