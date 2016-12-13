@@ -1,0 +1,26 @@
+.emoji {
+  height: 17px;
+  width: 17px;
+}
+
+.info-window-selected {
+  text-align: left;
+  color: rgb(0, 188, 212);
+  width: auto;
+  padding-right: 5px;
+}
+
+.info-window-not-selected {
+  text-align: left;
+  color: rgb(189,189,189);
+  width: auto;
+  padding: 1px;
+}
+
+.info-window-time {
+  color: black;
+}
+
+.risk-description {
+  font-size: 15px;
+}

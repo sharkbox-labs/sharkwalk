@@ -1,0 +1,185 @@
+.floating-action-button-hide {
+  display: none !important;
+}
+
+.floating-action-button-show, .refresh-indicator {
+  bottom: 25px;
+  position: fixed;
+  right: 50px;
+  z-index: 3;
+}
+
+.refresh-indicator {
+  z-index: 4;
+}
+
+.clear-button {
+  position: fixed;
+  right: 57px;
+  bottom: 95px;
+}
+
+
+.flat-button {
+  clear: both;
+  text-align: left !important;
+  width: 300px;
+}
+
+.directions-icon {
+}
+
+.fetching-route-data {
+
+}
+
+.not-fetching-route-data {
+  display: none !important;
+}
+
+.map-viewing {
+
+}
+
+.map-selecting-route {
+  top: 56px;
+}
+
+.selecting-route-toolbar-icon {
+  padding-right: 10px;
+  padding-bottom: 10px;
+  color: rgb(178,235,242) !important;
+  height: 30px !important;
+  width: 30px !important;
+}
+
+.origin-not-available, .destination-not-available {
+  font-style: italic;
+}
+
+.searchbar-menu-button {
+  float: left;
+}
+
+.search-toolbar-show {
+  background-color: white !important;
+  position: absolute;
+  height: auto;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  border-radius: 3px;
+}
+
+.search-toolbar-hide {
+  display: none !important;
+}
+
+.search-toolbargroup {
+  width: 100%;
+  margin-right: 10px;
+}
+
+.current-origin {
+  padding: 10px 10px 0px 10px !important;
+}
+
+.current-destination {
+  padding: 0px 10px 0px 10px !important;
+}
+
+.current-location-card-show {
+  position: absolute;
+  top: 75px;
+  left: 10px;
+  right: 10px;
+  border-radius: 3px;
+}
+
+.current-location-card-hide {
+  display: none;
+}
+
+.current-location-found {
+
+}
+
+.current-location-not-found {
+  color: red !important;
+  font-style: italic;
+}
+
+.search-results-card {
+  top: 155px;
+}
+
+.search-results-card-only {
+  top: 80px;
+}
+
+.search-cards-show {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  border-radius: 3px;
+}
+
+.search-cards-hide {
+  display: none;
+}
+
+.search-result-destination-show {
+
+}
+
+.search-result-destination-hide {
+  display: none !important;
+}
+
+.search-result-origin-show {
+}
+
+.search-result-origin-hide {
+  display: none !important;
+}
+
+.selecting-route-toolbar-show {
+  position: relative;
+  background-color: rgb(0, 188, 212) !important;
+}
+
+.selecting-route-toolbar-hide {
+  display: none !important;
+}
+
+.shark-walk-gif-container {
+  bottom: 0%;
+}
+
+.shark-walk-about-container {
+  padding-top: 20%;
+  padding-right: 5%;
+  padding-left: 5%;
+  padding-bottom: 20%;
+  color: #444;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.shark-walk-about-container h1 {
+  color: rgb(0, 188, 212);
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.flash-text {
+  background-color: white;
+  color: rgb(200,8,8);
+  font-size: 24px;
+  z-index: 5;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(200,8,8);
+  box-shadow: 0 0 20px #555;
+  margin: 10px;
+  text-align: center;
+  font-family: 'Roboto Condensed', sans-serif;
+}

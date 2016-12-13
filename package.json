@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./riskService/node_modules/.bin/_mocha ./riskService/spec; ./riskService/node_modules/.bin/_mocha ./integrationServer/spec; ./riskService/node_modules/.bin/_mocha ./tripService/spec"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,20 @@
   "bugs": {
     "url": "https://github.com/sharkbox-labs/jellywave/issues"
   },
-  "homepage": "https://github.com/sharkbox-labs/jellywave#readme"
+  "eslintConfig": {
+    "extends": "airbnb",
+    "env": {
+      "mocha": true,
+      "node": true,
+      "browser": true
+    }
+  },
+  "homepage": "https://github.com/sharkbox-labs/jellywave#readme",
+  "devDependencies": {
+    "eslint": "^3.10.0",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0"
+  }
 }

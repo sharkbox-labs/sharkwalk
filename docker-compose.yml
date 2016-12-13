@@ -1,0 +1,33 @@
+version: '2'
+services:
+  tripservice:
+    image: node:boron
+    volumes:
+    - ./tripService:/user/src/tripservice
+    working_dir: /user/src/tripservice
+    env_file: .env
+    ports:
+    - "3001:3001"
+    command: npm run docker
+  riskservice:
+    image: node:boron
+    volumes:
+    - ./riskService:/user/src/riskservice
+    - ssl-certs:/var/ssl:ro
+    working_dir: /user/src/riskservice
+    env_file: .env
+    links:
+        - tripservice
+        - riskdb
+    ports:
+    - "80:3002"
+    - "443:3012"
+    depends_on:
+    - riskdb
+    command: npm run docker
+  riskdb:
+    image: mongo
+    command: mongod
+volumes:
+  ssl-certs:
+    external: true

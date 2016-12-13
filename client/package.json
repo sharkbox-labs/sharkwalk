@@ -1,0 +1,38 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^3.10.0",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "react-scripts": "0.7.0"
+  },
+  "dependencies": {
+    "axios": "^0.15.2",
+    "chai": "^3.5.0",
+    "classnames": "^2.2.5",
+    "colorcolor": "^1.1.1",
+    "deep-equal": "^1.0.1",
+    "enzyme": "^2.6.0",
+    "google-maps-react": "https://github.com/mjstromberg/google-maps-react/tarball/feature/google-maps-controls",
+    "material-ui": "^0.16.1",
+    "qs": "^6.3.0",
+    "react": "^15.4.0",
+    "react-addons-test-utils": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^3.0.0",
+    "react-tap-event-plugin": "^2.0.0",
+    "redux": "^3.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "deploy": "npm install && npm run build"
+  }
+}
