@@ -62,6 +62,7 @@ in your browser.
 ## Requirements
 
 - Node 6.7.0
+- MongoDB 3.2.10
 
 ## Development
 
@@ -78,7 +79,7 @@ from within each directory.
 
 ### Backlog
 
-View the project backlog [here](https://waffle.io/sharkbox-labs/jellywave)
+View the project backlog [here](https://waffle.io/sharkbox-labs/sharkwalk)
 
 ### Tech Stack
 
@@ -119,10 +120,10 @@ The application uses a risk weight of 1 and 10 to generate routes for the user.
 
 ## Diagrams
 
-### Sequence
+### Architecture
 <img src='readme/SystemsDiagram.png' />
 
-### Architecture
+### Sequence
 <img src='readme/SequenceDiagram.png' />
 
 
