@@ -21,7 +21,7 @@ mapping with crime data to help walkers find a safe path to their destination. W
     1. [Installing Dependencies](#installing-dependencies)
     1. [Tasks](#tasks)
     1. [Tech Stack](#techstack)
-1. [Data Modeling](#datamodeling)
+1. [Data Modeling](#data-modeling)
     1. [Street Graph](#street-graph)
     1. [Crime Risk](#crime-risk)
 1. [Diagrams](#diagrams)
