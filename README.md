@@ -100,9 +100,9 @@ The Shark Walk worker also uses the [Streets of San Francisco Dataset](https://d
 
 ### Crime Risk
 
-<img src='readme/riskweight.png' width=800 alt="Crime risk weight per distance" />
+<img src='readme/riskweight.png' width=800 alt="Crime risk level per distance" />
 
-To build a crime risk model, the worker accesses the [SFPD Incidents Dataset](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry) to retrieve criminal police reports from the last six months. For each node in the street graph, the worker computes a crime risk for that node by examining police reports in the vicinity. The closer a police report is to the node, the more it contributes to the risk at that node. A report that is at the node adds a value of one to the crime risk at the node. The weight of the police report on the crime risk falls off according to the modified sigmoid function shown above. At 100m from the node, a report adds 0.5 to the crime risk weight. At 250m from the node, a police report adds less that 0.001 to the crime risk weight. The worker ignores reports outside of 250m.
+To build a crime risk model, the worker accesses the [SFPD Incidents Dataset](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry) to retrieve criminal police reports from the last six months. For each node in the street graph, the worker computes a crime risk for that node by examining police reports in the vicinity. The closer a police report is to the node, the more it contributes to the risk at that node. A report that is at the node adds a value of one to the crime risk at the node. The weight of the police report on the crime risk falls off according to the modified sigmoid function shown above. At 100m from the node, a report adds 0.5 to the crime risk level. At 250m from the node, a police report adds less that 0.001 to the crime risk level. The worker ignores reports outside of 250m.
 
 ## Pathfinding
 
