@@ -10,7 +10,7 @@ mapping with crime data to help walkers find a safe path to their destination. W
   - [Ker Moua](https://github.com/kmoua92)
   - [David Walsh](https://github.com/rhinodavid)
   - [Mike Stromberg](https://github.com/mjstromberg)
-  - [Analisa Heilmann](https://github.com/anaheilmann)
+  - [Analisa Nazari](https://github.com/analisanazari)
 
 ## Table of Contents
 
