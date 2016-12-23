@@ -128,7 +128,6 @@ const App = (props) => {
     } else {
       flashMessage.flashText('Bummer dude... There was an error getting your directions', 5);
     }
-    appHelper.cancelRouting(props);
   };
 
   return (
