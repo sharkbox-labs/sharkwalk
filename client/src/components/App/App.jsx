@@ -24,6 +24,7 @@ import InfoWindow from '../InfoWindow/InfoWindow';
 import appHelper from '../utils/appHelper';
 import CancelRoutesButton from '../CancelRoutesButton/CancelRoutesButton';
 import FlashMessage from '../FlashMessage/FlashMessage';
+import overridingStyleObjects from '../utils/overridingStyleObjects';
 
 
 injectTapEventPlugin();
@@ -38,22 +39,10 @@ const App = (props) => {
     VIEWING_SIDEBAR: 'VIEWING_SIDEBAR',
   };
 
-  // These styles are for development only, remove for production
-  const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ? { height: 'calc(100% - 112px)' } : {};
-  const appContainerStyle = {};
-  const mapContainerStyle = {};
-  const searchBarStyle = {
-    marginRight: 10,
-  };
-  const textFieldInputStyle = {
-    color: 'rgb(224,247,250)',
-    backgroundColor: 'rgb(77,208,225)',
-    borderRadius: '5px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    height: '80%',
-    width: '95%',
-  };
+  // Logic to select correct style object or class based off of UI state
+  const mapStyle = props.interactionType === interactionTypes.SELECTING_ROUTE ?
+                   overridingStyleObjects.mapSelectingRouteStyle :
+                   overridingStyleObjects.mapFullScreenStyle;
 
   const mapClasses = classNames({
     'map-viewing': props.interactionType !== interactionTypes.SELECTING_ROUTE,
@@ -131,7 +120,7 @@ const App = (props) => {
   };
 
   return (
-    <div className="app-container" style={appContainerStyle} >
+    <div className="app-container" >
       <Drawer
         docked={false}
         width={300}
@@ -168,13 +157,12 @@ const App = (props) => {
           <OriginIcon className="selecting-route-toolbar-icon" />
           <TextField
             id="text-field-controlled"
-            inputStyle={textFieldInputStyle}
+            inputStyle={overridingStyleObjects.textFieldInputStyle}
             underlineShow={false}
             fullWidth
             hintText="Origin"
             value={props.origin.name || 'Choose starting point...'}
             onClick={() => { props.changeInteractionType(interactionTypes.SEARCHING_ORIGIN); }}
-            style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
@@ -186,7 +174,7 @@ const App = (props) => {
           <DestinationIcon className="selecting-route-toolbar-icon" />
           <TextField
             id="text-field-controlled"
-            inputStyle={textFieldInputStyle}
+            inputStyle={overridingStyleObjects.textFieldInputStyle}
             underlineShow={false}
             fullWidth
             hintText="Destination"
@@ -194,11 +182,10 @@ const App = (props) => {
             onClick={() => {
               props.changeInteractionType(interactionTypes.SEARCHING_DESTINATION);
             }}
-            style={searchBarStyle}
           />
         </ToolbarGroup>
       </Toolbar>
-      <div className={mapClasses} style={mapContainerStyle}>
+      <div className={mapClasses} >
         <Map
           className="map"
           gestureHandling={'greedy'}
@@ -284,7 +271,6 @@ const App = (props) => {
               appHelper.getGoogleMapsPlacePredictions(query, props, interactionTypes);
             }}
             searchText={appHelper.autofillSearchBar(props, interactionTypes)}
-            style={searchBarStyle}
             underlineStyle={{ color: 'rgb(0, 188, 212)' }}
           />
         </ToolbarGroup>
@@ -339,7 +325,7 @@ const App = (props) => {
       >
         <Directions
           className="directions-icon"
-          style={{ fill: 'rgb(178,235,242)' }}
+          style={overridingStyleObjects.directionsIconStyle}
         />
       </FloatingActionButton>
       <RefreshIndicator
