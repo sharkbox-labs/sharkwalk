@@ -1,3 +1,9 @@
+/**
+ * Autofill search bar input fields depending on interaction type.
+ * @param  {Object} props            Props passed into the App component
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {String}                  Origin or destination
+ */
 const autofillSearchBar = (props, interactionTypes) => {
   // If just viewing map, search bar should be empty
   if (props.interactionType === interactionTypes.VIEWING_MAP) {
@@ -14,10 +20,19 @@ const autofillSearchBar = (props, interactionTypes) => {
   return props.destination.name;
 };
 
+/**
+ * Move the center of the map to the origin (no return statement).
+ * @param  {Object} props Props passed into the App component
+ */
 const centerMapToOrigin = (props) => {
   props.map.setCenter(props.position);
 };
 
+/**
+ * Make request to PlaceService API to convert place into Lat/Lng.
+ * @param  {Object} place Origin or destination place information
+ * @return {Object}       Origin or destinatin Lat/Lng
+ */
 const convertPlaceIdToLatLng = place => (
   new Promise((resolve, reject) => {
     const placesService = new window.google.maps.places.PlacesService(document.createElement('div'));
@@ -42,11 +57,24 @@ const convertPlaceIdToLatLng = place => (
   })
 );
 
+/**
+ * Check if current location is available.
+ * @param  {Object} props Props passed into the App component
+ * @return {String}       Description of current location availability
+ */
 const getCurrentLocationCardPrimaryText = props => (
   // Check that current location has been reset to a real location
   props.currentLocation.lat !== 400 ? 'Use current location' : 'Current location not available'
 );
 
+/**
+ * Save results for origin and destination searches.
+ * @param  {Array}  predictions      Collection of predicted place objects
+ * @param  {String} status           The status returned by the Google Maps Places Service
+ * @param  {Object} props            Props passed into the App component
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {Function Invocation}     Dispatched action
+ */
 const saveSearchResults = (predictions, status, props, interactionTypes) => {
   // Save only name and placeId of places
   const results = predictions.map(prediction => ({
@@ -72,6 +100,13 @@ const saveSearchResults = (predictions, status, props, interactionTypes) => {
   return props.changeDestinationSearchResults(results);
 };
 
+/**
+ * Fetches place predictions from the Google Maps Autocomplete Service.
+ * @param  {String} query            User-searched place or word fragment
+ * @param  {Object} props            Props passed into the App component
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {Function Invocation}     Dispatched action
+ */
 const getGoogleMapsPlacePredictions = (query, props, interactionTypes) => {
   // Prioritize San Francisco places during search
   const defaultBounds = new window.google.maps.LatLngBounds(
@@ -97,10 +132,21 @@ const getGoogleMapsPlacePredictions = (query, props, interactionTypes) => {
   );
 };
 
+/**
+ * Get search bar hint text.
+ * @param  {Object} props            Props passed into the App component
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {String}                  Hint text
+ */
 const getSearchBarHintText = (props, interactionTypes) => (
   props.interactionType === interactionTypes.SEARCHING_ORIGIN ? 'Search for starting point' : 'Search for destination'
 );
 
+/**
+ * Open search cards.
+ * @param  {Object} props            Props passed into the App componet
+ * @param  {Object} interactionTypes Available immutable interaction types
+ */
 const openSearchCards = (props, interactionTypes) => {
   if (props.interactionType !== interactionTypes.SEARCHING_ORIGIN &&
     props.interactionType !== interactionTypes.SEARCHING_DESTINATION
@@ -109,6 +155,10 @@ const openSearchCards = (props, interactionTypes) => {
   }
 };
 
+/**
+ * Set origin to current location.
+ * @param  {Object} props Props passed into the App component
+ */
 const setOriginToCurrentLocation = (props) => {
   // If origin hasn't been set, save currentLocation (if currentLocation
   // is available) as the origin in store
@@ -117,6 +167,14 @@ const setOriginToCurrentLocation = (props) => {
   }
 };
 
+/**
+ * Get directions.
+ * @param  {Object}   props            Props passed into the App component
+ * @param  {Object}   interactionTypes Available immutable interaction types
+ * @param  {Object}   place            Origin or destination place information
+ * @param  {Function} dispatchFunction Dispatcher that is passed into the action
+ * @param  {Function} errorHandler     Function to invoke in case of GET request error
+ */
 const getDirections = (props, interactionTypes, place, dispatchFunction, errorHandler) => {
   if (props.interactionType === interactionTypes.SEARCHING_ORIGIN) {
     // On user submit from input field, set top matched origin search result as the origin
@@ -146,10 +204,22 @@ const getDirections = (props, interactionTypes, place, dispatchFunction, errorHa
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
+/**
+ * Toggle Floating Action Button class.
+ * @param  {String} interactionType  Current interaction type
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {String}                  CSS class
+ */
 const toggleFloatingActionButtonClass = (interactionType, interactionTypes) => (
   interactionType === interactionTypes.SELECTING_ROUTE ? 'floating-action-button-show' : 'floating-action-button-hide'
 );
 
+/**
+ * Toggle the interaction type on a menu click.
+ * @param  {Object} props            Props passed into the App component
+ * @param  {Object} interactionTypes Available immutable interaction types
+ * @return {Function Invocation}     Dispatched action
+ */
 const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   // If sidebar is currently not open, open sidebar
   if (props.interactionType !== interactionTypes.VIEWING_SIDEBAR) {
@@ -166,6 +236,13 @@ const toggleInteractionTypeFromMenuClick = (props, interactionTypes) => {
   return props.changeInteractionType(interactionTypes.VIEWING_MAP);
 };
 
+/**
+ * Handle click on Use Current Location card.
+ * @param  {Object}   props            Props passed into the App component
+ * @param  {Object}   interactionTypes Available immutable interaction types
+ * @param  {Function} dispatchFunction Dispatcher that is passed into the action
+ * @param  {Function} errorHandler     Function to invoke in case of GET request error
+ */
 const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunction, errorHandler) => {
   if (props.currentLocation.lat !== 400) {
     const currentLocation = Object.assign({}, { name: 'Current Location' }, props.currentLocation);
@@ -176,7 +253,10 @@ const useCurrentLocationClickHandler = (props, interactionTypes, dispatchFunctio
   props.changeInteractionType(interactionTypes.SELECTING_ROUTE);
 };
 
-
+/**
+ * Cancel request to get route
+ * @param  {Object} props Props passed into the App component
+ */
 const cancelRouting = (props) => {
   props.changeOrigin({
     lat: 400,
