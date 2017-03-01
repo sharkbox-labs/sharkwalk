@@ -1,7 +1,22 @@
 const RiskNode = require('./riskNodeModel');
-const lru = require('lru-cache');
+const logger = require('../logger');
 
-const cache = lru(500);
+const buildCache = function buildCache(model) {
+  const cache = {};
+  cache.get = function get(id) {
+    return this[id];
+  };
+
+  model.find({}).exec().then((records) => {
+    records.forEach((record) => {
+      cache[record.cnn] = record;
+    });
+    logger.info(`Built risk node cache with ${records.length} records`);
+  });
+  return cache;
+};
+
+const cache = buildCache(RiskNode);
 
 /**
  * Methods for interacting with Risk Nodes.
@@ -20,13 +35,6 @@ const cache = lru(500);
 const createRiskNodes = function createRiskNodes(points, batchId) {
   const batchedPoints = points.map(point => Object.assign(point, { batchId }));
   return RiskNode.create(batchedPoints);
-};
-
-const findRiskNodesByCnns = function findRiskNodesByCnns(cnns) {
-  const uncachedCnns = cnns.filter(cnn => !cache.get(cnn));
-  return RiskNode.find({
-    cnn: { $in: uncachedCnns },
-  }).exec();
 };
 
 const findRiskNodeByCnn = function findRiskNodeByCnn(cnn) {
@@ -55,10 +63,7 @@ const findRiskNodesNear = function findRiskNodesNear(point, distance = 100) {
       },
     },
   }).exec()
-  .then((nodes) => {
-    nodes.forEach(node => cache.set(node.cnn, node));
-    return nodes;
-  });
+  .then(nodes => nodes);
 };
 
 const findRiskNodesNearCnn = function findRiskNodesNearCnn(cnn, distance = 100) {
@@ -69,10 +74,7 @@ const findRiskNodesNearCnn = function findRiskNodesNearCnn(cnn, distance = 100) 
       }
       return findRiskNodesNear(node.location, distance);
     })
-    .then((nodes) => {
-      nodes.forEach(node => cache.set(node.cnn, node));
-      return nodes;
-    });
+    .then(nodes => nodes);
 };
 
 const findRiskNodeAndCacheNeighbors = function findRiskNodeAndCacheNeighbors(cnn) {
@@ -81,10 +83,6 @@ const findRiskNodeAndCacheNeighbors = function findRiskNodeAndCacheNeighbors(cnn
       if (!node) {
         throw new Error(`No node with CNN: ${cnn} found.`);
       }
-      findRiskNodesByCnns(node.edges.map(edge => edge.cnn))
-        .then((neighbors) => {
-          neighbors.forEach(neighbor => cache.set(neighbor.cnn, neighbor));
-        });
       return node;
     });
 };
