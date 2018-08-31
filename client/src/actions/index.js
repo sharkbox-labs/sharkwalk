@@ -112,7 +112,6 @@ export const setOriginSearchResults = originResults => ({
  * @return {Function} callback - Using redux-thunk to return a callback that sends
  * out a promisified, async request to the Integration Server.
  */
-
 export const setRouteResponse = (origin, destination, dispatch, errorHandler) => {
   dispatch(setIsFetchingRouteData(true));
   
